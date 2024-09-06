@@ -25,6 +25,7 @@
 		<FileVersion>0.0.1</FileVersion>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>License.txt</PackageLicenseFile>
+		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
