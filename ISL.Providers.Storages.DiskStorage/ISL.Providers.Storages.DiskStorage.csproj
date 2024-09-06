@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<Title>ISL.Providers.Notifications.GovukNotify</Title>
+		<Product>ISL.Providers.Notifications.GovukNotify</Product>
+		<PackageId>ISL.Providers.Notifications.GovukNotify</PackageId>
+		<Authors>North East London ICB</Authors>
+		<Company>North East London ICB</Company>
+		<Description>ISL.Providers.Notifications.GovukNotify provides a notification implementation the popular GOV.UK Notify client.</Description>
+		<Copyright>North East London ICB - 2024 (c)</Copyright>
+		<PackageIcon>storage.png</PackageIcon>
+		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Notifications</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Notifications</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>NHSISL; Notifications; Provider; Abstractions; .NET; The Standard; Standard;</PackageTags>
+		<PackageReleaseNotes>
+			Initial release of ISL.Providers.Notifications.GovukNotify.
+		</PackageReleaseNotes>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<Version>0.0.1</Version>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<FileVersion>0.0.1</FileVersion>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>License.txt</PackageLicenseFile>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="..\License.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\Resources\Images\storage.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="ISL.Providers.Notifications.GovukNotify.Tests.Unit" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GovukNotify" Version="7.2.0" />
+	</ItemGroup>
+
+</Project>

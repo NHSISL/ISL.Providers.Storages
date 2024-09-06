@@ -2,9 +2,9 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using ISL.AzureBlobClient.Infrastructure.Services;
+using ISL.Providers.Storages.Infrastructure.Services;
 
-namespace ISL.AzureBlobClient.Infrastructure
+namespace ISL.Providers.Storages.Infrastructure
 {
     internal class Program
     {
@@ -14,7 +14,7 @@ namespace ISL.AzureBlobClient.Infrastructure
 
             scriptGenerationService.GenerateBuildScript(
                 branchName: "main",
-                projectName: "ISL.AzureBlobClient");
+                projectName: "ISL.Providers.Storages.Abstractions");
         }
     }
 }

@@ -9,7 +9,7 @@ using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
 
-namespace ISL.AzureBlobClient.Infrastructure.Services
+namespace ISL.Providers.Storages.Infrastructure.Services
 {
     internal class ScriptGenerationService
     {

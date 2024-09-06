@@ -118,7 +118,7 @@ jobs:
 
         sudo apt-get install xmlstarlet
 
-        version_number=$(xmlstarlet sel -t -v "//Version" -n ISL.AzureBlobClient/ISL.AzureBlobClient.csproj)
+        version_number=$(xmlstarlet sel -t -v "//Version" -n ISL.Providers.Storages.Abstractions/ISL.Providers.Storages.Abstractions.csproj)
 
         echo "$version_number"
 
@@ -137,7 +137,7 @@ jobs:
 
         sudo apt-get install xmlstarlet
 
-        package_release_notes=$(xmlstarlet sel -t -v "//PackageReleaseNotes" -n ISL.AzureBlobClient/ISL.AzureBlobClient.csproj)
+        package_release_notes=$(xmlstarlet sel -t -v "//PackageReleaseNotes" -n ISL.Providers.Storages.Abstractions/ISL.Providers.Storages.Abstractions.csproj)
 
         echo "$package_release_notes"
 
