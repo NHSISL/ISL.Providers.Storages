@@ -4,20 +4,20 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<Title>ISL.Providers.Notifications.GovukNotify</Title>
-		<Product>ISL.Providers.Notifications.GovukNotify</Product>
-		<PackageId>ISL.Providers.Notifications.GovukNotify</PackageId>
+		<Title>ISL.Providers.Storages.AzureBlobStorage</Title>
+		<Product>ISL.Providers.Storages.AzureBlobStorage</Product>
+		<PackageId>ISL.Providers.Storages.AzureBlobStorage</PackageId>
 		<Authors>North East London ICB</Authors>
 		<Company>North East London ICB</Company>
-		<Description>ISL.Providers.Notifications.GovukNotify provides a notification implementation the popular GOV.UK Notify client.</Description>
+		<Description>ISL.Providers.Storages.AzureBlobStorage provides a storage implementation for Azure Blob Stores.</Description>
 		<Copyright>North East London ICB - 2024 (c)</Copyright>
 		<PackageIcon>storage.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Notifications</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Notifications</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>NHSISL; Notifications; Provider; Abstractions; .NET; The Standard; Standard;</PackageTags>
+		<PackageTags>NHSISL; Storages; Provider; .NET; The Standard; Standard;</PackageTags>
 		<PackageReleaseNotes>
-			Initial release of ISL.Providers.Notifications.GovukNotify.
+			Initial release of ISL.Providers.Storages.AzureBlobStorage.
 		</PackageReleaseNotes>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<Version>0.0.1</Version>
@@ -46,7 +46,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="ISL.Providers.Notifications.GovukNotify.Tests.Unit" />
+		<InternalsVisibleTo Include="ISL.Providers.Storages.AzureBlobStorage.Tests.Unit" />
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 
