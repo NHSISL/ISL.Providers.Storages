@@ -51,6 +51,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Azure.Identity" Version="1.12.1" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.22.1" />
 		<PackageReference Include="GovukNotify" Version="7.2.0" />
 	</ItemGroup>
 
