@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal class BlobStorageBroker : IBlobStorageBroker
     {
-        public BlobServiceClient blobServiceClient { get; private set; }
+        public BlobServiceClient BlobServiceClient { get; private set; }
 
         public BlobStorageBroker(string serviceUri, string azureTenantId)
         {
@@ -26,7 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 EnableTenantDiscovery = true
             };
 
-            this.blobServiceClient = new BlobServiceClient(
+            this.BlobServiceClient = new BlobServiceClient(
                     serviceUri: new Uri(serviceUri),
                     credential: new DefaultAzureCredential(
                         new DefaultAzureCredentialOptions
@@ -40,6 +40,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset? startsOn,
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default) =>
-            blobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
     }
 }
