@@ -2,6 +2,7 @@
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Moq;
+using System.IO;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -36,7 +37,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
+        public class TestStream : MemoryStream
+        {
+            public override long Length => 0;
+        }
 
+        public static TheoryData<Stream, string> GetStreamLengthZero()
+        {
+            Stream stream = new TestStream();
+
+            return new TheoryData<Stream, string>
+            {
+                { stream, " " }
+            };
+        }
 
     }
 }
