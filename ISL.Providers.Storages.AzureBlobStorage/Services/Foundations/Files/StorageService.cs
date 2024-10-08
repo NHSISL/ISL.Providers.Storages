@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
     internal class StorageService : IStorageService
     {
+        private readonly IBlobStorageBroker blobStorageBroker;
+
+        internal StorageService(IBlobStorageBroker blobStorageBroker)
+        {
+            this.blobStorageBroker = blobStorageBroker;
+        }
+
         public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
             throw new NotImplementedException();
 
