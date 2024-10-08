@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs.Models;
-using Moq;
+﻿using Moq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,8 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputFileName = randomFileName;
             string inputContainer = randomContainer;
             Stream inputStream = randomStream;
-
-            var options = new BlobUploadOptions();
+            // var options = new BlobUploadOptions();
 
 
             this.blobServiceClientMock.Setup(client =>
@@ -28,10 +26,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobContainerClientMock.Setup(client =>
                 client.GetBlobClient(inputFileName))
                     .Returns(blobClientMock.Object);
-
-            //this.blobClientMock.Setup(client =>
-            //    client.UploadAsync(inputStream))
-            //        .Returns();
 
             // when
             await this.storageService.CreateFileAsync(inputStream, inputFileName, inputContainer);

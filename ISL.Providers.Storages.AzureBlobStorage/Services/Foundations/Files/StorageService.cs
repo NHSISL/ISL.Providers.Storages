@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure.Storage.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             this.blobStorageBroker = blobStorageBroker;
         }
 
-        public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
-            throw new NotImplementedException();
+        public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
+        {
+            BlobClient blobClient =
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
+
+            await blobClient.UploadAsync(input);
+        }
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
             throw new NotImplementedException();
