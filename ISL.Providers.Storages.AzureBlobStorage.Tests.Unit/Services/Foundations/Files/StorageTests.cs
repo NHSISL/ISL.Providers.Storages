@@ -1,7 +1,9 @@
-﻿using Azure.Identity;
+﻿using Azure;
+using Azure.Identity;
 using Azure.Storage.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
+using Microsoft.WindowsAzure.Storage;
 using Moq;
 using System;
 using System.IO;
@@ -66,8 +68,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static ArgumentException CreateArgumentException() =>
             (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));
 
-        //private ArgumentException CreateSqlException() =>
-        //    (SqlException)RuntimeHelpers.GetUninitializedObject(type: typeof(SqlException));
+        private static RequestFailedException CreateRequestFailedException() =>
+            (RequestFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(RequestFailedException));
+
+        private static StorageException CreateStorageException() =>
+            (StorageException)RuntimeHelpers.GetUninitializedObject(type: typeof(StorageException));
+
+        private static OperationCanceledException CreateOperationCanceledException() =>
+            (OperationCanceledException)RuntimeHelpers.GetUninitializedObject(type: typeof(OperationCanceledException));
+
+        private static TimeoutException CreateTimeoutException() =>
+            (TimeoutException)RuntimeHelpers.GetUninitializedObject(type: typeof(TimeoutException));
+
+        private static IOException CreateIOException() =>
+            (IOException)RuntimeHelpers.GetUninitializedObject(type: typeof(IOException));
 
         public static TheoryData<Exception> DependencyValidationExceptions()
         {
@@ -81,5 +95,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
+        public static TheoryData<Exception> DependencyExceptions()
+        {
+            RequestFailedException someRequestFailedException = CreateRequestFailedException();
+            StorageException someStorageException = CreateStorageException();
+            OperationCanceledException someOperationCanceledException = CreateOperationCanceledException();
+            TimeoutException someTimeoutException = CreateTimeoutException();
+            IOException someIOException = CreateIOException();
+
+            return new TheoryData<Exception>
+            {
+                { someRequestFailedException },
+                { someStorageException },
+                { someOperationCanceledException },
+                { someTimeoutException },
+                { someIOException }
+            };
+        }
     }
 }
