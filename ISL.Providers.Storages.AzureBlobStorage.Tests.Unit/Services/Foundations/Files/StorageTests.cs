@@ -64,11 +64,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { stream, " " }
             };
         }
-        private static Azure.Response CreateAzureResponse() =>
-            (Azure.Response)RuntimeHelpers.GetUninitializedObject(type: typeof(Azure.Response));
 
+        public static TheoryData<Stream, string> GetStreamWithLength()
+        {
+            Stream stream = new HasLengthStream();
 
-
+            return new TheoryData<Stream, string>
+            {
+                { stream, " " }
+            };
+        }
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
             (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));

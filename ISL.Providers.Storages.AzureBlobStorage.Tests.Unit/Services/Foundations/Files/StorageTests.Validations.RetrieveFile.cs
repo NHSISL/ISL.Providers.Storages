@@ -11,8 +11,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         [InlineData(null, null)]
         [InlineData(null, "")]
         [InlineData(null, " ")]
-        [MemberData(nameof(GetStreamLengthZero))]
-        public async Task ShouldThrowValidationExceptionOnCreateIfArgumentsInvalidAsync(Stream invalidStream, string invalidText)
+        [MemberData(nameof(GetStreamWithLength))]
+        public async Task ShouldThrowValidationExceptionOnRetrieveIfArgumentsInvalidAsync(Stream invalidStream, string invalidText)
         {
             // given
             string invalidFileName = invalidText;
@@ -41,14 +41,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: invalidArgumentStorageException);
 
             // when
-            ValueTask createFileTask =
-                this.storageService.CreateFileAsync(invalidInputStream, invalidFileName, invalidContainer);
+            ValueTask retrieveFileTask =
+                this.storageService.RetrieveFileAsync(invalidInputStream, invalidFileName, invalidContainer);
 
-            StorageValidationException actualStorageValidationException =
-                await Assert.ThrowsAsync<StorageValidationException>(createFileTask.AsTask);
+            StorageValidationException actualFileValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(retrieveFileTask.AsTask);
 
             // then
-            actualStorageValidationException.Should().BeEquivalentTo(expectedStorageValidationException);
+            actualFileValidationException.Should().BeEquivalentTo(expectedStorageValidationException);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();

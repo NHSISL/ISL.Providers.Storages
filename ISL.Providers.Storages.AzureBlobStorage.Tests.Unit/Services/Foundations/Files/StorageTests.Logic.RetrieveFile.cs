@@ -12,11 +12,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new HasLengthStream();
             string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream inputStream = randomStream;
-            Stream initialOutputStream = new MemoryStream();
             Stream outputStream = new MemoryStream();
             byte[] randomoutputData = CreateRandomData();
             Stream returnedOutputStream = new MemoryStream(randomoutputData);
