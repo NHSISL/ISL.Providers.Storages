@@ -48,7 +48,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 await Assert.ThrowsAsync<StorageValidationException>(createFileTask.AsTask);
 
             // then
-            actualStorageValidationException.Should().BeEquivalentTo(expectedStorageValidationException);
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
