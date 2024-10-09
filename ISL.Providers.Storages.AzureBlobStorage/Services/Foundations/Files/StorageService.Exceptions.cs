@@ -55,16 +55,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw await CreateDependencyExceptionAsync(iOException);
             }
+            catch (Exception exception)
+            {
+                var failedStorageServiceException =
+                    new FailedStorageServiceException(
+                        message: "Failed storage service error occurred, please contact support.",
+                        innerException: exception);
+
+                throw await CreateServiceExceptionAsync(failedStorageServiceException);
+            }
         }
 
         private async ValueTask<StorageValidationException> CreateValidationExceptionAsync(
             Xeption exception)
         {
-            var userAccessValidationException = new StorageValidationException(
+            var storageValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",
                 innerException: exception);
 
-            return userAccessValidationException;
+            return storageValidationException;
         }
 
         private async ValueTask<StorageDependencyValidationException> CreateDependencyValidationExceptionAsync(
@@ -85,6 +94,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 innerException: exception);
 
             return storageDependencyException;
+        }
+
+        private async ValueTask<StorageServiceException> CreateServiceExceptionAsync(
+            Xeption exception)
+        {
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: exception);
+
+            return storageServiceException;
         }
     }
 }
