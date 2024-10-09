@@ -1,8 +1,11 @@
-﻿using Azure.Storage.Blobs;
+﻿using Azure.Identity;
+using Azure.Storage.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Moq;
+using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -37,18 +40,44 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
-        public class TestStream : MemoryStream
+        public class ZeroLengthStream : MemoryStream
         {
             public override long Length => 0;
         }
 
+        public class HasLengthStream : MemoryStream
+        {
+            public override long Length => 1;
+        }
+
         public static TheoryData<Stream, string> GetStreamLengthZero()
         {
-            Stream stream = new TestStream();
+            Stream stream = new ZeroLengthStream();
 
             return new TheoryData<Stream, string>
             {
                 { stream, " " }
+            };
+        }
+
+        private static AuthenticationFailedException CreateAuthenticationFailedException() =>
+            (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
+
+        private static ArgumentException CreateArgumentException() =>
+            (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));
+
+        //private ArgumentException CreateSqlException() =>
+        //    (SqlException)RuntimeHelpers.GetUninitializedObject(type: typeof(SqlException));
+
+        public static TheoryData<Exception> DependencyValidationExceptions()
+        {
+            AuthenticationFailedException someAuthenticationFailedException = CreateAuthenticationFailedException();
+            ArgumentException someArgumentException = CreateArgumentException();
+
+            return new TheoryData<Exception>
+            {
+                { someAuthenticationFailedException },
+                { someArgumentException }
             };
         }
 

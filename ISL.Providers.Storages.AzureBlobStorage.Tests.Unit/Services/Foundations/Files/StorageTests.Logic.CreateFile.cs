@@ -12,12 +12,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new MemoryStream();
+            Stream randomStream = new HasLengthStream();
             string inputFileName = randomFileName;
             string inputContainer = randomContainer;
             Stream inputStream = randomStream;
-            // var options = new BlobUploadOptions();
-
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))

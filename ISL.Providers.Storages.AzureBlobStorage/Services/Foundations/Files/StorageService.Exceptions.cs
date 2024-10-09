@@ -20,18 +20,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
             catch (InvalidArgumentStorageException invalidArgumentStorageException)
             {
-                throw await CreateAndLogValidationExceptionAsync(invalidArgumentStorageException);
+                throw await CreateValidationExceptionAsync(invalidArgumentStorageException);
             }
         }
 
-        private async ValueTask<StorageValidationException> CreateAndLogValidationExceptionAsync(
+        private async ValueTask<StorageValidationException> CreateValidationExceptionAsync(
             Xeption exception)
         {
             var userAccessValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",
                 innerException: exception);
-
-            //await this.loggingBroker.LogErrorAsync(userAccessValidationException);
 
             return userAccessValidationException;
         }
