@@ -24,7 +24,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Invalid storage service argument(s), please fix the errors and try again.");
 
             invalidArgumentStorageException.AddData(
-                key: "Input",
+                key: "Output",
                 values: "Stream is invalid");
 
             invalidArgumentStorageException.AddData(

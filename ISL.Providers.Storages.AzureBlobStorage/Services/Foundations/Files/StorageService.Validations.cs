@@ -19,6 +19,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: await IsInvalidInputStreamAsync(inputStream), Parameter: "Input"));
         }
 
+        private async ValueTask ValidateStorageArgumentsOnRetrieveAsync(Stream outputStream, string fileName, string container)
+        {
+            Validate(
+                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
+                (Rule: await IsInvalidAsync(container), Parameter: "Container"),
+                (Rule: await IsInvalidOutputStreamAsync(outputStream), Parameter: "Output"));
+        }
+
         private static async ValueTask<dynamic> IsInvalidAsync(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
@@ -28,6 +36,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         private static async ValueTask<dynamic> IsInvalidInputStreamAsync(Stream inputStream) => new
         {
             Condition = inputStream is null || inputStream.Length == 0,
+            Message = "Stream is invalid"
+        };
+
+        private static async ValueTask<dynamic> IsInvalidOutputStreamAsync(Stream outputStream) => new
+        {
+            Condition = outputStream is null || outputStream.Length > 0,
             Message = "Stream is invalid"
         };
 
