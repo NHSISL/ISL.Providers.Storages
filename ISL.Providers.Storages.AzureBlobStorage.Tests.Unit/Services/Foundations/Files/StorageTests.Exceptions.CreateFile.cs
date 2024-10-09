@@ -23,9 +23,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
-            var expectedStorageDependencyValidationException = new StorageDependencyValidationException(
-                message: "Storage dependency validation error occurred, please fix errors and try again.",
-                innerException: dependencyValidationException);
+            var failedStorageDependencyValidationException =
+                new FailedStorageDependencyValidationException(
+                    message: "Failed storage dependency validation error occurred, please contact support.",
+                    innerException: dependencyValidationException);
+
+            var expectedStorageDependencyValidationException =
+                new StorageDependencyValidationException(
+                    message: "Storage dependency validation error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyValidationException);
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))
@@ -66,9 +72,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
             var expectedStorageDependencyException = new StorageDependencyException(
                 message: "Storage dependency error occurred, please fix errors and try again.",
-                innerException: dependencyException);
+                innerException: failedStorageDependencyException);
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))

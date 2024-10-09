@@ -25,35 +25,70 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
             catch (InvalidArgumentStorageException invalidArgumentStorageException)
             {
-                throw await CreateValidationExceptionAsync(invalidArgumentStorageException);
+                throw CreateValidationException(invalidArgumentStorageException);
             }
             catch (ArgumentException argumentException)
             {
-                throw await CreateDependencyValidationExceptionAsync(argumentException);
+                var failedStorageDependencyValidationException =
+                    new FailedStorageDependencyValidationException(
+                        message: "Failed storage dependency validation error occurred, please contact support.",
+                        innerException: argumentException);
+
+                throw CreateDependencyValidationException(failedStorageDependencyValidationException);
             }
             catch (AuthenticationFailedException authenticationFailedException)
             {
-                throw await CreateDependencyValidationExceptionAsync(authenticationFailedException);
+                var failedStorageDependencyValidationException =
+                    new FailedStorageDependencyValidationException(
+                        message: "Failed storage dependency validation error occurred, please contact support.",
+                        innerException: authenticationFailedException);
+
+                throw CreateDependencyValidationException(failedStorageDependencyValidationException);
             }
             catch (RequestFailedException requestFailedException)
             {
-                throw await CreateDependencyExceptionAsync(requestFailedException);
+                var failedStorageDependencyException =
+                    new FailedStorageDependencyException(
+                        message: "Failed storage dependency error occurred, please contact support.",
+                        innerException: requestFailedException);
+
+                throw CreateDependencyException(failedStorageDependencyException);
             }
             catch (StorageException storageException)
             {
-                throw await CreateDependencyExceptionAsync(storageException);
+                var failedStorageDependencyException =
+                    new FailedStorageDependencyException(
+                        message: "Failed storage dependency error occurred, please contact support.",
+                        innerException: storageException);
+
+                throw CreateDependencyException(failedStorageDependencyException);
             }
             catch (OperationCanceledException operationCanceledException)
             {
-                throw await CreateDependencyExceptionAsync(operationCanceledException);
+                var failedStorageDependencyException =
+                    new FailedStorageDependencyException(
+                        message: "Failed storage dependency error occurred, please contact support.",
+                        innerException: operationCanceledException);
+
+                throw CreateDependencyException(failedStorageDependencyException);
             }
             catch (TimeoutException timeoutException)
             {
-                throw await CreateDependencyExceptionAsync(timeoutException);
+                var failedStorageDependencyException =
+                    new FailedStorageDependencyException(
+                        message: "Failed storage dependency error occurred, please contact support.",
+                        innerException: timeoutException);
+
+                throw CreateDependencyException(failedStorageDependencyException);
             }
             catch (IOException iOException)
             {
-                throw await CreateDependencyExceptionAsync(iOException);
+                var failedStorageDependencyException =
+                    new FailedStorageDependencyException(
+                        message: "Failed storage dependency error occurred, please contact support.",
+                        innerException: iOException);
+
+                throw CreateDependencyException(failedStorageDependencyException);
             }
             catch (Exception exception)
             {
@@ -62,11 +97,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                         message: "Failed storage service error occurred, please contact support.",
                         innerException: exception);
 
-                throw await CreateServiceExceptionAsync(failedStorageServiceException);
+                throw CreateServiceException(failedStorageServiceException);
             }
         }
 
-        private async ValueTask<StorageValidationException> CreateValidationExceptionAsync(
+        private static StorageValidationException CreateValidationException(
             Xeption exception)
         {
             var storageValidationException = new StorageValidationException(
@@ -76,8 +111,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return storageValidationException;
         }
 
-        private async ValueTask<StorageDependencyValidationException> CreateDependencyValidationExceptionAsync(
-            Exception exception)
+        private static StorageDependencyValidationException CreateDependencyValidationException(
+            Xeption exception)
         {
             var storageDependencyValidationException = new StorageDependencyValidationException(
                 message: "Storage dependency validation error occurred, please fix errors and try again.",
@@ -86,8 +121,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return storageDependencyValidationException;
         }
 
-        private async ValueTask<StorageDependencyException> CreateDependencyExceptionAsync(
-            Exception exception)
+        private static StorageDependencyException CreateDependencyException(
+            Xeption exception)
         {
             var storageDependencyException = new StorageDependencyException(
                 message: "Storage dependency error occurred, please fix errors and try again.",
@@ -96,7 +131,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return storageDependencyException;
         }
 
-        private async ValueTask<StorageServiceException> CreateServiceExceptionAsync(
+        private static StorageServiceException CreateServiceException(
             Xeption exception)
         {
             var storageServiceException = new StorageServiceException(
