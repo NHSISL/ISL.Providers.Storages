@@ -8,6 +8,7 @@ using Moq;
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -38,6 +39,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
+        public byte[] CreateRandomData()
+        {
+            string randomMessage = GetRandomString();
+            return Encoding.UTF8.GetBytes(randomMessage);
+        }
+
         public class ZeroLengthStream : MemoryStream
         {
             public override long Length => 0;
@@ -57,6 +64,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { stream, " " }
             };
         }
+        private static Azure.Response CreateAzureResponse() =>
+            (Azure.Response)RuntimeHelpers.GetUninitializedObject(type: typeof(Azure.Response));
+
+
+
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
             (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
