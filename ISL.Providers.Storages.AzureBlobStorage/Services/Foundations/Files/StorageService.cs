@@ -33,8 +33,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await blobClient.UploadAsync(input);
             });
 
-        public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
-            throw new NotImplementedException();
+        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
+        {
+            BlobClient blobClient =
+                    this.blobStorageBroker.blobServiceClient
+                        .GetBlobContainerClient(container)
+                        .GetBlobClient(fileName);
+
+            await blobClient.DownloadToAsync(output);
+        }
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>
             throw new NotImplementedException();
