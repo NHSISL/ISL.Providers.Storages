@@ -12,7 +12,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal interface IBlobStorageBroker
     {
-        BlobServiceClient BlobServiceClient { get; }
+        BlobServiceClient blobServiceClient { get; }
 
         Response<UserDelegationKey> GetUserDelegationKey(
             DateTimeOffset? startsOn,

@@ -26,7 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.BlobServiceClient
+                    this.blobStorageBroker.blobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 

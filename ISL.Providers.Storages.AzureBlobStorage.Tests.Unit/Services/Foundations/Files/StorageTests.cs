@@ -28,7 +28,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobClientMock = new Mock<BlobClient>();
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.BlobServiceClient)
+                broker.blobServiceClient)
                     .Returns(blobServiceClientMock.Object);
 
             this.storageService = new StorageService(
