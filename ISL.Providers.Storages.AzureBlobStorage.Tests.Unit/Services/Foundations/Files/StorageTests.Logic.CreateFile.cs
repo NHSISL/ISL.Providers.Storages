@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
-    public partial class FilesTests
+    public partial class StorageTests
     {
         [Fact]
         public async Task ShouldCreateFileAsync()

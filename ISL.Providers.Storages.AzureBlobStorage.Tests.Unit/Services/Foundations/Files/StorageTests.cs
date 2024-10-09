@@ -7,7 +7,7 @@ using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
-    public partial class FilesTests
+    public partial class StorageTests
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
@@ -16,7 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly StorageService storageService;
 
 
-        public FilesTests()
+        public StorageTests()
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();

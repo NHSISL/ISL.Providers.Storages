@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
-    public partial class FilesTests
+    public partial class StorageTests
     {
         [Theory]
         [InlineData(null, null)]
@@ -19,33 +19,33 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string invalidContainer = invalidText;
             Stream invalidInputStream = invalidStream;
 
-            var invalidArgumentFilesException = new InvalidArgumentFileException(
-                message: "Invalid files service argument(s), please fix the errors and try again.");
+            var invalidArgumentStorageException = new InvalidArgumentStorageException(
+                message: "Invalid storage service argument(s), please fix the errors and try again.");
 
-            invalidArgumentFilesException.AddData(
+            invalidArgumentStorageException.AddData(
                 key: "Input",
-                values: "Input is invalid");
+                values: "Stream is invalid");
 
-            invalidArgumentFilesException.AddData(
+            invalidArgumentStorageException.AddData(
                 key: "FileName",
-                values: "FileName is invalid");
+                values: "Text is invalid");
 
-            invalidArgumentFilesException.AddData(
+            invalidArgumentStorageException.AddData(
                 key: "Container",
-                values: "Container is invalid");
+                values: "Text is invalid");
 
-            var expectedFileValidationException = new FileValidationException(
-                message: "File validation error occuured, please fix errors and try again.",
-                innerException: invalidArgumentFilesException);
+            var expectedStorageValidationException = new StorageValidationException(
+                message: "Storage validation error occurred, please fix errors and try again.",
+                innerException: invalidArgumentStorageException);
 
             // when
             ValueTask createFileTask = this.storageService.CreateFileAsync(invalidInputStream, invalidFileName, invalidContainer);
 
-            FileValidationException actualFileValidationException =
-                await Assert.ThrowsAsync<FileValidationException>(createFileTask.AsTask);
+            StorageValidationException actualFileValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(createFileTask.AsTask);
 
             // then
-            actualFileValidationException.Should().BeEquivalentTo(expectedFileValidationException);
+            actualFileValidationException.Should().BeEquivalentTo(expectedStorageValidationException);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();

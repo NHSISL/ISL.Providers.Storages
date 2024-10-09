@@ -2,9 +2,9 @@
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions
 {
-    public class InvalidArgumentFileException : Xeption
+    public class InvalidArgumentStorageException : Xeption
     {
-        public InvalidArgumentFileException(string message)
+        public InvalidArgumentStorageException(string message)
             : base(message)
         { }
     }

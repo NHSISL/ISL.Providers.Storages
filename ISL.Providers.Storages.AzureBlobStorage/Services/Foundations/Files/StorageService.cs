@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
-    internal class StorageService : IStorageService
+    internal partial class StorageService : IStorageService
     {
         private readonly IBlobStorageBroker blobStorageBroker;
 
@@ -20,15 +20,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             this.blobStorageBroker = blobStorageBroker;
         }
 
-        public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
-        {
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
+        public async ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
+            await TryCatch(async () =>
+            {
+                await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
 
-            await blobClient.UploadAsync(input);
-        }
+                BlobClient blobClient =
+                    this.blobStorageBroker.BlobServiceClient
+                        .GetBlobContainerClient(container)
+                        .GetBlobClient(fileName);
+
+                await blobClient.UploadAsync(input);
+            });
+
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
             throw new NotImplementedException();

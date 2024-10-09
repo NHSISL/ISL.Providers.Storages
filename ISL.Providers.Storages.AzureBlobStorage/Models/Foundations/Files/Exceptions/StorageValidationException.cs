@@ -2,9 +2,9 @@
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions
 {
-    public class FileValidationException : Xeption
+    public class StorageValidationException : Xeption
     {
-        public FileValidationException(string message, Xeption innerException)
+        public StorageValidationException(string message, Xeption innerException)
             : base(message, innerException)
         { }
     }
