@@ -2,14 +2,15 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Net.Http;
-using System.Threading;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Models;
+using System;
+using System.Net.Http;
+using System.Threading;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -17,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     {
         public BlobServiceClient blobServiceClient { get; private set; }
 
-        public BlobStorageBroker(string serviceUri, string azureTenantId)
+        public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
             var blobServiceClientOptions = new BlobClientOptions()
             {
@@ -27,11 +28,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             };
 
             this.blobServiceClient = new BlobServiceClient(
-                    serviceUri: new Uri(serviceUri),
+                    serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                     credential: new DefaultAzureCredential(
                         new DefaultAzureCredentialOptions
                         {
-                            VisualStudioTenantId = azureTenantId,
+                            VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
                         }),
                     options: blobServiceClientOptions);
         }
