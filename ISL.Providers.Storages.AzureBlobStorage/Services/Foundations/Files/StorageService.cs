@@ -20,8 +20,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             this.blobStorageBroker = blobStorageBroker;
         }
 
-        public async ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
-            await TryCatch(async () =>
+        public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
+            TryCatch(async () =>
             {
                 await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
 
@@ -32,7 +32,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                 await blobClient.UploadAsync(input);
             });
-
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
             throw new NotImplementedException();

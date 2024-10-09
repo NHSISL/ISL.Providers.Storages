@@ -20,7 +20,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly Mock<BlobClient> blobClientMock;
         private readonly StorageService storageService;
 
-
         public StorageTests()
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
@@ -35,9 +34,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object);
         }
-
-        private static string GetRandomStringWithLength(int length) =>
-            new MnemonicString(wordCount: 1, wordMinLength: length, wordMaxLength: length).GetValue();
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();

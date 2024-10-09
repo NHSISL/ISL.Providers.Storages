@@ -77,9 +77,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Failed storage dependency error occurred, please contact support.",
                     innerException: dependencyException);
 
-            var expectedStorageDependencyException = new StorageDependencyException(
-                message: "Storage dependency error occurred, please fix errors and try again.",
-                innerException: failedStorageDependencyException);
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))
@@ -119,13 +120,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
-            var failedStorageServiceException = new FailedStorageServiceException(
-                message: "Failed storage service error occurred, please contact support.",
-                innerException: someException);
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
 
-            var expectedStorageServiceException = new StorageServiceException(
-                message: "Storage service error occurred, please fix errors and try again.",
-                innerException: failedStorageServiceException);
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))
