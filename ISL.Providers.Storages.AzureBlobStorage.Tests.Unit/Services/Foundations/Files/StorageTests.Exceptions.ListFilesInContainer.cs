@@ -2,7 +2,7 @@
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using Moq;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -11,16 +11,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCreateAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnListFilesInContainerAsync(
             Exception dependencyValidationException)
         {
             // given
             string randomString = GetRandomString();
-            Stream someStream = new HasLengthStream();
-            string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
-            string inputFileName = someFileName;
             string inputContainer = someContainer;
 
             var failedStorageDependencyValidationException =
@@ -38,11 +34,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask createFileTask =
-                this.storageService.CreateFileAsync(inputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.storageService.ListFilesInContainerAsync(inputContainer);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(listFilesTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -60,16 +56,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCreateAsync(
-            Exception dependencyException)
+        public async Task ShouldThrowDependencyExceptionOnListFilesInContainerAsync(Exception dependencyException)
         {
             // given
             string randomString = GetRandomString();
-            Stream someStream = new HasLengthStream();
-            string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
-            string inputFileName = someFileName;
             string inputContainer = someContainer;
 
             var failedStorageDependencyException =
@@ -87,11 +78,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyException);
 
             // when
-            ValueTask createFileTask =
-                this.storageService.CreateFileAsync(inputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.storageService.ListFilesInContainerAsync(inputContainer);
 
             StorageDependencyException actualStorageDependencyException =
-                await Assert.ThrowsAsync<StorageDependencyException>(createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyException>(listFilesTask.AsTask);
 
             // then
             actualStorageDependencyException
@@ -108,16 +99,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateAsync()
+        public async Task ShouldThrowServiceExceptionOnListFilesInContainerAsync()
         {
             // given
             Exception someException = new Exception();
             string randomString = GetRandomString();
-            Stream someStream = new HasLengthStream();
-            string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
-            string inputFileName = someFileName;
             string inputContainer = someContainer;
 
             var failedStorageServiceException =
@@ -135,11 +122,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(someException);
 
             // when
-            ValueTask createFileTask =
-                this.storageService.CreateFileAsync(inputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.storageService.ListFilesInContainerAsync(inputContainer);
 
             StorageServiceException actualStorageServiceException =
-                await Assert.ThrowsAsync<StorageServiceException>(createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageServiceException>(listFilesTask.AsTask);
 
             // then
             actualStorageServiceException

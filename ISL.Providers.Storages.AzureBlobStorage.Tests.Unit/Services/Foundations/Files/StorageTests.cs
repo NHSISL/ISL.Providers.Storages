@@ -1,11 +1,13 @@
 ﻿using Azure;
 using Azure.Identity;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.WindowsAzure.Storage;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -38,6 +40,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(max: 15, min: 2).GetValue();
 
         public byte[] CreateRandomData()
         {
@@ -74,6 +79,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             {
                 { stream, " " }
             };
+        }
+
+        private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
+        {
+            List<BlobItem> blobItems = CreateBlobItems();
+            Page<BlobItem> page = Page<BlobItem>.FromValues(blobItems, null, new Mock<Response>().Object);
+            AsyncPageable<BlobItem> pages = AsyncPageable<BlobItem>.FromPages(new[] { page });
+
+            return pages;
+        }
+
+        private static List<BlobItem> CreateBlobItems()
+        {
+            List<BlobItem> blobItems = new List<BlobItem>();
+            int randomNumber = GetRandomNumber();
+
+            for (int index = 0; index < randomNumber; index++)
+            {
+                string blobItemName = GetRandomString();
+                BlobItem blobItem = BlobsModelFactory.BlobItem(name: blobItemName);
+                blobItems.Add(blobItem);
+            }
+
+            return blobItems;
         }
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>

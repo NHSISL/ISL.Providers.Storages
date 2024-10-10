@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
@@ -61,7 +62,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             });
 
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                await ValidateStorageArgumentsOnListAsync(container);
+                List<string> fileNames = new List<string>();
+
+                BlobContainerClient containerClient =
+                    this.blobStorageBroker.blobServiceClient
+                        .GetBlobContainerClient(container);
+
+                AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
+
+                await foreach (BlobItem blobItem in blobItems)
+                {
+                    fileNames.Add(blobItem.Name);
+                }
+
+                return fileNames;
+            });
+
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
