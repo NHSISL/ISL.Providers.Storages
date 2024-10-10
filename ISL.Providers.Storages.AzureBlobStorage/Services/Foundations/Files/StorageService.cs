@@ -3,6 +3,7 @@
 // ---------------------------------------------------------
 
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
 using System.Collections.Generic;
@@ -46,8 +47,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await blobClient.DownloadToAsync(output);
             });
 
-        public ValueTask DeleteFileAsync(string fileName, string container) =>
-            throw new NotImplementedException();
+        public async ValueTask DeleteFileAsync(string fileName, string container)
+        {
+            BlobClient blobClient =
+                this.blobStorageBroker.blobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
+
+            await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
+        }
 
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
             throw new NotImplementedException();
