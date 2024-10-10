@@ -27,6 +27,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: await IsInvalidOutputStreamAsync(outputStream), Parameter: "Output"));
         }
 
+        private async ValueTask ValidateStorageArgumentsOnDeleteAsync(string fileName, string container)
+        {
+            Validate(
+                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
+                (Rule: await IsInvalidAsync(container), Parameter: "Container"));
+        }
+
         private static async ValueTask<dynamic> IsInvalidAsync(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

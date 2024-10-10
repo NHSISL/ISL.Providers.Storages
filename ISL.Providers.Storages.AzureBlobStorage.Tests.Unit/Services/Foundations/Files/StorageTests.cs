@@ -42,6 +42,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         public byte[] CreateRandomData()
         {
             string randomMessage = GetRandomString();
+            
             return Encoding.UTF8.GetBytes(randomMessage);
         }
 
