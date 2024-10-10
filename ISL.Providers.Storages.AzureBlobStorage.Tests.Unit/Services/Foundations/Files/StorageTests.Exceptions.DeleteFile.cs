@@ -35,11 +35,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask createFileTask =
+            ValueTask deleteFileTask =
                 this.storageService.DeleteFileAsync(inputFileName, inputContainer);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(deleteFileTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -81,15 +81,61 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyException);
 
             // when
-            ValueTask createFileTask =
+            ValueTask deleteFileTask =
                 this.storageService.DeleteFileAsync(inputFileName, inputContainer);
 
             StorageDependencyException actualStorageDependencyException =
-                await Assert.ThrowsAsync<StorageDependencyException>(createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyException>(deleteFileTask.AsTask);
 
             // then
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobServiceClientMock.Verify(client =>
+                client.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnDeleteAndLogItAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string randomString = GetRandomString();
+            string someFileName = randomString;
+            string someContainer = randomString;
+            string inputFileName = someFileName;
+            string inputContainer = someContainer;
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.blobServiceClientMock.Setup(client =>
+                client.GetBlobContainerClient(inputContainer))
+                    .Throws(someException);
+
+            // when
+            ValueTask deleteFileTask =
+                this.storageService.DeleteFileAsync(inputFileName, inputContainer);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(deleteFileTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobServiceClientMock.Verify(client =>
                 client.GetBlobContainerClient(inputContainer),
