@@ -83,8 +83,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
-            var page = Page<BlobItem>.FromValues(blobItems, null, new Mock<Response>().Object);
-            var pages = AsyncPageable<BlobItem>.FromPages(new[] { page });
+            Page<BlobItem> page = Page<BlobItem>.FromValues(blobItems, null, new Mock<Response>().Object);
+            AsyncPageable<BlobItem> pages = AsyncPageable<BlobItem>.FromPages(new[] { page });
 
             return pages;
         }
@@ -103,20 +103,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return blobItems;
         }
-
-        private static Filler<BlobItem> CreateBlobItemFiller() =>
-            new Filler<BlobItem>();
-
-        private static Filler<AsyncPageable<BlobItem>> CreateAsyncPageableFiller()
-        {
-            return new Filler<AsyncPageable<BlobItem>>();
-
-            //filler.Setup()
-            //    //.OnProperty(item => item.GetAsyncEnumerator(default)).Use(CreateBlobItem());
-            //    .OnProperty(item => item.GetAsyncEnumerator(default)).Use(CreateBlobItem());
-            //    //.OnType(item => item)
-        }
-
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
             (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
