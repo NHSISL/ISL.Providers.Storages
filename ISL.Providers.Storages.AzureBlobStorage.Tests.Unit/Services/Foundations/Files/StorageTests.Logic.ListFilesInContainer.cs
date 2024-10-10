@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs.Models;
+using FluentAssertions;
 using Moq;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -11,14 +12,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         public async Task ShouldListFilesInContainerAsync()
         {
             // given
-            string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new HasLengthStream();
-            string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream inputStream = randomStream;
             var randomAsyncPageable = CreateAsyncPageableBlobItem();
             var outputAsyncPageable = randomAsyncPageable;
+            List<string> expectedFileNames = new List<string>();
+
+            await foreach (BlobItem blobItem in outputAsyncPageable)
+            {
+                expectedFileNames.Add(blobItem.Name);
+            }
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))
@@ -29,9 +32,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(outputAsyncPageable);
 
             // when
-            await this.storageService.ListFilesInContainerAsync(inputContainer);
+            var actualFileNames = await this.storageService.ListFilesInContainerAsync(inputContainer);
 
             // then
+            actualFileNames.Should().BeEquivalentTo(expectedFileNames);
+
             this.blobServiceClientMock.Verify(client =>
                 client.GetBlobContainerClient(inputContainer),
                     Times.Once);
