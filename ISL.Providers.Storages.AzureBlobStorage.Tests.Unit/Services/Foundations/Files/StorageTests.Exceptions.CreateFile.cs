@@ -108,7 +108,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnCreateAsync()
         {
             // given
             Exception someException = new Exception();

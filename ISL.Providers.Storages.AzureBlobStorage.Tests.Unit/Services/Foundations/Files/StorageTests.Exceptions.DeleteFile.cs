@@ -102,7 +102,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnDeleteAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnDeleteAsync()
         {
             // given
             Exception someException = new Exception();
