@@ -7,6 +7,7 @@ using Azure.Identity;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using Microsoft.WindowsAzure.Storage;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xeptions;
@@ -16,6 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
     internal partial class StorageService : IStorageService
     {
         private delegate ValueTask ReturningNothingFunction();
+        private delegate ValueTask<List<string>> ReturningListFunction();
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -98,6 +100,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                         innerException: exception);
 
                 throw CreateServiceException(failedStorageServiceException);
+            }
+        }
+
+        private async ValueTask<List<string>> TryCatch(ReturningListFunction returningListFunction)
+        {
+            try
+            {
+                return await returningListFunction();
+            }
+            catch (InvalidArgumentStorageException invalidArgumentStorageException)
+            {
+                throw CreateValidationException(invalidArgumentStorageException);
             }
         }
 

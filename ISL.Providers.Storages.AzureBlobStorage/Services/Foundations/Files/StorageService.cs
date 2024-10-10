@@ -61,23 +61,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
             });
 
-        public async ValueTask<List<string>> ListFilesInContainerAsync(string container)
-        {
-            List<string> fileNames = new List<string>();
-
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.blobServiceClient
-                    .GetBlobContainerClient(container);
-
-            AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
-
-            await foreach (BlobItem blobItem in blobItems)
+        public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
+            TryCatch(async () =>
             {
-                fileNames.Add(blobItem.Name);
-            }
+                await ValidateStorageArgumentsOnListAsync(container);
+                List<string> fileNames = new List<string>();
 
-            return fileNames;
-        }
+                BlobContainerClient containerClient =
+                    this.blobStorageBroker.blobServiceClient
+                        .GetBlobContainerClient(container);
+
+                AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
+
+                await foreach (BlobItem blobItem in blobItems)
+                {
+                    fileNames.Add(blobItem.Name);
+                }
+
+                return fileNames;
+            });
+
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
