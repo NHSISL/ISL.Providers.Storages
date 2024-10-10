@@ -176,6 +176,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                 throw CreateDependencyException(failedStorageDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedStorageServiceException =
+                    new FailedStorageServiceException(
+                        message: "Failed storage service error occurred, please contact support.",
+                        innerException: exception);
+
+                throw CreateServiceException(failedStorageServiceException);
+            }
         }
 
         private static StorageValidationException CreateValidationException(
