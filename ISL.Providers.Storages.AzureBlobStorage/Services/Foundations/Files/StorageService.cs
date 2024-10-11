@@ -82,9 +82,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             });
 
 
-        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        public async ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
         {
-            throw new NotImplementedException();
+            BlobClient blobClient =
+                    this.blobStorageBroker.BlobServiceClient
+                        .GetBlobContainerClient(container)
+                        .GetBlobClient(fileName);
+
+            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
+            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+
+            return blobUriBuilder.ToUri().ToString();
         }
 
         public ValueTask CreateContainerAsync(string container) =>

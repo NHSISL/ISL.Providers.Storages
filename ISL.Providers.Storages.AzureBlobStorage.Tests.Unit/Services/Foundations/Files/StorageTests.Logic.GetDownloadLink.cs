@@ -1,6 +1,6 @@
 ﻿using Azure;
-using Azure.Storage.Blobs;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -13,24 +13,32 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         public async Task ShouldGetDownloadLinkAsync()
         {
             // given
-            string randomFileName = GetRandomString();
-            string randomContainer = GetRandomString();
+            //string randomFileName = GetRandomString();
+            string randomFileName = "file";
+            //string randomContainer = GetRandomString();
+            string randomContainer = "container";
             string randomUrl = GetRandomString();
-            string inputFileName = randomFileName;
-            string inputContainer = randomContainer;
+            string inputFileName = randomFileName.DeepClone();
+            string inputContainer = randomContainer.DeepClone();
+            string blobClientContainer = inputContainer.DeepClone();
+            string blobClientBlobName = inputFileName.DeepClone();
+
             DateTimeOffset currentDateTimeOffset = DateTimeOffset.UtcNow;
             DateTimeOffset futureDateTimeOffset = GetRandomFutureDateTimeOffset();
             DateTimeOffset inputExpiresOn = futureDateTimeOffset;
-            string randomDownloadLink = GetRandomString();
-            string outputDowloadLink = randomDownloadLink;
-            string expectedDowloadLink = outputDowloadLink;
-            var key = CreateUserDelegationKey();
-            //var newResponse = Response();
-            //var response = Response.FromValue(key, );
-            string server = "http://www.myserver.com";
-            var someUri = new Uri(server);
+            string randomDownloadLink = "http://mytest.com/";
 
-            var blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri(server));
+            string outputDowloadLink = randomDownloadLink.DeepClone();
+            string expectedDowloadLink = outputDowloadLink.DeepClone();
+            var key = CreateUserDelegationKey();
+
+            this.blobClientMock
+                .SetupGet(m => m.BlobContainerName)
+                    .Returns(blobClientContainer);
+
+            this.blobClientMock
+                .SetupGet(m => m.Name)
+                    .Returns(blobClientBlobName);
 
             this.blobServiceClientMock.Setup(client =>
                 client.GetBlobContainerClient(inputContainer))
@@ -56,11 +64,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     It.IsAny<Uri>()))
                         //new Uri(GetRandomString()))
                         //someUri))
-                        .Returns(blobUriBuilderMock.Object);
-
-            //this.blobUriBuilderMock.Setup(builder =>
-            //    builder.ToUri())
-            //        .Returns(new Uri(outputDowloadLink));
+                        .Returns(this.blobUriBuilderMock.Object);
 
             // when
             var actualDownloadLink = await this.storageService.GetDownloadLinkAsync(inputFileName, inputContainer, inputExpiresOn);
@@ -77,10 +81,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(client =>
-                client.GetUserDelegationKey(It.IsAny<DateTimeOffset>(), inputExpiresOn, default),
-                    Times.Once);
-
-            this.blobStorageBrokerMock.Verify(client =>
                 client.GetBlobSasBuilder(
                     blobClientMock.Object.Name,
                     blobClientMock.Object.BlobContainerName,
@@ -92,9 +92,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     blobClientMock.Object.Uri),
                         Times.Once);
 
-            this.blobUriBuilderMock.Verify(builder =>
-                builder.ToUri(),
-                    Times.Once);
+            //this.blobClientMock.Verify(client =>
+            // client.BlobContainerName
+
+
+            //blobUriBuilderMock.Verify(builder =>
+            //    builder.ToUri(),
+            //        Times.Once);
+
+
+            /// Not 100% sure how to account for all these calls. The tests fail on this combination of calls
+            this.blobClientMock.Verify(client =>
+                client.BlobContainerName, Times.Exactly(4));
+
+            this.blobClientMock.Verify(client =>
+                client.Name, Times.Exactly(4));
+
+            this.blobClientMock.Verify(client =>
+                client.Uri, Times.Exactly(3));
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();

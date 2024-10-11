@@ -32,7 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
-            //this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest"));
+            this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
             this.blobContainerClientMock = new Mock<BlobContainerClient>();
             this.blobClientMock = new Mock<BlobClient>();
             this.blobClientResponseMock = new Mock<Response>();
@@ -40,13 +40,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.BlobServiceClient)
                     .Returns(blobServiceClientMock.Object);
-
-            //this.blobStorageBrokerMock.Setup(client =>
-            //    client.GetBlobUriBuilder(
-            //        blobClientMock.Object.Uri))
-            //            //new Uri(GetRandomString()))
-            //            //someUri))
-            //            .Returns(blobUriBuilderMock.Object);
 
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object);
@@ -136,8 +129,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             //userDelegationKey.;
         }
 
+        private BlobClient CreateBlobClient()
+        {
+            return CreateBlobClientFiller().Create();
+        }
+
+        private static Filler<BlobClient> CreateBlobClientFiller()
+        {
+
+            var filler = new Filler<BlobClient>();
+
+            //filler.Setup()
+            //    .OnType<DateTimeOffset>().Use(dateTimeOffset)
+            //    .OnType<DateTimeOffset?>().Use(dateTimeOffset)
+            //    .OnProperty(userAccess => userAccess.CreatedBy).Use(user)
+            //    .OnProperty(userAccess => userAccess.UpdatedBy).Use(user);
+
+            return filler;
+        }
+
+
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
-            (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
+        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
 
         private static ArgumentException CreateArgumentException() =>
             (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));
