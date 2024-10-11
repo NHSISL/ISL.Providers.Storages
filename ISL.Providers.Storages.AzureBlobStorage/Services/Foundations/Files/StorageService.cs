@@ -28,7 +28,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -41,7 +41,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await ValidateStorageArgumentsOnRetrieveAsync(output, fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -54,7 +54,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await ValidateStorageArgumentsOnDeleteAsync(fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -68,7 +68,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 List<string> fileNames = new List<string>();
 
                 BlobContainerClient containerClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container);
 
                 AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
@@ -82,8 +82,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             });
 
 
-        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
+        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        {
             throw new NotImplementedException();
+        }
 
         public ValueTask CreateContainerAsync(string container) =>
             throw new NotImplementedException();

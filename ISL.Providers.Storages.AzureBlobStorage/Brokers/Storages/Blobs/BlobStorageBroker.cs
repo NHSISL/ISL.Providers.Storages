@@ -7,6 +7,7 @@ using Azure.Core.Pipeline;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
 using System.Net.Http;
@@ -16,7 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal class BlobStorageBroker : IBlobStorageBroker
     {
-        public BlobServiceClient blobServiceClient { get; private set; }
+        public BlobServiceClient BlobServiceClient { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -27,7 +28,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 EnableTenantDiscovery = true
             };
 
-            this.blobServiceClient = new BlobServiceClient(
+            this.BlobServiceClient = new BlobServiceClient(
                     serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                     credential: new DefaultAzureCredential(
                         new DefaultAzureCredentialOptions
@@ -41,6 +42,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset? startsOn,
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default) =>
-            blobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+
+        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
+        {
+            var blobSasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = blobContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            return blobSasBuilder;
+        }
+
+        public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
+            new BlobUriBuilder(uri);
     }
 }
