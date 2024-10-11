@@ -22,7 +22,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomContainer.DeepClone();
             string blobClientContainer = inputContainer.DeepClone();
             string blobClientBlobName = inputFileName.DeepClone();
-
             DateTimeOffset currentDateTimeOffset = DateTimeOffset.UtcNow;
             DateTimeOffset futureDateTimeOffset = GetRandomFutureDateTimeOffset();
             DateTimeOffset inputExpiresOn = futureDateTimeOffset;
@@ -101,7 +100,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             //        Times.Once);
 
 
-            /// Not 100% sure how to account for all these calls. The tests fail on this combination of calls
+            /// Not 100% sure how to account for all these calls. The tests fail on this combination of calls 
+            /// if you comment out the following three verifications
             this.blobClientMock.Verify(client =>
                 client.BlobContainerName, Times.Exactly(4));
 
