@@ -198,6 +198,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw CreateValidationException(invalidArgumentStorageException);
             }
+            catch (ArgumentException argumentException)
+            {
+                var failedStorageDependencyValidationException =
+                    new FailedStorageDependencyValidationException(
+                        message: "Failed storage dependency validation error occurred, please contact support.",
+                        innerException: argumentException);
+
+                throw CreateDependencyValidationException(failedStorageDependencyValidationException);
+            }
+            catch (AuthenticationFailedException authenticationFailedException)
+            {
+                var failedStorageDependencyValidationException =
+                    new FailedStorageDependencyValidationException(
+                        message: "Failed storage dependency validation error occurred, please contact support.",
+                        innerException: authenticationFailedException);
+
+                throw CreateDependencyValidationException(failedStorageDependencyValidationException);
+            }
         }
 
         private static StorageValidationException CreateValidationException(

@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             // given
             string randomString = GetRandomString();
-            DateTimeOffset someDateTimeOffset = DateTimeOffset.UtcNow;
+            DateTimeOffset someDateTimeOffset = GetRandomFutureDateTimeOffset();
             string someFileName = randomString;
             string someContainer = randomString;
             string inputFileName = someFileName;
