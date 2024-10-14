@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(container), Parameter: "Container"));
         }
 
-        private static void ValidateStorageArgumentsOnList(string container)
+        private static void ValidateContainerName(string container)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"));
