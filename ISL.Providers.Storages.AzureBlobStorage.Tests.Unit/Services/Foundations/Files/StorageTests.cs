@@ -96,6 +96,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
+        public static TheoryData<string, DateTimeOffset> GetInvalidDownloadArguments()
+        {
+            DateTimeOffset defaultDateTimeOffset = default;
+            DateTimeOffset pastDateTimeOffset = DateTimeOffset.MinValue;
+
+            return new TheoryData<string, DateTimeOffset>
+            {
+                { null, defaultDateTimeOffset },
+                { "", defaultDateTimeOffset },
+                { " ", pastDateTimeOffset },
+            };
+        }
+
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
