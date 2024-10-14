@@ -40,10 +40,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: await IsInvalidAsync(container), Parameter: "Container"));
         }
 
+        private async ValueTask ValidateStorageArgumentsOnGetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        {
+            Validate(
+                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
+                (Rule: await IsInvalidAsync(container), Parameter: "Container"),
+                (Rule: await IsInvalidAsync(expiresOn), Parameter: "ExpiresOn"));
+        }
+
         private static async ValueTask<dynamic> IsInvalidAsync(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is invalid"
+        };
+
+        private static async ValueTask<dynamic> IsInvalidAsync(DateTimeOffset dateTimeOffset) => new
+        {
+            Condition = dateTimeOffset == default || dateTimeOffset <= DateTimeOffset.UtcNow,
+            Message = "Date is invalid"
         };
 
         private static async ValueTask<dynamic> IsInvalidInputStreamAsync(Stream inputStream) => new

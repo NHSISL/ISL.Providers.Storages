@@ -18,6 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
     {
         private delegate ValueTask ReturningNothingFunction();
         private delegate ValueTask<List<string>> ReturningListFunction();
+        private delegate ValueTask<string> ReturningStringFunction();
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -187,8 +188,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
         }
 
+        private async ValueTask<string> TryCatch(ReturningStringFunction returningStringFunction)
+        {
+            try
+            {
+                return await returningStringFunction();
+            }
+            catch (InvalidArgumentStorageException invalidArgumentStorageException)
+            {
+                throw CreateValidationException(invalidArgumentStorageException);
+            }
+        }
+
         private static StorageValidationException CreateValidationException(
-            Xeption exception)
+        Xeption exception)
         {
             var storageValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",

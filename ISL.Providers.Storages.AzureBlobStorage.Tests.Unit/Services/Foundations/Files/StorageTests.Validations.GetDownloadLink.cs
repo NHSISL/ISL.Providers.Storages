@@ -23,7 +23,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             invalidArgumentStorageException.AddData(
                 key: "ExpiresOn",
-                values: "Stream is invalid");
+                values: "Date is invalid");
 
             invalidArgumentStorageException.AddData(
                 key: "FileName",

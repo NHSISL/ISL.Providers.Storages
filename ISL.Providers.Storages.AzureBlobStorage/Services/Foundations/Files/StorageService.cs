@@ -82,18 +82,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             });
 
 
-        public async ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
-        {
-            BlobClient blobClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container)
-                        .GetBlobClient(fileName);
+        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
+            TryCatch(async () =>
+            {
+                await ValidateStorageArgumentsOnGetDownloadLinkAsync(fileName, container, expiresOn);
 
-            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
-            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+                BlobClient blobClient =
+                        this.blobStorageBroker.BlobServiceClient
+                            .GetBlobContainerClient(container)
+                            .GetBlobClient(fileName);
 
-            return blobUriBuilder.ToUri().ToString();
-        }
+                var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
+                var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+
+                return blobUriBuilder.ToUri().ToString();
+            });
+
 
         public ValueTask CreateContainerAsync(string container) =>
             throw new NotImplementedException();
