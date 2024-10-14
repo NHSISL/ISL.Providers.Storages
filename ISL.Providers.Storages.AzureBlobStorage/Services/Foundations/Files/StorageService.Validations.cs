@@ -5,68 +5,68 @@
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
     internal partial class StorageService : IStorageService
     {
-        private async ValueTask ValidateStorageArgumentsOnCreateAsync(Stream inputStream, string fileName, string container)
+        private static void ValidateStorageArgumentsOnCreate(Stream inputStream, string fileName, string container)
         {
             Validate(
-                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
-                (Rule: await IsInvalidAsync(container), Parameter: "Container"),
-                (Rule: await IsInvalidInputStreamAsync(inputStream), Parameter: "Input"));
+                (Rule: IsInvalid(fileName), Parameter: "FileName"),
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalidInputStream(inputStream), Parameter: "Input"));
         }
 
-        private async ValueTask ValidateStorageArgumentsOnRetrieveAsync(Stream outputStream, string fileName, string container)
+        private static void ValidateStorageArgumentsOnRetrieve(Stream outputStream, string fileName, string container)
         {
             Validate(
-                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
-                (Rule: await IsInvalidAsync(container), Parameter: "Container"),
-                (Rule: await IsInvalidOutputStreamAsync(outputStream), Parameter: "Output"));
+                (Rule: IsInvalid(fileName), Parameter: "FileName"),
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalidOutputStream(outputStream), Parameter: "Output"));
         }
 
-        private async ValueTask ValidateStorageArgumentsOnDeleteAsync(string fileName, string container)
+        private static void ValidateStorageArgumentsOnDelete(string fileName, string container)
         {
             Validate(
-                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
-                (Rule: await IsInvalidAsync(container), Parameter: "Container"));
+                (Rule: IsInvalid(fileName), Parameter: "FileName"),
+                (Rule: IsInvalid(container), Parameter: "Container"));
         }
 
-        private async ValueTask ValidateStorageArgumentsOnListAsync(string container)
+        private static void ValidateStorageArgumentsOnList(string container)
         {
             Validate(
-                (Rule: await IsInvalidAsync(container), Parameter: "Container"));
+                (Rule: IsInvalid(container), Parameter: "Container"));
         }
 
-        private async ValueTask ValidateStorageArgumentsOnGetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        private static void ValidateStorageArgumentsOnGetDownloadLink(
+            string fileName, string container, DateTimeOffset expiresOn)
         {
             Validate(
-                (Rule: await IsInvalidAsync(fileName), Parameter: "FileName"),
-                (Rule: await IsInvalidAsync(container), Parameter: "Container"),
-                (Rule: await IsInvalidAsync(expiresOn), Parameter: "ExpiresOn"));
+                (Rule: IsInvalid(fileName), Parameter: "FileName"),
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
         }
 
-        private static async ValueTask<dynamic> IsInvalidAsync(string text) => new
+        private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is invalid"
         };
 
-        private static async ValueTask<dynamic> IsInvalidAsync(DateTimeOffset dateTimeOffset) => new
+        private static dynamic IsInvalid(DateTimeOffset dateTimeOffset) => new
         {
             Condition = dateTimeOffset == default || dateTimeOffset <= DateTimeOffset.UtcNow,
             Message = "Date is invalid"
         };
 
-        private static async ValueTask<dynamic> IsInvalidInputStreamAsync(Stream inputStream) => new
+        private static dynamic IsInvalidInputStream(Stream inputStream) => new
         {
             Condition = inputStream is null || inputStream.Length == 0,
             Message = "Stream is invalid"
         };
 
-        private static async ValueTask<dynamic> IsInvalidOutputStreamAsync(Stream outputStream) => new
+        private static dynamic IsInvalidOutputStream(Stream outputStream) => new
         {
             Condition = outputStream is null || outputStream.Length > 0,
             Message = "Stream is invalid"

@@ -25,7 +25,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
+                ValidateStorageArgumentsOnCreate(input, fileName, container);
 
                 BlobClient blobClient =
                     this.blobStorageBroker.BlobServiceClient
@@ -38,7 +38,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnRetrieveAsync(output, fileName, container);
+                ValidateStorageArgumentsOnRetrieve(output, fileName, container);
 
                 BlobClient blobClient =
                     this.blobStorageBroker.BlobServiceClient
@@ -51,7 +51,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask DeleteFileAsync(string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnDeleteAsync(fileName, container);
+                ValidateStorageArgumentsOnDelete(fileName, container);
 
                 BlobClient blobClient =
                     this.blobStorageBroker.BlobServiceClient
@@ -64,7 +64,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnListAsync(container);
+                ValidateStorageArgumentsOnList(container);
                 List<string> fileNames = new List<string>();
 
                 BlobContainerClient containerClient =
@@ -85,7 +85,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnGetDownloadLinkAsync(fileName, container, expiresOn);
+                ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
 
                 BlobClient blobClient =
                         this.blobStorageBroker.BlobServiceClient
