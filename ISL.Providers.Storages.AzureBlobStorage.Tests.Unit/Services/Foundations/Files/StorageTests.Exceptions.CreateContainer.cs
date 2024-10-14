@@ -53,5 +53,49 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnCreateContainerAsync(Exception dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            string someContainer = randomString;
+            string inputContainer = someContainer;
+
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
+
+            this.blobServiceClientMock.Setup(client =>
+                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask createContainerTask =
+                this.storageService.CreateContainerAsync(inputContainer);
+
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createContainerTask.AsTask);
+
+            // then
+            actualStorageDependencyException
+                .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobServiceClientMock.Verify(client =>
+                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
