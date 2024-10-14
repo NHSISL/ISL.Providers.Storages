@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // then
             this.blobServiceClientMock.Verify(client =>
-                client.CreateBlobContainer(inputContainer, PublicAccessType.None, null, default),
+                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default),
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
