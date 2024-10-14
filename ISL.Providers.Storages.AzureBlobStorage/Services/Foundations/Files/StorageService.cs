@@ -102,6 +102,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask CreateContainerAsync(string container) =>
             throw new NotImplementedException();
 
+        //public async ValueTask CreateContainerAsync(string container) =>
+        //     await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
+
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
 
