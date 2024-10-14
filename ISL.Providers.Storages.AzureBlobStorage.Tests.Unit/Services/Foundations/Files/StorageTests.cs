@@ -2,6 +2,7 @@
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.WindowsAzure.Storage;
@@ -19,19 +20,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
+        private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
+        private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
         private readonly Mock<BlobContainerClient> blobContainerClientMock;
         private readonly Mock<BlobClient> blobClientMock;
+        private readonly Mock<Response> blobClientResponseMock;
         private readonly StorageService storageService;
 
         public StorageTests()
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
+            this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
+            this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
             this.blobContainerClientMock = new Mock<BlobContainerClient>();
             this.blobClientMock = new Mock<BlobClient>();
+            this.blobClientResponseMock = new Mock<Response>();
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.blobServiceClient)
+                broker.BlobServiceClient)
                     .Returns(blobServiceClientMock.Object);
 
             this.storageService = new StorageService(
@@ -49,6 +56,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomMessage = GetRandomString();
 
             return Encoding.UTF8.GetBytes(randomMessage);
+        }
+
+        private static DateTimeOffset GetRandomFutureDateTimeOffset()
+        {
+            DateTime futureStartDate = DateTimeOffset.UtcNow.AddDays(1).Date;
+            int randomDaysInFuture = GetRandomNumber();
+            DateTime futureEndDate = futureStartDate.AddDays(randomDaysInFuture).Date;
+
+            return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
         }
 
         public class ZeroLengthStream : MemoryStream
@@ -85,6 +101,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
+        public static TheoryData<string, DateTimeOffset> GetInvalidDownloadArguments()
+        {
+            DateTimeOffset defaultDateTimeOffset = default;
+            DateTimeOffset pastDateTimeOffset = DateTimeOffset.MinValue;
+
+            return new TheoryData<string, DateTimeOffset>
+            {
+                { null, defaultDateTimeOffset },
+                { "", defaultDateTimeOffset },
+                { " ", pastDateTimeOffset },
+            };
+        }
+
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
@@ -109,8 +138,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
+        private static UserDelegationKey CreateUserDelegationKey() =>
+            new Mock<UserDelegationKey>().Object;
+
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
-            (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
+        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
 
         private static ArgumentException CreateArgumentException() =>
             (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));

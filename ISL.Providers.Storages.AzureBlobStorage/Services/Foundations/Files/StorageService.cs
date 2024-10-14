@@ -25,10 +25,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnCreateAsync(input, fileName, container);
+                ValidateStorageArgumentsOnCreate(input, fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -38,10 +38,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnRetrieveAsync(output, fileName, container);
+                ValidateStorageArgumentsOnRetrieve(output, fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -51,10 +51,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask DeleteFileAsync(string fileName, string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnDeleteAsync(fileName, container);
+                ValidateStorageArgumentsOnDelete(fileName, container);
 
                 BlobClient blobClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container)
                         .GetBlobClient(fileName);
 
@@ -64,11 +64,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
             TryCatch(async () =>
             {
-                await ValidateStorageArgumentsOnListAsync(container);
+                ValidateStorageArgumentsOnList(container);
                 List<string> fileNames = new List<string>();
 
                 BlobContainerClient containerClient =
-                    this.blobStorageBroker.blobServiceClient
+                    this.blobStorageBroker.BlobServiceClient
                         .GetBlobContainerClient(container);
 
                 AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
@@ -83,7 +83,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
-            throw new NotImplementedException();
+            TryCatch(async () =>
+            {
+                ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
+
+                BlobClient blobClient =
+                        this.blobStorageBroker.BlobServiceClient
+                            .GetBlobContainerClient(container)
+                            .GetBlobClient(fileName);
+
+                var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
+                var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+
+                return blobUriBuilder.ToUri().ToString();
+            });
+
 
         public ValueTask CreateContainerAsync(string container) =>
             throw new NotImplementedException();
