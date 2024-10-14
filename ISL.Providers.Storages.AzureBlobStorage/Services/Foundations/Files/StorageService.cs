@@ -64,7 +64,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
             TryCatch(async () =>
             {
-                ValidateStorageArgumentsOnList(container);
+                ValidateContainerName(container);
                 List<string> fileNames = new List<string>();
 
                 BlobContainerClient containerClient =
@@ -98,8 +98,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 return blobUriBuilder.ToUri().ToString();
             });
 
-        public async ValueTask CreateContainerAsync(string container) =>
-             await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
+        public ValueTask CreateContainerAsync(string container) =>
+            TryCatch(async () =>
+            {
+                ValidateContainerName(container);
+                await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
+            });
+
 
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
