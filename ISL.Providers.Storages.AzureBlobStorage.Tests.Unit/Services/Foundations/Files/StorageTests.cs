@@ -120,34 +120,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
-        private static UserDelegationKey CreateUserDelegationKey()
-        {
-            //var userDelegationKey = BlobsModelFactory.UserDelegationKey();
-            //return BlobsModelFactory.UserDelegationKey();
-            return new Mock<UserDelegationKey>().Object;
-
-            //userDelegationKey.;
-        }
-
-        private BlobClient CreateBlobClient()
-        {
-            return CreateBlobClientFiller().Create();
-        }
-
-        private static Filler<BlobClient> CreateBlobClientFiller()
-        {
-
-            var filler = new Filler<BlobClient>();
-
-            //filler.Setup()
-            //    .OnType<DateTimeOffset>().Use(dateTimeOffset)
-            //    .OnType<DateTimeOffset?>().Use(dateTimeOffset)
-            //    .OnProperty(userAccess => userAccess.CreatedBy).Use(user)
-            //    .OnProperty(userAccess => userAccess.UpdatedBy).Use(user);
-
-            return filler;
-        }
-
+        private static UserDelegationKey CreateUserDelegationKey() =>
+            new Mock<UserDelegationKey>().Object;
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
         (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
