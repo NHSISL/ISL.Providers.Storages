@@ -56,5 +56,53 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnGetDownloadLinkAsync(Exception dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            DateTimeOffset someDateTimeOffset = GetRandomFutureDateTimeOffset();
+            string someFileName = randomString;
+            string someContainer = randomString;
+            string inputFileName = someFileName;
+            string inputContainer = someContainer;
+            DateTimeOffset inputDateTimeOffset = someDateTimeOffset;
+
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
+
+            this.blobServiceClientMock.Setup(client =>
+                client.GetBlobContainerClient(inputContainer))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask<string> getDownloadLinkTask =
+                this.storageService.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
+
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: getDownloadLinkTask.AsTask);
+
+            // then
+            actualStorageDependencyException
+                .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobServiceClientMock.Verify(client =>
+                client.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
