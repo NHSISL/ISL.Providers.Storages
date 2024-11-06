@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
-
+        //private readonly DataLakeServiceClient dataLakeServiceClient;
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
             var blobServiceClientOptions = new BlobClientOptions()
@@ -30,32 +30,57 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             this.BlobServiceClient = new BlobServiceClient(
                     serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                    credential: new DefaultAzureCredential(
-                        new DefaultAzureCredentialOptions
-                        {
-                            VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
-                        }),
-                    options: blobServiceClientOptions);
+                    credential: new DefaultAzureCredential());
+            //credential: new DefaultAzureCredential(
+            //        new DefaultAzureCredentialOptions
+            //        {
+            //            VisualStudioTenantId = azureBlobStoreConfigurations.SubscriptionId,
+            //        }),
+            //        options: blobServiceClientOptions);
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
             DateTimeOffset? startsOn,
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default) =>
-            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+            this.BlobServiceClient.GetUserDelegationKey(DateTime.UtcNow, DateTime.UtcNow.AddMinutes(45));
 
-        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
+        public BlobSasBuilder GetBlobSasBuilder(string path, string blobContainerName, DateTimeOffset expiresOn)
         {
             var blobSasBuilder = new BlobSasBuilder()
             {
                 BlobContainerName = blobContainerName,
-                BlobName = blobName,
-                Resource = "b",
+                BlobName = path,
+                Resource = "d",
                 StartsOn = DateTimeOffset.UtcNow,
                 ExpiresOn = expiresOn
             };
 
-            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
+            blobSasBuilder.SetPermissions(BlobSasPermissions.Read | BlobSasPermissions.List);
+
+            return blobSasBuilder;
+        }
+
+        public BlobSasBuilder GetBlobSasBuilder(string path, string blobContainerName, DateTimeOffset expiresOn, string permissions)
+        {
+            var blobSasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = blobContainerName,
+                BlobName = path,
+                Resource = "d",
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            //blobSasBuilder.SetPermissions(permissions switch
+            //{
+            //    "read" => BlobSasPermissions.Read | BlobSasPermissions.List,
+            //    "write" => BlobSasPermissions.Write,
+            //    "full" => BlobSasPermissions.Read | BlobSasPermissions.Write | BlobSasPermissions.List,
+            //    _ => BlobSasPermissions.Read
+            //});
+
+            blobSasBuilder.SetPermissions(BlobSasPermissions.Read | BlobSasPermissions.List);
 
             return blobSasBuilder;
         }

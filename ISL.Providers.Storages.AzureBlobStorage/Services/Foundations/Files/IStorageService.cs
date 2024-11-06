@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
 
         ValueTask CreateContainerAsync(string container);
-        ValueTask CreateAndAssignRoleToContainerAsync(string container, string roleName);
-        ValueTask CreateAndAssignManagedIdentityToRoleAsync(string identity, string roleName);
+        //ValueTask CreateAndAssignRoleToContainerAsync(string container, string roleName);
+        //ValueTask CreateAndAssignManagedIdentityToRoleAsync(string identity, string roleName);
     }
 }
