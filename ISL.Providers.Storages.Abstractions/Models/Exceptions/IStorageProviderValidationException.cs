@@ -2,8 +2,8 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-namespace ISL.Providers.Storages.Abstractions
+namespace ISL.Providers.Storages.Abstractions.Models.Exceptions
 {
-    public interface IStoragesProvider : IStoragesOperations
+    public interface IStorageProviderValidationException
     { }
 }

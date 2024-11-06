@@ -2,14 +2,15 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure;
-using Azure.Identity;
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using Microsoft.WindowsAzure.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Azure;
+using Azure.Identity;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
+using Microsoft.WindowsAzure.Storage;
 using Xeptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages

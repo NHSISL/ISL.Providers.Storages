@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISL.Providers.Storages.Azur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureBlobStorage", "AzureBlobStorage", "{FD9E1867-D2B4-48B6-95B0-7809AC0178D7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DiskStorage", "DiskStorage", "{974384EC-C0DC-42B8-BD8B-678820CABB1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISL.Providers.Storages.Abstractions.Tests.Unit", "ISL.Providers.Storages.Abstractions.Tests.Unit\ISL.Providers.Storages.Abstractions.Tests.Unit.csproj", "{96B2F1EC-2C22-4E48-837B-A42F049E3893}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISL.Providers.Storages.Abstractions.Tests.Acceptance", "ISL.Providers.Storages.Abstractions.Tests.Acceptance\ISL.Providers.Storages.Abstractions.Tests.Acceptance.csproj", "{274FBB54-7224-42C3-BB55-2CC486E9F251}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Abstraction Provider", "Abstraction Provider", "{58DD8E99-49D2-405F-A778-8E21654897C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +47,25 @@ Global
 		{BDAD4B92-0731-45A3-895B-8462107EAE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDAD4B92-0731-45A3-895B-8462107EAE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDAD4B92-0731-45A3-895B-8462107EAE3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B2F1EC-2C22-4E48-837B-A42F049E3893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B2F1EC-2C22-4E48-837B-A42F049E3893}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B2F1EC-2C22-4E48-837B-A42F049E3893}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B2F1EC-2C22-4E48-837B-A42F049E3893}.Release|Any CPU.Build.0 = Release|Any CPU
+		{274FBB54-7224-42C3-BB55-2CC486E9F251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274FBB54-7224-42C3-BB55-2CC486E9F251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274FBB54-7224-42C3-BB55-2CC486E9F251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274FBB54-7224-42C3-BB55-2CC486E9F251}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{FDF6DDD3-6CD7-40C4-AB0B-C97AE97643E1} = {58DD8E99-49D2-405F-A778-8E21654897C5}
 		{4F401D48-2CBF-4BF6-B018-1A838777BAFE} = {FD9E1867-D2B4-48B6-95B0-7809AC0178D7}
 		{86BAC5DC-C65D-48D4-BFF5-97468720A918} = {FD9E1867-D2B4-48B6-95B0-7809AC0178D7}
 		{BDAD4B92-0731-45A3-895B-8462107EAE3C} = {FD9E1867-D2B4-48B6-95B0-7809AC0178D7}
+		{96B2F1EC-2C22-4E48-837B-A42F049E3893} = {58DD8E99-49D2-405F-A778-8E21654897C5}
+		{274FBB54-7224-42C3-BB55-2CC486E9F251} = {58DD8E99-49D2-405F-A778-8E21654897C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71F274A5-5D15-4661-9D0B-01EBBFF052BA}

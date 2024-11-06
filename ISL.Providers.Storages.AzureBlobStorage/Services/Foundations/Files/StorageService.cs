@@ -2,14 +2,15 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {

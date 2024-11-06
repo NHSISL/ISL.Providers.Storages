@@ -4,20 +4,20 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<Title>ISL.Providers.Notifications.Abstractions</Title>
-		<Product>ISL.Providers.Notifications.Abstractions</Product>
-		<PackageId>ISL.Providers.Notifications.Abstractions</PackageId>
+		<Title>ISL.Providers.Storage.Abstractions</Title>
+		<Product>ISL.Providers.Storage.Abstractions</Product>
+		<PackageId>ISL.Providers.Storage.Abstractions</PackageId>
 		<Authors>North East London ICB</Authors>
 		<Company>North East London ICB</Company>
-		<Description>ISL.Providers.Notifications.Abstractions provides abstractions of serialization. Interfaces defined in this package are implemented by classes in SPAL implementations of ISerializationProvider.</Description>
+		<Description>ISL.Providers.Storage.Abstractions provides abstractions of serialization. Interfaces defined in this package are implemented by classes in SPAL implementations of ISerializationProvider.</Description>
 		<Copyright>North East London ICB - 2024 (c)</Copyright>
 		<PackageIcon>storage.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Notifications</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Notifications</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Storage</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Storage</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>NHSISL; Notifications; Provider; Abstractions; .NET; The Standard; Standard;</PackageTags>
+		<PackageTags>NHSISL; Storage; Provider; Abstractions; .NET; The Standard; Standard;</PackageTags>
 		<PackageReleaseNotes>
-			Initial release of ISL.Providers.Notifications.Abstractions.
+			Initial release of ISL.Providers.Storage.Abstractions.
 		</PackageReleaseNotes>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<Version>0.0.1</Version>
@@ -43,6 +43,10 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Xeption" Version="2.8.0" />
 	</ItemGroup>
 
 </Project>

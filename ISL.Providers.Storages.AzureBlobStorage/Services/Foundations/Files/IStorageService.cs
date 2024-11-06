@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
+namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files
 {
     internal interface IStorageService
     {

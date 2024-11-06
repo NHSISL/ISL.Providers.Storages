@@ -2,9 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System;
 using System.IO;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {

@@ -2,6 +2,9 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System;
+using System.Net.Http;
+using System.Threading;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
@@ -9,9 +12,6 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
-using System;
-using System.Net.Http;
-using System.Threading;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {

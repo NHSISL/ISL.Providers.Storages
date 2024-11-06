@@ -12,8 +12,8 @@
 		<Description>ISL.Providers.Storages.AzureBlobStorage provides a storage implementation for Azure Blob Stores.</Description>
 		<Copyright>North East London ICB - 2024 (c)</Copyright>
 		<PackageIcon>storage.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Notifications</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Notifications</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/NHSISL/ISL.Providers.Storages</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/NHSISL/ISL.Providers.Storages</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>NHSISL; Storages; Provider; .NET; The Standard; Standard;</PackageTags>
 		<PackageReleaseNotes>
