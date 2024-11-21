@@ -13,7 +13,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(InvalidPolicyArguments))]
-        public async Task ShouldThrowValidationExceptionOnCreateAccessPolicyIfArgumentsInvalidAsync(string invalidText, List<string> invalidList)
+        public async Task
+            ShouldThrowValidationExceptionOnCreateAccessPolicyIfArgumentsInvalidAsync(
+            string invalidText, List<string> invalidList)
         {
             // given
             string invalidContainer = invalidText;

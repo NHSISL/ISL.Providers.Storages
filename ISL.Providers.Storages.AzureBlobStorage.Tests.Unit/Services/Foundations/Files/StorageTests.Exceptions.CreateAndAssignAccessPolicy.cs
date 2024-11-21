@@ -46,7 +46,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 this.storageService.CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createAccessPolicyTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+                    testCode: createAccessPolicyTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
