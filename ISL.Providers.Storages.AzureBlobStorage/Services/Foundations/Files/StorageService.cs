@@ -146,7 +146,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        private static string ConvertPolicyNameToPermissions(string policyName)
+        virtual internal string ConvertPolicyNameToPermissions(string policyName)
         {
             if (policyName == "reader")
             {
