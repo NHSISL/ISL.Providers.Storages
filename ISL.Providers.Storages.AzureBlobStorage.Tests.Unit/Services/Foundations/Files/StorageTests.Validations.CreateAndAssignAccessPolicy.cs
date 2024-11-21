@@ -60,12 +60,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomString = GetRandomString();
             string inputContainer = randomString;
-
-            List<string> invalidPolicyNames = new List<string>
-            {
-                "reader",
-                "superuser"
-            };
+            List<string> randomPolicyNames = GetRandomStringList();
+            List<string> invalidPolicyNames = randomPolicyNames;
 
             var invalidPolicyNameStorageException =
                 new InvalidPolicyNameStorageException(

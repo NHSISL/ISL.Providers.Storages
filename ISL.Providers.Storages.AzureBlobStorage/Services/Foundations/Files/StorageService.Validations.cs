@@ -94,7 +94,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             foreach (var policyName in policyNames)
             {
-                if (policyName.ToLower() != "reader" || policyName.ToLower() != "writer")
+                if (policyName.ToLower() != "reader" && policyName.ToLower() != "writer")
                 {
                     throw new InvalidPolicyNameStorageException(
                         message: "Invalid policy name, only reader and writer privileges " +
