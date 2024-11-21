@@ -56,6 +56,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
                 (Rule: IsInvalidList(policyNames), Parameter: "PolicyNames"));
+
+            ValidatePolicyNames(policyNames);
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -87,6 +89,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Condition = outputStream is null || outputStream.Length > 0,
             Message = "Stream is invalid"
         };
+
+        private static void ValidatePolicyNames(List<string> policyNames)
+        {
+            foreach (var policyName in policyNames)
+            {
+                if (policyName.ToLower() != "reader" || policyName.ToLower() != "writer")
+                {
+                    throw new InvalidPolicyNameStorageException(
+                        message: "Invalid policy name, only reader and writer privileges " +
+                        "are supported at this time.");
+                }
+            }
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
