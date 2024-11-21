@@ -241,5 +241,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { someIOException }
             };
         }
+
+        public static TheoryData<string, List<string>> InvalidPolicyArguments()
+        {
+            List<string> emptyStringList = new List<string>
+            {
+                ""
+            };
+
+            List<string> blankStringList = new List<string>
+            {
+                " "
+            };
+
+            return new TheoryData<string, List<string>>
+            {
+                { null, null },
+                { "", emptyStringList },
+                { " ", blankStringList }
+            };
+        }
     }
 }
