@@ -43,7 +43,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
@@ -93,7 +93,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(testCode: createAccessPolicyTask.AsTask);
@@ -142,7 +142,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(testCode: createAccessPolicyTask.AsTask);

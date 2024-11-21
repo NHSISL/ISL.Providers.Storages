@@ -112,7 +112,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
 
-        public ValueTask CreateAndAssignAccessPolicyToContainerAsync(string container, List<string> policyNames) =>
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
