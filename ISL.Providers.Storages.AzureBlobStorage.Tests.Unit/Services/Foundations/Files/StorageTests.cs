@@ -2,20 +2,21 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Azure;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.WindowsAzure.Storage;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -23,6 +24,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
         private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
         private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
@@ -34,6 +36,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         public StorageTests()
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
             this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
@@ -46,7 +49,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(blobServiceClientMock.Object);
 
             this.storageService = new StorageService(
-                this.blobStorageBrokerMock.Object);
+                this.blobStorageBrokerMock.Object,
+                this.dateTimeBrokerMock.Object);
         }
 
         private static string GetRandomString() =>
@@ -61,6 +65,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return Encoding.UTF8.GetBytes(randomMessage);
         }
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
         private static DateTimeOffset GetRandomFutureDateTimeOffset()
         {
@@ -140,6 +147,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             }
 
             return blobItems;
+        }
+
+        public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
+        {
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmms");
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
+            {
+                new BlobSignedIdentifier
+                {
+                    Id = $"reader_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        Permissions = "rl"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"writer_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        Permissions = "w"
+                    }
+                }
+            };
+
+            return signedIdentifiers;
         }
 
         private static UserDelegationKey CreateUserDelegationKey() =>

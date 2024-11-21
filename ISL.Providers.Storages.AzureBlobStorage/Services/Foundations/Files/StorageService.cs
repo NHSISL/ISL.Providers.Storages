@@ -2,25 +2,28 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Azure;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
     internal partial class StorageService : IStorageService
     {
         private readonly IBlobStorageBroker blobStorageBroker;
+        private readonly IDateTimeBroker dateTimeBroker;
 
-        internal StorageService(IBlobStorageBroker blobStorageBroker)
+        internal StorageService(IBlobStorageBroker blobStorageBroker, IDateTimeBroker dateTimeBroker)
         {
             this.blobStorageBroker = blobStorageBroker;
+            this.dateTimeBroker = dateTimeBroker;
         }
 
         public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
@@ -109,10 +112,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
 
-        public ValueTask CreateAndAssignRoleToContainerAsync(string roleName, string container) =>
+        public async ValueTask CreateAndAssignAccessPolicyToContainerAsync(string container, List<string> policyNames) =>
             throw new NotImplementedException();
 
         public ValueTask CreateAndAssignManagedIdentityToRoleAsync(string identity, string roleName) =>
             throw new NotImplementedException();
+
+        private static string ConvertPolicyNameToPermissions(string policyName)
+        {
+            if (policyName == "reader")
+            {
+                return "rl";
+            }
+            else if (policyName == "writer")
+            {
+                return "w";
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }
