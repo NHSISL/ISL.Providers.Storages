@@ -9,7 +9,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Fact]
-        public async Task ShouldCreateAndAssignAccessPolicyAsync()
+        public async Task ShouldCreateAndAssignAccessPoliciesAsync()
         {
             // given
             string randomString = GetRandomString();
@@ -38,7 +38,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             await this.storageService
-                .CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
+                .CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
 
             // then
             this.dateTimeBrokerMock.Verify(broker =>
