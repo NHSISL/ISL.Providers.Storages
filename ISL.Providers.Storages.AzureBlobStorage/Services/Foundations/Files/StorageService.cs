@@ -146,8 +146,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container)
+        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
         {
+            ValidateStorageArgumentsOnRemoveAccessPolicies(container);
             List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
 
             BlobContainerClient containerClient =
@@ -155,7 +157,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                         .GetBlobContainerClient(container);
 
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
-        }
+        });
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName)
         {
