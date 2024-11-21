@@ -112,11 +112,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
 
-        public async ValueTask CreateAndAssignAccessPolicyToContainerAsync(string container, List<string> policyNames) =>
-            throw new NotImplementedException();
+        public async ValueTask CreateAndAssignAccessPolicyToContainerAsync(string container, List<string> policyNames)
+        {
+            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmms");
 
-        public ValueTask CreateAndAssignManagedIdentityToRoleAsync(string identity, string roleName) =>
-            throw new NotImplementedException();
+            BlobContainerClient containerClient =
+                    this.blobStorageBroker.BlobServiceClient
+                        .GetBlobContainerClient(container);
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
+
+            foreach (string policyName in policyNames)
+            {
+                string permissions = ConvertPolicyNameToPermissions(policyName);
+
+                var blobSignedIdentifier = new BlobSignedIdentifier
+                {
+                    Id = $"{policyName}_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = dateTimeOffset,
+                        PolicyExpiresOn = dateTimeOffset.AddYears(this.blobStorageBroker.TokenLifetimeYears),
+                        Permissions = permissions
+                    }
+                };
+
+                signedIdentifiers.Add(blobSignedIdentifier);
+            }
+
+            await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
+        }
 
         private static string ConvertPolicyNameToPermissions(string policyName)
         {

@@ -15,6 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomString = GetRandomString();
             string inputContainer = randomString;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+
             List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(randomDateTimeOffset);
 
             List<string> inputPolicyNames = new List<string>
@@ -36,7 +37,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(1);
 
             // when
-            await this.storageService.CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
+            await this.storageService
+                .CreateAndAssignAccessPolicyToContainerAsync(inputContainer, inputPolicyNames);
 
             // then
             this.dateTimeBrokerMock.Verify(broker =>
@@ -44,12 +46,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobServiceClientMock.Verify(client =>
-                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default),
+                client.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.TokenLifetimeYears,
+                    Times.Exactly(2));
+
             this.blobContainerClientMock.Verify(client =>
-                client.SetAccessPolicyAsync(PublicAccessType.None, inputSignedIdentifiers, null, default),
-                    Times.Once);
+                client.SetAccessPolicyAsync(
+                    PublicAccessType.None,
+                    It.Is(SameBlobSignedIdentifierListAs(inputSignedIdentifiers)),
+                    null,
+                    default),
+                        Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

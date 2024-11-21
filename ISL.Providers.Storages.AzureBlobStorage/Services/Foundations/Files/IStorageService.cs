@@ -19,6 +19,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files
 
         ValueTask CreateContainerAsync(string container);
         ValueTask CreateAndAssignAccessPolicyToContainerAsync(string container, List<string> policyNames);
-        ValueTask CreateAndAssignManagedIdentityToRoleAsync(string identity, string roleName);
     }
 }
