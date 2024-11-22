@@ -205,12 +205,47 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
+        //public static IEnumerable<BlobSignedIdentifier> CreateSignedIdentifiersWithId
+
+        public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+            CreateBlobContainerAccessPolicyFiller().Create();
+
+        public static BlobSignedIdentifier CreateBlobSignedIdentifier(string signedIdentifierId) =>
+            CreateBlobSignedIdentifierFiller(signedIdentifierId).Create();
+
+        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
+        {
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            var filler = new Filler<BlobContainerAccessPolicy>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
+                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
+                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
+
+            return filler;
+        }
+
+        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
+        {
+
+            var filler = new Filler<BlobSignedIdentifier>();
+
+            filler.Setup()
+                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
+
+            return filler;
+        }
+
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
                 actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;
 
         private static UserDelegationKey CreateUserDelegationKey() =>
             new Mock<UserDelegationKey>().Object;
+
+        //private static ETag CreateUserDelegationKey() =>
+        //    new Mock<ETag<T>>().Object;
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
         (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
