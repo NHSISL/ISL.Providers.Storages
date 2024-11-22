@@ -67,6 +67,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(container), Parameter: "Container"));
         }
 
+        private static void ValidateStorageArgumentsOnRetrieveAllAccessPolicies(string container)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
