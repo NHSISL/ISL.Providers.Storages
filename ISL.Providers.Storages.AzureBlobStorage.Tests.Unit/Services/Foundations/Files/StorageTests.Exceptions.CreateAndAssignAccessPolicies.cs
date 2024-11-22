@@ -21,11 +21,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomString = GetRandomString();
             string inputContainer = randomString;
-            List<string> inputPolicyNames = new List<string>
-            {
-                "read",
-                "write"
-            };
+            List<string> inputPolicyNames = GetPolicyNames();
 
             var failedStorageDependencyValidationException =
                 new FailedStorageDependencyValidationException(
@@ -71,11 +67,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomString = GetRandomString();
             string inputContainer = randomString;
-            List<string> inputPolicyNames = new List<string>
-            {
-                "delete",
-                "fullaccess"
-            };
+            List<string> inputPolicyNames = GetPolicyNames();
 
             var failedStorageDependencyException =
                 new FailedStorageDependencyException(
@@ -120,11 +112,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Exception someException = new Exception();
             string randomString = GetRandomString();
             string inputContainer = randomString;
-            List<string> inputPolicyNames = new List<string>
-            {
-                "read",
-                "delete"
-            };
+            List<string> inputPolicyNames = GetPolicyNames();
 
             var failedStorageServiceException =
                 new FailedStorageServiceException(
@@ -142,7 +130,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                    inputContainer, inputPolicyNames);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(testCode: createAccessPolicyTask.AsTask);

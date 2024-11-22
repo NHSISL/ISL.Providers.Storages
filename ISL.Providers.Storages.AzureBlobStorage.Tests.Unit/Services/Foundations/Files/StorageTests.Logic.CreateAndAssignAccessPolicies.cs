@@ -15,7 +15,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomString = GetRandomString();
             string inputContainer = randomString;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-
             List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(randomDateTimeOffset);
 
             List<string> inputPolicyNames = new List<string>

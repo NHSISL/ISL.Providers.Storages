@@ -225,6 +225,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
+        public static List<string> GetPolicyNames() =>
+            new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
+            };
+
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
                 actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;
