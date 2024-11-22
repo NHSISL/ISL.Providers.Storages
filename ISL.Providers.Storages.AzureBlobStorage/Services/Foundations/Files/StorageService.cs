@@ -145,7 +145,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        public ValueTask CreateDirectorySasToken(
+        public ValueTask<string> CreateDirectorySasToken(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
              throw new NotImplementedException();
 

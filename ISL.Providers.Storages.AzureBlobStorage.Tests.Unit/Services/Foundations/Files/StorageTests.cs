@@ -237,16 +237,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 "fullaccess"
             };
 
-        public static StorageSharedKeyCredential CreateRandomStorageSharedKeyCredential() =>
-            CreateStorageSharedKeyCredentialFiller().Create();
-
-        private static Filler<StorageSharedKeyCredential> CreateStorageSharedKeyCredentialFiller()
-        {
-            var filler = new Filler<StorageSharedKeyCredential>();
-
-            return filler;
-        }
-
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
                 actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;

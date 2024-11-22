@@ -3,9 +3,7 @@
 // ---------------------------------------------------------
 
 using Azure.Storage;
-using Azure.Storage.Blobs.Models;
 using FluentAssertions;
-using Force.DeepCloner;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -21,6 +19,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomContainer = GetRandomString();
             string randomDirectoryPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
+            string randomAccountName = GetRandomString();
+            string randomAccountKey = GetRandomString();
             string randomSasToken = GetRandomString();
             string inputContainer = randomContainer;
             string inputDirectoryPath = randomDirectoryPath;
@@ -30,15 +30,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             DateTimeOffset inputExpiresOn = futureDateTimeOffset;
 
             StorageSharedKeyCredential randomStorageSharedKeyCredential =
-                CreateRandomStorageSharedKeyCredential();
+                new StorageSharedKeyCredential("VGhpcyBpcyBhIHRlc3Q=", "VGhpcyBpcyBhIHRlc3Q=");
 
             StorageSharedKeyCredential outputStorageSharedKeyCredential = randomStorageSharedKeyCredential;
-
             string outputSasToken = randomSasToken;
-            string outputDowloadLink = mockDownloadLink.DeepClone();
-            string expectedDowloadLink = outputDowloadLink.DeepClone();
-            UserDelegationKey randomKey = CreateUserDelegationKey();
-            UserDelegationKey outputKey = randomKey;
+            string expectedSasToken = outputSasToken;
 
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.GetDataLakeSasBuilder(
@@ -53,42 +49,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(outputStorageSharedKeyCredential);
 
             this.dataLakeSasBuilderMock.Setup(builder =>
-                builder.ToSasQueryParameters(It.Is(SameStorageSharedKeyCredentialAs(outputStorageSharedKeyCredential)))).Returns(outputSasToken);
-
-            this.blobStorageBrokerMock.Setup(client =>
-                client.GetBlobUriBuilder(
-                    It.IsAny<Uri>()))
-                        .Returns(blobUriBuilderMock.Object);
+                builder.ToSasQueryParameters(It.Is(SameStorageSharedKeyCredentialAs(
+                    outputStorageSharedKeyCredential))).ToString())
+                        .Returns(outputSasToken);
 
             // when
-            var actualDownloadLink = await this.storageService.GetDownloadLinkAsync(inputFileName, inputContainer, inputExpiresOn);
+            var actualSasToken = await this.storageService.CreateDirectorySasToken(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier, inputExpiresOn);
 
             // then
-            actualDownloadLink.Should().BeEquivalentTo(expectedDowloadLink);
+            actualSasToken.Should().BeEquivalentTo(expectedSasToken);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
-                    Times.Once);
-
-            this.blobContainerClientMock.Verify(client =>
-                client.GetBlobClient(inputFileName),
-                    Times.Once);
-
-            this.blobStorageBrokerMock.Verify(client =>
-                client.GetBlobSasBuilder(
-                    inputFileName,
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetDataLakeSasBuilder(
                     inputContainer,
+                    inputDirectoryPath,
+                    inputAccessPolicyIdentifier,
                     inputExpiresOn),
                         Times.Once);
 
-            this.blobStorageBrokerMock.Verify(client =>
-                client.GetBlobUriBuilder(
-                    It.IsAny<Uri>()),
-                        Times.Once);
-
-            this.blobClientMock.Verify(client =>
-                client.Uri,
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.StorageSharedKeyCredential,
                     Times.Once);
+
+            this.dataLakeSasBuilderMock.Verify(builder =>
+                builder.ToSasQueryParameters(It.Is(SameStorageSharedKeyCredentialAs(
+                    outputStorageSharedKeyCredential))).ToString(), Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
