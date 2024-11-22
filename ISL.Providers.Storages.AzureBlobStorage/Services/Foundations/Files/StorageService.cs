@@ -146,9 +146,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
-            throw new NotImplementedException();
+        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
+        {
+            BlobContainerClient containerClient =
+                    this.blobStorageBroker.BlobServiceClient
+                        .GetBlobContainerClient(container);
 
+            BlobContainerAccessPolicy containerAccessPolicy = await containerClient.GetAccessPolicyAsync();
+            List<string> signedIdentifiers = new List<string>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier.Id);
+            }
+
+            return signedIdentifiers;
+        }
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
         {
