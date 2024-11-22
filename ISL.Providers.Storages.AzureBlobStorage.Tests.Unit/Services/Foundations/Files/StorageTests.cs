@@ -205,13 +205,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
-        //public static IEnumerable<BlobSignedIdentifier> CreateSignedIdentifiersWithId
-
         public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
             CreateBlobContainerAccessPolicyFiller().Create();
-
-        public static BlobSignedIdentifier CreateBlobSignedIdentifier(string signedIdentifierId) =>
-            CreateBlobSignedIdentifierFiller(signedIdentifierId).Create();
 
         private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
         {
