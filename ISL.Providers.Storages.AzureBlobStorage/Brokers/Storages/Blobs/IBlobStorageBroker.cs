@@ -21,7 +21,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
+
+        BlobSasBuilder GetBlobSasBuilder(
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset expiresOn);
+
+        DataLakeSasBuilder GetDataLakeSasBuilder(
+            string container,
+            string directoryPath,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn);
+
         BlobUriBuilder GetBlobUriBuilder(Uri uri);
     }
 }

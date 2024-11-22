@@ -85,7 +85,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return fileNames;
         });
 
-
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
@@ -145,6 +144,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
+
+        public ValueTask CreateDirectorySasToken(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+             throw new NotImplementedException();
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {

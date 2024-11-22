@@ -29,6 +29,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
         private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
+        private readonly Mock<DataLakeSasBuilder> dataLakeSasBuilderMock;
         private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
         private readonly Mock<BlobContainerClient> blobContainerClientMock;
         private readonly Mock<BlobClient> blobClientMock;
@@ -42,6 +43,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
+            this.dataLakeSasBuilderMock = new Mock<DataLakeSasBuilder>();
             this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
             this.blobContainerClientMock = new Mock<BlobContainerClient>();
             this.blobClientMock = new Mock<BlobClient>();
