@@ -65,6 +65,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
             new BlobUriBuilder(uri);
-
     }
 }

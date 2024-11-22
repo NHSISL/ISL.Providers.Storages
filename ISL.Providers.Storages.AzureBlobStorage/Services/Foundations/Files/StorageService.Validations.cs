@@ -7,6 +7,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -68,7 +69,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         private static dynamic IsInvalidList(List<string> textList) => new
         {
-            Condition = textList is null || textList.Contains("") || textList.Contains(" "),
+            Condition = textList is null || textList.Any(string.IsNullOrWhiteSpace),
             Message = "List is invalid"
         };
 
