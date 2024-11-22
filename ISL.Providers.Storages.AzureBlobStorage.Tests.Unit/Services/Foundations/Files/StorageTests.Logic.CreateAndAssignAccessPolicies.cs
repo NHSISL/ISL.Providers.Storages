@@ -20,8 +20,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             List<string> inputPolicyNames = new List<string>
             {
-                "reader",
-                "writer"
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
             };
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -51,7 +53,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.TokenLifetimeDays,
-                    Times.Exactly(2));
+                    Times.Exactly(inputPolicyNames.Count));
 
             this.blobContainerClientMock.Verify(client =>
                 client.SetAccessPolicyAsync(

@@ -67,7 +67,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             var invalidPolicyNameStorageException =
                 new InvalidPolicyNameStorageException(
-                    message: "Invalid policy name, only reader and writer privileges are supported at this time.");
+                    message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
+                        "are supported at this time.");
 
             var expectedStorageValidationException =
                 new StorageValidationException(

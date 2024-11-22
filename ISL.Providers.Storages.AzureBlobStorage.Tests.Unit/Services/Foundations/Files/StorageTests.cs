@@ -182,22 +182,42 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             {
                 new BlobSignedIdentifier
                 {
-                    Id = $"reader_{timestamp}",
+                    Id = $"read_{timestamp}",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "rl"
                     }
                 },
                 new BlobSignedIdentifier
                 {
-                    Id = $"writer_{timestamp}",
+                    Id = $"write_{timestamp}",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "w"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"delete_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "d"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"fullaccess_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rlwd"
                     }
                 }
             };

@@ -23,8 +23,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomString;
             List<string> inputPolicyNames = new List<string>
             {
-                "reader",
-                "writer"
+                "read",
+                "write"
             };
 
             var failedStorageDependencyValidationException =
@@ -73,8 +73,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomString;
             List<string> inputPolicyNames = new List<string>
             {
-                "reader",
-                "writer"
+                "delete",
+                "fullaccess"
             };
 
             var failedStorageDependencyException =
@@ -122,8 +122,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomString;
             List<string> inputPolicyNames = new List<string>
             {
-                "reader",
-                "writer"
+                "read",
+                "delete"
             };
 
             var failedStorageServiceException =

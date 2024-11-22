@@ -146,20 +146,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        virtual internal string ConvertPolicyNameToPermissions(string policyName)
+        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {
-            if (policyName == "reader")
-            {
-                return "rl";
-            }
-            else if (policyName == "writer")
-            {
-                return "w";
-            }
-            else
-            {
-                return "";
-            }
-        }
+            "read" => "rl",
+            "write" => "w",
+            "delete" => "d",
+            "fullaccess" => "rlwd",
+            _ => ""
+        };
     }
 }
