@@ -307,7 +307,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return new TheoryData<string, List<string>>
             {
                 { null, null },
-                { "", emptyStringList },
+                { "", new List<string>() },
                 { " ", blankStringList }
             };
         }
