@@ -105,5 +105,50 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetreiveAllAccessPoliciesFromContainerAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string randomString = GetRandomString();
+            string someContainer = randomString;
+            string inputContainer = someContainer;
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.blobServiceClientMock.Setup(client =>
+                client.GetBlobContainerClient(inputContainer))
+                    .Throws(someException);
+
+            // when
+            ValueTask<List<string>> retrieveAllAccessPoliciesTask =
+                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: retrieveAllAccessPoliciesTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
+
+            this.blobServiceClientMock.Verify(client =>
+                client.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
