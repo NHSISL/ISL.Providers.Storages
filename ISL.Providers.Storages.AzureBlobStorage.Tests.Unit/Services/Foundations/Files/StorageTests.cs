@@ -4,6 +4,7 @@
 
 using Azure;
 using Azure.Identity;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -236,9 +237,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 "fullaccess"
             };
 
+        public static StorageSharedKeyCredential CreateRandomStorageSharedKeyCredential() =>
+            CreateStorageSharedKeyCredentialFiller().Create();
+
+        private static Filler<StorageSharedKeyCredential> CreateStorageSharedKeyCredentialFiller()
+        {
+            var filler = new Filler<StorageSharedKeyCredential>();
+
+            return filler;
+        }
+
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
                 actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;
+
+        private Expression<Func<StorageSharedKeyCredential, bool>> SameStorageSharedKeyCredentialAs(
+            StorageSharedKeyCredential expectedCredential) =>
+                actualCredential => this.compareLogic.Compare(expectedCredential, actualCredential).AreEqual;
 
         private static UserDelegationKey CreateUserDelegationKey() =>
             new Mock<UserDelegationKey>().Object;
