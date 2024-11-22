@@ -135,7 +135,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = dateTimeOffset,
-                        PolicyExpiresOn = dateTimeOffset.AddYears(this.blobStorageBroker.TokenLifetimeYears),
+                        PolicyExpiresOn = dateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
                         Permissions = permissions
                     }
                 };

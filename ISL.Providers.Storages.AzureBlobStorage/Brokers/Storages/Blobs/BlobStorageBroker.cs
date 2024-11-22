@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
-        public int TokenLifetimeYears { get; private set; }
+        public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -38,7 +38,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                         }),
                     options: blobServiceClientOptions);
 
-            this.TokenLifetimeYears = azureBlobStoreConfigurations.TokenLifetimeYears;
+            this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
