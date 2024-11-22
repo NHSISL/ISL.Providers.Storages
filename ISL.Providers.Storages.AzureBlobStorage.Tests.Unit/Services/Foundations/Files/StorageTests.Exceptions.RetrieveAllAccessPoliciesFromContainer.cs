@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnRetreiveAllAccessPoliciesFromContainerAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveAllAccessPoliciesFromContainerAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -62,7 +62,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetreiveAllAccessPoliciesFromContainerAsync(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPoliciesFromContainerAsync(
             Exception dependencyException)
         {
             // given
@@ -107,7 +107,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRetreiveAllAccessPoliciesFromContainerAsync()
+        public async Task ShouldThrowServiceExceptionOnRetrieveAllAccessPoliciesFromContainerAsync()
         {
             // given
             Exception someException = new Exception();
