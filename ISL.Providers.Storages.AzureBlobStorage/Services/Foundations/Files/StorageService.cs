@@ -109,8 +109,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
         });
 
-        public ValueTask CreateDirectoryAsync(string directory) =>
-            throw new NotImplementedException();
+        public async ValueTask CreateDirectoryAsync(string directory)
+        {
+            await this.blobStorageBroker.DataLakeFileSystemClient.CreateDirectoryAsync(directory);
+        }
 
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();
