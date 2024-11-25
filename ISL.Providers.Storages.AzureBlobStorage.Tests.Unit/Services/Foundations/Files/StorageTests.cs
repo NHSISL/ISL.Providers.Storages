@@ -176,34 +176,63 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmms");
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
 
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
                 new BlobSignedIdentifier
                 {
-                    Id = $"reader_{timestamp}",
+                    Id = $"read_{timestamp}",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "rl"
                     }
                 },
                 new BlobSignedIdentifier
                 {
-                    Id = $"writer_{timestamp}",
+                    Id = $"write_{timestamp}",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddYears(1),
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "w"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"delete_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "d"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"fullaccess_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rlwd"
                     }
                 }
             };
 
             return signedIdentifiers;
         }
+
+        public static List<string> GetPolicyNames() =>
+            new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
+            };
 
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
@@ -263,24 +292,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<string, List<string>> InvalidPolicyArguments()
-        {
-            List<string> emptyStringList = new List<string>
+        public static TheoryData<List<string>> NullAndEmptyList() =>
+            new TheoryData<List<string>>
             {
-                ""
+                { null },
+                { new List<string>() }
             };
-
-            List<string> blankStringList = new List<string>
-            {
-                " "
-            };
-
-            return new TheoryData<string, List<string>>
-            {
-                { null, null },
-                { "", emptyStringList },
-                { " ", blankStringList }
-            };
-        }
     }
 }

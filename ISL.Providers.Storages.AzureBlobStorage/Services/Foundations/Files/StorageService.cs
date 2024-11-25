@@ -117,7 +117,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
             DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmms");
+            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmmss");
 
             BlobContainerClient containerClient =
                     this.blobStorageBroker.BlobServiceClient
@@ -135,7 +135,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = dateTimeOffset,
-                        PolicyExpiresOn = dateTimeOffset.AddYears(this.blobStorageBroker.TokenLifetimeYears),
+                        PolicyExpiresOn = dateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
                         Permissions = permissions
                     }
                 };
@@ -161,18 +161,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName)
         {
-            if (policyName == "reader")
-            {
-                return "rl";
-            }
-            else if (policyName == "writer")
-            {
-                return "w";
-            }
-            else
-            {
-                return "";
-            }
-        }
+            "read" => "rl",
+            "write" => "w",
+            "delete" => "d",
+            "fullaccess" => "rlwd",
+            _ => ""
+        };
     }
 }

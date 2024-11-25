@@ -8,6 +8,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Models
     {
         public string ServiceUri { get; set; }
         public string AzureTenantId { get; set; }
-        public int TokenLifetimeYears { get; set; }
+        public int TokenLifetimeDays { get; set; }
     }
 }
