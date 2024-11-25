@@ -2,9 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Net.Http;
-using System.Threading;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
@@ -12,12 +9,16 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
+using System;
+using System.Net.Http;
+using System.Threading;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
+        public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -29,13 +30,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             };
 
             this.BlobServiceClient = new BlobServiceClient(
-                    serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                    credential: new DefaultAzureCredential(
-                        new DefaultAzureCredentialOptions
-                        {
-                            VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
-                        }),
-                    options: blobServiceClientOptions);
+                serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
+                credential: new DefaultAzureCredential(
+                    new DefaultAzureCredentialOptions
+                    {
+                        VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
+                    }),
+                options: blobServiceClientOptions);
+
+            this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(

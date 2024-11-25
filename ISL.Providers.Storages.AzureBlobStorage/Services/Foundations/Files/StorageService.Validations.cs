@@ -2,10 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.IO;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -49,10 +51,39 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
         }
 
+        private static void ValidateStorageArgumentsOnCreateAccessPolicy(
+            string container, List<string> policyNames)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalidList(policyNames), Parameter: "PolicyNames"));
+
+            ValidatePolicyNames(policyNames);
+        }
+
+        private static void ValidateStorageArgumentsOnRemoveAccessPolicies(
+            string container)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"));
+        }
+
+        private static void ValidateStorageArgumentsOnRetrieveAllAccessPolicies(string container)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),
             Message = "Text is invalid"
+        };
+
+        private static dynamic IsInvalidList(List<string> textList) => new
+        {
+            Condition = textList is null || textList.Count == 0 || textList.Any(string.IsNullOrWhiteSpace),
+            Message = "List is invalid"
         };
 
         private static dynamic IsInvalid(DateTimeOffset dateTimeOffset) => new
@@ -72,6 +103,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Condition = outputStream is null || outputStream.Length > 0,
             Message = "Stream is invalid"
         };
+
+        private static void ValidatePolicyNames(List<string> policyNames)
+        {
+            foreach (var policyName in policyNames)
+            {
+                if (policyName.ToLower() != "read" &&
+                    policyName.ToLower() != "write" &&
+                    policyName.ToLower() != "delete" &&
+                    policyName.ToLower() != "fullaccess")
+                {
+                    throw new InvalidPolicyNameStorageException(
+                        message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
+                        "are supported at this time.");
+                }
+            }
+        }
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
