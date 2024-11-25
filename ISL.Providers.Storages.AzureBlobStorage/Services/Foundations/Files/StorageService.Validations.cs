@@ -69,6 +69,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(directoryPath), Parameter: "DirectoryPath"),
                 (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"),
                 (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+        }
 
         private static void ValidateStorageArgumentsOnRemoveAccessPolicies(
             string container)

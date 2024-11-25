@@ -178,7 +178,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return uri.ToString();
         });
 
-
         public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
         {
