@@ -116,5 +116,57 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnCreateDirectorySasTokenAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string randomString = GetRandomString();
+            DateTimeOffset someDateTimeOffset = GetRandomFutureDateTimeOffset();
+            string someContainer = randomString;
+            string someDirectoryPath = randomString;
+            string someAccessPolicyIdentifier = randomString;
+            string inputContainer = someContainer;
+            string inputDirectoryPath = someDirectoryPath;
+            string inputAccessPolicyIdentifier = someAccessPolicyIdentifier;
+            DateTimeOffset inputDateTimeOffset = someDateTimeOffset;
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffsetAsync())
+                    .Throws(someException);
+
+            // when
+            ValueTask<string> createDirectorySasTokenTask =
+                this.storageService.CreateDirectorySasToken(
+                    someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: createDirectorySasTokenTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffsetAsync(),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
