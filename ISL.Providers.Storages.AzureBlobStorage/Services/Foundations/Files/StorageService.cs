@@ -92,9 +92,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
 
             BlobClient blobClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container)
-                        .GetBlobClient(fileName);
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
 
             var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
             var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
@@ -152,8 +152,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
 
             BlobContainerClient containerClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container);
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container);
 
             BlobContainerAccessPolicy containerAccessPolicy = await containerClient.GetAccessPolicyAsync();
             List<string> signedIdentifiers = new List<string>();
@@ -173,8 +173,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
 
             BlobContainerClient containerClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container);
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container);
 
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         });
