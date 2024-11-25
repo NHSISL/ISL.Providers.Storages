@@ -48,12 +48,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: invalidArgumentStorageException);
 
             // when
-            ValueTask<string> getDownloadLinkTask =
+            ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateDirectorySasToken(
-                invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier, invalidExpiresOn);
+                    invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier, invalidExpiresOn);
 
             StorageValidationException actualStorageValidationException =
-                await Assert.ThrowsAsync<StorageValidationException>(getDownloadLinkTask.AsTask);
+                await Assert.ThrowsAsync<StorageValidationException>(createDirectorySasTokenTask.AsTask);
 
             // then
             actualStorageValidationException
