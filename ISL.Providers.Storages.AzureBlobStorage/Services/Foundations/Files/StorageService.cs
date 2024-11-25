@@ -110,11 +110,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
         });
 
-        public async ValueTask CreateDirectoryAsync(string container, string directory)
+        public ValueTask CreateDirectoryAsync(string container, string directory) =>
+        TryCatch(async () =>
         {
+            ValidateStorageArgumentsOnCreateDirectory(container, directory);
             DataLakeFileSystemClient dataLakeFileSystemClient = this.blobStorageBroker.DataLakeServiceClient.GetFileSystemClient(container);
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
-        }
+        });
 
         public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
             throw new NotImplementedException();

@@ -42,6 +42,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(container), Parameter: "Container"));
         }
 
+        private static void ValidateStorageArgumentsOnCreateDirectory(string container, string directory)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(directory), Parameter: "Directory"));
+        }
+
         private static void ValidateStorageArgumentsOnGetDownloadLink(
             string fileName, string container, DateTimeOffset expiresOn)
         {
