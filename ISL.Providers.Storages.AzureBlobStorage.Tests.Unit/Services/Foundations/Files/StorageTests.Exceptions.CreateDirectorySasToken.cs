@@ -65,6 +65,56 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnCreateDirectorySasTokenAsync(Exception dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            DateTimeOffset someDateTimeOffset = GetRandomFutureDateTimeOffset();
+            string someContainer = randomString;
+            string someDirectoryPath = randomString;
+            string someAccessPolicyIdentifier = randomString;
+            string inputContainer = someContainer;
+            string inputDirectoryPath = someDirectoryPath;
+            string inputAccessPolicyIdentifier = someAccessPolicyIdentifier;
+            DateTimeOffset inputDateTimeOffset = someDateTimeOffset;
 
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffsetAsync())
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask<string> createDirectorySasTokenTask =
+                this.storageService.CreateDirectorySasToken(
+                    someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
+
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createDirectorySasTokenTask.AsTask);
+
+            // then
+            actualStorageDependencyException
+                .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffsetAsync(),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
