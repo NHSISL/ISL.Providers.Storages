@@ -48,10 +48,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.StorageSharedKeyCredential)
                     .Returns(outputStorageSharedKeyCredential);
 
-            this.dataLakeSasBuilderMock.Setup(builder =>
-                builder.ToSasQueryParameters(It.Is(SameStorageSharedKeyCredentialAs(
-                    outputStorageSharedKeyCredential))).ToString())
-                        .Returns(outputSasToken);
+            //this.dataLakeSasBuilderMock.Setup(builder =>
+            //    builder.ToSasQueryParameters(It.Is(SameStorageSharedKeyCredentialAs(
+            //        outputStorageSharedKeyCredential))).ToString())
+            //            .Returns(outputSasToken);
 
             // when
             var actualSasToken = await this.storageService.CreateDirectorySasToken(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier, inputExpiresOn);
