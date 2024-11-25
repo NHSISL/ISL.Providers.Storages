@@ -6,6 +6,7 @@ using Azure;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
@@ -28,6 +29,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
+        private readonly Mock<DataLakeFileSystemClient> dataLakeFileSystemClientMock;
         private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
         private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
         private readonly Mock<BlobContainerClient> blobContainerClientMock;
@@ -41,6 +43,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
+            this.dataLakeFileSystemClientMock = new Mock<DataLakeFileSystemClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
             this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
             this.blobContainerClientMock = new Mock<BlobContainerClient>();
@@ -51,6 +54,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.BlobServiceClient)
                     .Returns(blobServiceClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.DataLakeFileSystemClient)
+                    .Returns(dataLakeFileSystemClientMock.Object);
 
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object,
