@@ -117,7 +117,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
             DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmms");
+            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmmss");
 
             BlobContainerClient containerClient =
                     this.blobStorageBroker.BlobServiceClient

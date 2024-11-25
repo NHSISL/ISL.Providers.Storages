@@ -176,7 +176,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmms");
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
 
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
@@ -292,24 +292,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<string, List<string>> InvalidPolicyArguments()
-        {
-            List<string> emptyStringList = new List<string>
+        public static TheoryData<List<string>> NullAndEmptyList() =>
+            new TheoryData<List<string>>
             {
-                ""
+                { null },
+                { new List<string>() }
             };
-
-            List<string> blankStringList = new List<string>
-            {
-                " "
-            };
-
-            return new TheoryData<string, List<string>>
-            {
-                { null, null },
-                { "", new List<string>() },
-                { " ", blankStringList }
-            };
-        }
     }
 }

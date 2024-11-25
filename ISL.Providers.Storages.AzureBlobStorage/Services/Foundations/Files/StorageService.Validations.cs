@@ -69,7 +69,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         private static dynamic IsInvalidList(List<string> textList) => new
         {
-            Condition = textList is null || textList.Any(string.IsNullOrWhiteSpace),
+            Condition = textList is null || textList.Count == 0 || textList.Any(string.IsNullOrWhiteSpace),
             Message = "List is invalid"
         };
 
