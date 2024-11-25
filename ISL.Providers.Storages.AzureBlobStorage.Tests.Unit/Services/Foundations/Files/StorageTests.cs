@@ -225,6 +225,32 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
+        public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+            CreateBlobContainerAccessPolicyFiller().Create();
+
+        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
+        {
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            var filler = new Filler<BlobContainerAccessPolicy>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
+                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
+                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
+
+            return filler;
+        }
+
+        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
+        {
+            var filler = new Filler<BlobSignedIdentifier>();
+
+            filler.Setup()
+                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
+
+            return filler;
+        }
+
         public static List<string> GetPolicyNames() =>
             new List<string>
             {
