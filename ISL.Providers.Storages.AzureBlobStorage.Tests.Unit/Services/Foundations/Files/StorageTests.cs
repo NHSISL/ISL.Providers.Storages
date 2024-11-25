@@ -2,20 +2,23 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Azure;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
+using KellermanSoftware.CompareNetObjects;
 using Microsoft.WindowsAzure.Storage;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Text;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -23,6 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
+        private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
         private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
         private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
@@ -30,30 +34,55 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly Mock<BlobClient> blobClientMock;
         private readonly Mock<Response> blobClientResponseMock;
         private readonly StorageService storageService;
+        private readonly ICompareLogic compareLogic;
 
         public StorageTests()
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
+            this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
             this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
             this.blobContainerClientMock = new Mock<BlobContainerClient>();
             this.blobClientMock = new Mock<BlobClient>();
             this.blobClientResponseMock = new Mock<Response>();
+            this.compareLogic = new CompareLogic();
 
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.BlobServiceClient)
                     .Returns(blobServiceClientMock.Object);
 
             this.storageService = new StorageService(
-                this.blobStorageBrokerMock.Object);
+                this.blobStorageBrokerMock.Object,
+                this.dateTimeBrokerMock.Object);
         }
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
+        private static string GetRandomStringWithLengthOf(int length)
+        {
+            string result = new MnemonicString(wordCount: 1, wordMinLength: length, wordMaxLength: length).GetValue();
+
+            return result.Length > length ? result.Substring(0, length) : result;
+        }
+
         private static int GetRandomNumber() =>
             new IntRange(max: 15, min: 2).GetValue();
+
+        private static List<string> GetRandomStringList()
+        {
+            int randomNumber = GetRandomNumber();
+            List<string> randomStringList = new List<string>();
+
+            for (int index = 0; index < randomNumber; index++)
+            {
+                string randomString = GetRandomStringWithLengthOf(randomNumber);
+                randomStringList.Add(randomString);
+            }
+
+            return randomStringList;
+        }
 
         public byte[] CreateRandomData()
         {
@@ -61,6 +90,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return Encoding.UTF8.GetBytes(randomMessage);
         }
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
         private static DateTimeOffset GetRandomFutureDateTimeOffset()
         {
@@ -142,6 +174,70 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
+        public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
+        {
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
+            {
+                new BlobSignedIdentifier
+                {
+                    Id = $"read_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rl"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"write_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "w"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"delete_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "d"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"fullaccess_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rlwd"
+                    }
+                }
+            };
+
+            return signedIdentifiers;
+        }
+
+        public static List<string> GetPolicyNames() =>
+            new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
+            };
+
+        private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
+            List<BlobSignedIdentifier> expectedList) =>
+                actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;
+
         private static UserDelegationKey CreateUserDelegationKey() =>
             new Mock<UserDelegationKey>().Object;
 
@@ -195,5 +291,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { someIOException }
             };
         }
+
+        public static TheoryData<List<string>> NullAndEmptyList() =>
+            new TheoryData<List<string>>
+            {
+                { null },
+                { new List<string>() }
+            };
     }
 }
