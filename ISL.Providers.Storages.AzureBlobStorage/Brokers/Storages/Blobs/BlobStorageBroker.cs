@@ -5,8 +5,10 @@
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
@@ -18,11 +20,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
+        public DataLakeFileSystemClient DataLakeFileSystemClient { get; private set; }
         public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
             var blobServiceClientOptions = new BlobClientOptions()
+            {
+                Transport = new HttpClientTransport(new HttpClient { Timeout = new TimeSpan(1, 0, 0) }),
+                Retry = { NetworkTimeout = new TimeSpan(1, 0, 0) },
+                EnableTenantDiscovery = true
+            };
+
+            var dataLakeClientOptions = new DataLakeClientOptions()
             {
                 Transport = new HttpClientTransport(new HttpClient { Timeout = new TimeSpan(1, 0, 0) }),
                 Retry = { NetworkTimeout = new TimeSpan(1, 0, 0) },
@@ -37,6 +47,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                         VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
                     }),
                 options: blobServiceClientOptions);
+
+            this.DataLakeFileSystemClient = new DataLakeFileSystemClient(
+                fileSystemUri: new Uri(azureBlobStoreConfigurations.FileSystemUri),
+                credential: new StorageSharedKeyCredential(azureBlobStoreConfigurations.StorageAccountName, azureBlobStoreConfigurations.StorageAccountAccessKey),
+                dataLakeClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
