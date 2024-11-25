@@ -102,5 +102,52 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnCreateDirectoryAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string randomContainerString = GetRandomString();
+            string inputContainer = randomContainerString;
+            string randomDirectoryString = GetRandomString();
+            string inputDirectory = randomDirectoryString;
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.dataLakeServiceClientMock.Setup(client =>
+                client.GetFileSystemClient(inputContainer))
+                    .Throws(someException);
+
+            // when
+            ValueTask createDirectoryTask =
+                this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: createDirectoryTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
+
+            this.dataLakeServiceClientMock.Verify(client =>
+                client.GetFileSystemClient(inputContainer),
+                    Times.Once);
+
+            this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
+            this.blobContainerClientMock.VerifyNoOtherCalls();
+            this.blobClientMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
