@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal interface IBlobStorageBroker
     {
         BlobServiceClient BlobServiceClient { get; }
-        DataLakeFileSystemClient DataLakeFileSystemClient { get; }
+        DataLakeServiceClient DataLakeServiceClient { get; }
         int TokenLifetimeDays { get; }
 
         Response<UserDelegationKey> GetUserDelegationKey(

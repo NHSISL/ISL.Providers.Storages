@@ -29,6 +29,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
         private readonly Mock<BlobServiceClient> blobServiceClientMock;
+        private readonly Mock<DataLakeServiceClient> dataLakeServiceClientMock;
         private readonly Mock<DataLakeFileSystemClient> dataLakeFileSystemClientMock;
         private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
         private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
@@ -43,6 +44,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
             this.blobServiceClientMock = new Mock<BlobServiceClient>();
+            this.dataLakeServiceClientMock = new Mock<DataLakeServiceClient>();
             this.dataLakeFileSystemClientMock = new Mock<DataLakeFileSystemClient>();
             this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
             this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
@@ -56,8 +58,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(blobServiceClientMock.Object);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.DataLakeFileSystemClient)
-                    .Returns(dataLakeFileSystemClientMock.Object);
+                broker.DataLakeServiceClient)
+                    .Returns(dataLakeServiceClientMock.Object);
 
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object,
