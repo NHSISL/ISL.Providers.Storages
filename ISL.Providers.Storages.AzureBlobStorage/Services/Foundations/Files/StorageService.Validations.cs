@@ -60,6 +60,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             ValidatePolicyNames(policyNames);
         }
 
+        private static void ValidateStorageArgumentsOnCreateDirectorySasToken(
+            string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(directoryPath), Parameter: "DirectoryPath"),
+                (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+        }
+
         private static dynamic IsInvalid(string text) => new
         {
             Condition = String.IsNullOrWhiteSpace(text),

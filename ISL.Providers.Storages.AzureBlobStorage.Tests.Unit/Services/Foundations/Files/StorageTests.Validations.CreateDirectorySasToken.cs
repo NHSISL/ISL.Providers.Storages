@@ -13,12 +13,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(GetInvalidSasArguments))]
-        public async Task ShouldThrowValidationExceptionOnGetDownloadLinkIfArgumentInvalidAsync(
+        public async Task ShouldThrowValidationExceptionOnCreateDirectorySasTokenIfArgumentInvalidAsync(
             string invalidText, DateTimeOffset invalidDateTimeOffset)
         {
             // given
-            string invalidFileName = invalidText;
             string invalidContainer = invalidText;
+            string invalidDirectoryPath = invalidText;
+            string invalidAccessPolicyIdentifier = invalidText;
             DateTimeOffset invalidExpiresOn = invalidDateTimeOffset;
 
             var invalidArgumentStorageException =
@@ -30,11 +31,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 values: "Date is invalid");
 
             invalidArgumentStorageException.AddData(
-                key: "FileName",
+                key: "DirectoryPath",
                 values: "Text is invalid");
 
             invalidArgumentStorageException.AddData(
                 key: "Container",
+                values: "Text is invalid");
+
+            invalidArgumentStorageException.AddData(
+                key: "AccessPolicyIdentifier",
                 values: "Text is invalid");
 
             var expectedStorageValidationException =
@@ -44,7 +49,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> getDownloadLinkTask =
-                this.storageService.GetDownloadLinkAsync(invalidFileName, invalidContainer, invalidExpiresOn);
+                this.storageService.CreateDirectorySasToken(
+                invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier, invalidExpiresOn);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(getDownloadLinkTask.AsTask);
@@ -57,6 +63,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

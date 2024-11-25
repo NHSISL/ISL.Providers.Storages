@@ -146,9 +146,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        public async ValueTask<string> CreateDirectorySasToken(
-             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
+        public ValueTask<string> CreateDirectorySasToken(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
         {
+            ValidateStorageArgumentsOnCreateDirectorySasToken(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+
             DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
 
             var sasBuilder = new DataLakeSasBuilder()
@@ -172,7 +176,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 this.blobStorageBroker.DataLakeServiceClient.Uri, container, directoryPath, sasToken);
 
             return uri.ToString();
-        }
+        });
+
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {

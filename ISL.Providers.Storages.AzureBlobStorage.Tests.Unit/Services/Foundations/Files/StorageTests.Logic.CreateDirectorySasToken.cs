@@ -40,7 +40,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             string outputSasToken = randomSasToken;
             string expectedSasToken = outputSasToken;
-
             Uri outputServiceUri = new Uri("http://mytest.com/");
 
             this.blobStorageBrokerMock.Setup(broker =>

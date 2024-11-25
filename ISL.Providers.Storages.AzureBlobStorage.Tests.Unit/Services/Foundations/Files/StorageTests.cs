@@ -149,7 +149,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<string, DateTimeOffset> GetInvalidDownloadArguments()
+        public static TheoryData<string, DateTimeOffset> GetInvalidSasArguments()
         {
             DateTimeOffset defaultDateTimeOffset = default;
             DateTimeOffset pastDateTimeOffset = DateTimeOffset.MinValue;
