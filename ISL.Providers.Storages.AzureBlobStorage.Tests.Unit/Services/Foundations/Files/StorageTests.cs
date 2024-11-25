@@ -243,7 +243,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
         {
-
             var filler = new Filler<BlobSignedIdentifier>();
 
             filler.Setup()
