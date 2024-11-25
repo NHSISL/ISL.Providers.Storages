@@ -14,7 +14,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal interface IBlobStorageBroker
     {
         BlobServiceClient BlobServiceClient { get; }
-        int TokenLifetimeYears { get; }
+        int TokenLifetimeDays { get; }
 
         Response<UserDelegationKey> GetUserDelegationKey(
             DateTimeOffset? startsOn,

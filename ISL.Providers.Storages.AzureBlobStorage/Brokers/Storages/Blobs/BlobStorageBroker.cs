@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
-        public int TokenLifetimeYears { get; private set; }
+        public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -30,15 +30,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             };
 
             this.BlobServiceClient = new BlobServiceClient(
-                    serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                    credential: new DefaultAzureCredential(
-                        new DefaultAzureCredentialOptions
-                        {
-                            VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
-                        }),
-                    options: blobServiceClientOptions);
+                serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
+                credential: new DefaultAzureCredential(
+                    new DefaultAzureCredentialOptions
+                    {
+                        VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
+                    }),
+                options: blobServiceClientOptions);
 
-            this.TokenLifetimeYears = azureBlobStoreConfigurations.TokenLifetimeYears;
+            this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
@@ -65,6 +65,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
             new BlobUriBuilder(uri);
-
     }
 }

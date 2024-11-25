@@ -5,8 +5,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Theory]
-        [InlineData("reader", "rl")]
-        [InlineData("writer", "w")]
+        [InlineData("read", "rl")]
+        [InlineData("write", "w")]
+        [InlineData("delete", "d")]
+        [InlineData("fullaccess", "rlwd")]
         [InlineData("randomstring", "")]
         public void ShouldConvertPolicyNameToPermissions(string maybePolicyString, string outputString)
         {

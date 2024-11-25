@@ -7,6 +7,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -81,7 +82,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         private static dynamic IsInvalidList(List<string> textList) => new
         {
-            Condition = textList is null || textList.Contains("") || textList.Contains(" "),
+            Condition = textList is null || textList.Count == 0 || textList.Any(string.IsNullOrWhiteSpace),
             Message = "List is invalid"
         };
 
@@ -107,10 +108,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             foreach (var policyName in policyNames)
             {
-                if (policyName.ToLower() != "reader" && policyName.ToLower() != "writer")
+                if (policyName.ToLower() != "read" &&
+                    policyName.ToLower() != "write" &&
+                    policyName.ToLower() != "delete" &&
+                    policyName.ToLower() != "fullaccess")
                 {
                     throw new InvalidPolicyNameStorageException(
-                        message: "Invalid policy name, only reader and writer privileges " +
+                        message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
                         "are supported at this time.");
                 }
             }
