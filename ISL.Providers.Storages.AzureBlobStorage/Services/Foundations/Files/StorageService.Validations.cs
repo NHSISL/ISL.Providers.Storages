@@ -7,6 +7,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -68,6 +69,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(directoryPath), Parameter: "DirectoryPath"),
                 (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"),
                 (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+
+        private static void ValidateStorageArgumentsOnRemoveAccessPolicies(
+            string container)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"));
+        }
+
+        private static void ValidateStorageArgumentsOnRetrieveAllAccessPolicies(string container)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"));
+
         }
 
         private static dynamic IsInvalid(string text) => new
@@ -78,7 +92,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         private static dynamic IsInvalidList(List<string> textList) => new
         {
-            Condition = textList is null || textList.Contains("") || textList.Contains(" "),
+            Condition = textList is null || textList.Count == 0 || textList.Any(string.IsNullOrWhiteSpace),
             Message = "List is invalid"
         };
 

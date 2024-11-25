@@ -188,7 +188,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmms");
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
 
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
@@ -235,6 +235,32 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
 
             return signedIdentifiers;
+        }
+
+        public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+            CreateBlobContainerAccessPolicyFiller().Create();
+
+        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
+        {
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            var filler = new Filler<BlobContainerAccessPolicy>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
+                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
+                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
+
+            return filler;
+        }
+
+        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
+        {
+            var filler = new Filler<BlobSignedIdentifier>();
+
+            filler.Setup()
+                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
+
+            return filler;
         }
 
         public static List<string> GetPolicyNames() =>
@@ -312,24 +338,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<string, List<string>> InvalidPolicyArguments()
-        {
-            List<string> emptyStringList = new List<string>
+        public static TheoryData<List<string>> NullAndEmptyList() =>
+            new TheoryData<List<string>>
             {
-                ""
+                { null },
+                { new List<string>() }
             };
-
-            List<string> blankStringList = new List<string>
-            {
-                " "
-            };
-
-            return new TheoryData<string, List<string>>
-            {
-                { null, null },
-                { "", emptyStringList },
-                { " ", blankStringList }
-            };
-        }
     }
 }
