@@ -16,8 +16,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files
         ValueTask DeleteFileAsync(string fileName, string container);
         ValueTask<List<string>> ListFilesInContainerAsync(string container);
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
-
         ValueTask CreateContainerAsync(string container);
         ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames);
+        ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
     }
 }
