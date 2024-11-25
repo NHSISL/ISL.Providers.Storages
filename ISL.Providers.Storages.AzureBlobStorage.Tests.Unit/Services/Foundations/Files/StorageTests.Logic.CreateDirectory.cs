@@ -14,11 +14,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomDirectory = GetRandomString();
             string inputDirectory = randomDirectory;
 
-            // when
             this.dataLakeServiceClientMock.Setup(service =>
                 service.GetFileSystemClient(inputContainer))
                     .Returns(this.dataLakeFileSystemClientMock.Object);
 
+            // when
             await this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             // then
