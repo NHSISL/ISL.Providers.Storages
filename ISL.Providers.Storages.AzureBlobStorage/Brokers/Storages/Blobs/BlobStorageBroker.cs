@@ -49,14 +49,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                 credential: new StorageSharedKeyCredential(
                     azureBlobStoreConfigurations.StorageAccountName,
-                    azureBlobStoreConfigurations.StorageAccountKey),
+                    azureBlobStoreConfigurations.StorageAccountAccessKey),
                 options: dataLakeClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
 
             this.StorageSharedKeyCredential = new StorageSharedKeyCredential(
                 azureBlobStoreConfigurations.StorageAccountName,
-                azureBlobStoreConfigurations.StorageAccountKey);
+                azureBlobStoreConfigurations.StorageAccountAccessKey);
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
