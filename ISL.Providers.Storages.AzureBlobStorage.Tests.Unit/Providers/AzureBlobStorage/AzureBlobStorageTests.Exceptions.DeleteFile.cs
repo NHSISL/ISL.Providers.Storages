@@ -51,6 +51,48 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             this.storageServiceMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task ShouldThrowProviderDependencyValidationExceptionOnDeleteFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
 
+            var storageDependencyValidationException = new StorageDependencyValidationException(
+                message: "Storage dependency validation error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyValidationException =
+                new AzureBlobStorageProviderDependencyValidationException(
+                    message: "Azure blob storage provider dependency validation error occurred, " +
+                            "fix errors and try again.",
+                    innerException: (Xeption)storageDependencyValidationException.InnerException,
+                    data: storageDependencyValidationException.InnerException.Data);
+
+            this.storageServiceMock.Setup(service =>
+                service.DeleteFileAsync(inputFileName, inputContainer))
+                    .ThrowsAsync(storageDependencyValidationException);
+
+            // when
+            ValueTask createFileTask =
+                this.azureBlobStorageProvider.DeleteFileAsync(inputFileName, inputContainer);
+
+            AzureBlobStorageProviderDependencyValidationException
+                actualAzureBlobStorageProviderDependencyValidationException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyValidationException>(
+                        testCode: createFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyValidationException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyValidationException);
+
+            this.storageServiceMock.Verify(service =>
+                service.DeleteFileAsync(inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
