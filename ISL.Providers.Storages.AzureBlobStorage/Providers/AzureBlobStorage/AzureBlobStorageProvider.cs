@@ -79,6 +79,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         public ValueTask<List<string>> ListContainerAsync(string container) =>
             throw new NotImplementedException();
 
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(List<string> policyNames, string container) =>
+            throw new NotImplementedException();
+
         public ValueTask<string> GetAccessTokenAsync(
             string path,
             string container,
