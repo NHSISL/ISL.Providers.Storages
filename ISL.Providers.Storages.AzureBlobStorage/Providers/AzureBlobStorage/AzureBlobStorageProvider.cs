@@ -115,8 +115,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask DeleteFileAsync(string fileName, string container) =>
-            await this.storageService.DeleteFileAsync(fileName, container);
+        public async ValueTask DeleteFileAsync(string fileName, string container)
+        {
+            try
+            {
+                await this.storageService.DeleteFileAsync(fileName, container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+        }
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
