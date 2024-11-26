@@ -151,5 +151,52 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnCreateFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            Stream randomStream = new HasLengthStream();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
+            Stream inputStream = randomStream;
+
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.CreateFileAsync(inputStream, inputFileName, inputContainer))
+                    .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask createFileTask =
+                this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputFileName, inputContainer);
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: createFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
+
+            this.storageServiceMock.Verify(service =>
+                service.CreateFileAsync(inputStream, inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
