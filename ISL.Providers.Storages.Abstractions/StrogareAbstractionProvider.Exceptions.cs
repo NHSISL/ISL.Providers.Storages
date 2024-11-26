@@ -64,7 +64,7 @@ namespace ISL.Providers.Storages.Abstractions
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyValidationException)
             {
-                throw CreateValidationException(ex);
+                throw CreateDependencyValidationException(ex);
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyException)
             {
@@ -99,7 +99,7 @@ namespace ISL.Providers.Storages.Abstractions
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyValidationException)
             {
-                throw CreateValidationException(ex);
+                throw CreateDependencyValidationException(ex);
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyException)
             {
