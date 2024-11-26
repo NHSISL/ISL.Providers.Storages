@@ -11,7 +11,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions
         /// This exception is thrown when a dependency validation error occurs while using the storage provider.
         /// For example, if an external dependency used by the provider requires data that is missing or invalid.
         /// </summary>
-        public AzureBlobStorageProviderDependencyValidationException(string message, Xeption innerException, IDictionary data)
+        public AzureBlobStorageProviderDependencyValidationException(
+            string message, 
+            Xeption innerException, 
+            IDictionary data)
             : base(message: message, innerException, data)
         { }
     }
