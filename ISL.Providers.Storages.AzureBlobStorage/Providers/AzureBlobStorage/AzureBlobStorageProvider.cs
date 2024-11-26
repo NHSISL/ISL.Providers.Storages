@@ -105,6 +105,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
         /// <summary>
         /// Asynchronously deletes a file from the specified storage container.
         /// </summary>
@@ -135,6 +136,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             {
                 throw CreateProviderDependencyException(
                     storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
             }
         }
 
