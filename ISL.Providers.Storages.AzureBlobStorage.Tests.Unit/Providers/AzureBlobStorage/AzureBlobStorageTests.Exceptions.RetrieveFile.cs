@@ -53,5 +53,51 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderDependencyValidationExceptionOnRetrieveFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            Stream randomStream = new ZeroLengthStream();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
+            Stream outputStream = randomStream;
+
+            var storageDependencyValidationException = new StorageDependencyValidationException(
+                message: "Storage dependency validation error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyValidationException =
+                new AzureBlobStorageProviderDependencyValidationException(
+                    message: "Azure blob storage provider dependency validation error occurred, " +
+                            "fix errors and try again.",
+                    innerException: (Xeption)storageDependencyValidationException.InnerException,
+                    data: storageDependencyValidationException.InnerException.Data);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                    .ThrowsAsync(storageDependencyValidationException);
+
+            // when
+            ValueTask retrieveFileTask =
+                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+
+            AzureBlobStorageProviderDependencyValidationException
+                actualAzureBlobStorageProviderDependencyValidationException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyValidationException>(
+                        testCode: retrieveFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyValidationException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyValidationException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
