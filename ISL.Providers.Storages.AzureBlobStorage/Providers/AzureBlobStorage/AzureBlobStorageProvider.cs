@@ -67,8 +67,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
-        public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// Retrieves a file from the storage container.
+        /// </summary>
+        /// <param name="output">The <see cref="Stream"/> containing the file data to be downloaded.</param>
+        /// <param name="fileName">The name of the file to retrieve in the container.</param>
+        /// <param name="container">The name of the storage container where the file is located.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
+            await this.storageService.RetrieveFileAsync(output, fileName, container);
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>
             throw new NotImplementedException();
