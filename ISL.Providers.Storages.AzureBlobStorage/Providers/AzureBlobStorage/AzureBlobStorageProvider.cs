@@ -23,6 +23,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             InitializeClients(serviceProvider);
         }
 
+        internal AzureBlobStorageProvider(IServiceProvider serviceProvider)
+        {
+            InitializeClients(serviceProvider);
+        }
+
         /// <summary>
         /// Creates a file in the storage container.
         /// </summary>
@@ -75,9 +80,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             throw new NotImplementedException();
 
         public ValueTask<string> GetAccessTokenAsync(
-            string path, 
-            string container, 
-            string accessLevel, 
+            string path,
+            string container,
+            string accessLevel,
             DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
 
