@@ -99,6 +99,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                 throw CreateProviderDependencyException(
                     storageDependencyException.InnerException as Xeption);
             }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
         }
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>

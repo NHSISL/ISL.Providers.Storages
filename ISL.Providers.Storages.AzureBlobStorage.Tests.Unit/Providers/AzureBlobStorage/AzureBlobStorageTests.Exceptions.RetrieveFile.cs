@@ -144,5 +144,50 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnRetrieveFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            Stream randomStream = new ZeroLengthStream();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
+            Stream outputStream = randomStream;
+
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                    .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask retrieveFileTask =
+                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: retrieveFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
