@@ -74,7 +74,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         public ValueTask<List<string>> ListContainerAsync(string container) =>
             throw new NotImplementedException();
 
-        public ValueTask<string> GetAccessTokenAsync(string path, string container, string accessLevel, DateTimeOffset expiresOn) =>
+        public ValueTask<string> GetAccessTokenAsync(
+            string path, 
+            string container, 
+            string accessLevel, 
+            DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
