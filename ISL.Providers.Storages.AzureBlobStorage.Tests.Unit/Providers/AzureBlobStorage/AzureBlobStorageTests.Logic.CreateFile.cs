@@ -27,8 +27,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
-            this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

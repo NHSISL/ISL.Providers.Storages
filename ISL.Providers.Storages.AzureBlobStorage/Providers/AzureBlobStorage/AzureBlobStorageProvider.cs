@@ -23,9 +23,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             InitializeClients(serviceProvider);
         }
 
-        internal AzureBlobStorageProvider(IServiceProvider serviceProvider)
+        internal AzureBlobStorageProvider(IStorageService storageService)
         {
-            InitializeClients(serviceProvider);
+            this.storageService = storageService;
         }
 
         /// <summary>
