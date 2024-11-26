@@ -37,7 +37,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             // when
             ValueTask retrieveFileTask =
-                this.azureBlobStorageProvider.CreateFileAsync(outputStream, inputFileName, inputContainer);
+                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
@@ -48,7 +48,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateFileAsync(outputStream, inputFileName, inputContainer),
+                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
                 Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

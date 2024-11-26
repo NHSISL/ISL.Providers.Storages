@@ -78,8 +78,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
-            await this.storageService.RetrieveFileAsync(output, fileName, container);
+        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
+        {
+            try
+            {
+                await this.storageService.RetrieveFileAsync(output, fileName, container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+        }
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>
             throw new NotImplementedException();
