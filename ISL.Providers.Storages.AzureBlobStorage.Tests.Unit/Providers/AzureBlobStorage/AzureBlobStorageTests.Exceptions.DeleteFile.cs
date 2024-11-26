@@ -94,5 +94,48 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderDependencyExceptionOnDeleteFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
+
+            var storageDependencyException = new StorageDependencyException(
+                message: "Storage dependency error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyException =
+                new AzureBlobStorageProviderDependencyException(
+                    message: "Azure blob storage provider dependency error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageDependencyException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.DeleteFileAsync(inputFileName, inputContainer))
+                    .ThrowsAsync(storageDependencyException);
+
+            // when
+            ValueTask deleteFileTask =
+                this.azureBlobStorageProvider.DeleteFileAsync(inputFileName, inputContainer);
+
+            AzureBlobStorageProviderDependencyException
+                actualAzureBlobStorageProviderDependencyException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
+                        testCode: deleteFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
+
+            this.storageServiceMock.Verify(service =>
+                service.DeleteFileAsync(inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
