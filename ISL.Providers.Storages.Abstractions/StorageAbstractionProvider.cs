@@ -157,6 +157,15 @@ namespace ISL.Providers.Storages.Abstractions
         /// The names of the policies you want to create. Options are read, write, delete and fullaccess.</param>
         /// <param name="container">The name of the storage container where the access policies will be created.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ///  /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
         public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(List<string> policyNames, string container) =>
             await this.storageProvider.CreateAndAssignAccessPoliciesToContainerAsync(policyNames, container);
     }
