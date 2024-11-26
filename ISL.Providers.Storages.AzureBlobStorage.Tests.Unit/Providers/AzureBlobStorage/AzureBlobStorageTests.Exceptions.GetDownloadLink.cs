@@ -36,12 +36,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageValidationException);
 
             // when
-            ValueTask<string> createFileTask =
+            ValueTask<string> getDownloadLinkTask =
                 this.azureBlobStorageProvider.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
-                    testCode: createFileTask.AsTask);
+                    testCode: getDownloadLinkTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
@@ -81,13 +81,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
-            ValueTask<string> createFileTask =
+            ValueTask<string> getDownloadLinkTask =
                 this.azureBlobStorageProvider.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
 
             AzureBlobStorageProviderDependencyValidationException
                 actualAzureBlobStorageProviderDependencyValidationException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyValidationException>(
-                        testCode: createFileTask.AsTask);
+                        testCode: getDownloadLinkTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderDependencyValidationException
@@ -126,13 +126,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageDependencyException);
 
             // when
-            ValueTask<string> createFileTask =
+            ValueTask<string> getDownloadLinkTask =
                 this.azureBlobStorageProvider.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
 
             AzureBlobStorageProviderDependencyException
                 actualAzureBlobStorageProviderDependencyException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
-                        testCode: createFileTask.AsTask);
+                        testCode: getDownloadLinkTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderDependencyException
@@ -171,13 +171,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageServiceException);
 
             // when
-            ValueTask<string> createFileTask =
+            ValueTask<string> getDownloadLinkTask =
                 this.azureBlobStorageProvider.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
 
             AzureBlobStorageProviderServiceException
                 actualAzureBlobStorageProviderServiceException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
-                        testCode: createFileTask.AsTask);
+                        testCode: getDownloadLinkTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderServiceException
