@@ -149,5 +149,15 @@ namespace ISL.Providers.Storages.Abstractions
         {
             return await storageProvider.GetAccessTokenAsync(path, container, accessLevel, expiresOn);
         });
+
+        /// <summary>
+        /// Creates the provided stored access policies on the container.
+        /// </summary>
+        /// <param name="policyNames"><see cref="List<string>"/>
+        /// The names of the policies you want to create. Options are read, write, delete and fullaccess.</param>
+        /// <param name="container">The name of the storage container where the access policies will be created.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(List<string> polictyNames, string container) =>
+            throw new NotImplementedException();
     }
 }
