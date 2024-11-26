@@ -8,7 +8,6 @@ using Azure.Identity;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
@@ -21,7 +20,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal class BlobStorageBroker : IBlobStorageBroker
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
-        public DataLakeServiceClient DataLakeServiceClient { get; private set; }
         public int TokenLifetimeDays { get; private set; }
         private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
 
@@ -34,24 +32,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 EnableTenantDiscovery = true
             };
 
-            var dataLakeClientOptions = new DataLakeClientOptions()
-            {
-                Transport = new HttpClientTransport(new HttpClient { Timeout = new TimeSpan(1, 0, 0) }),
-                Retry = { NetworkTimeout = new TimeSpan(1, 0, 0) },
-                EnableTenantDiscovery = true
-            };
-
             this.BlobServiceClient = new BlobServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                 credential: new DefaultAzureCredential(),
                 options: blobServiceClientOptions);
-
-            this.DataLakeServiceClient = new DataLakeServiceClient(
-                serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                credential: new StorageSharedKeyCredential(
-                    azureBlobStoreConfigurations.StorageAccountName,
-                    azureBlobStoreConfigurations.StorageAccountAccessKey),
-                options: dataLakeClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
 
