@@ -7,6 +7,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xeptions;
@@ -22,6 +23,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             InitializeClients(serviceProvider);
         }
 
+        /// <summary>
+        /// Creates a file in the storage container.
+        /// </summary>
+        /// <param name="input">The <see cref="Stream"/> containing the file data to be uploaded.</param>
+        /// <param name="fileName">The name of the file to create in the container.</param>
+        /// <param name="container">The name of the storage container where the file will be stored.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
         {
             try
@@ -49,6 +61,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
+        public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
+            throw new NotImplementedException();
+
+        public ValueTask DeleteFileAsync(string fileName, string container) =>
+            throw new NotImplementedException();
+
+        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
+            throw new NotImplementedException();
+
+        public ValueTask<List<string>> ListContainerAsync(string container) =>
+            throw new NotImplementedException();
+
+        public ValueTask<string> GetAccessTokenAsync(string path, string container, string accessLevel, DateTimeOffset expiresOn) =>
+            throw new NotImplementedException();
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)
