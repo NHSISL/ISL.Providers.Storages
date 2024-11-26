@@ -24,5 +24,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             public override long Length => 1;
         }
+
+        public class ZeroLengthStream : MemoryStream
+        {
+            public override long Length => 0;
+        }
     }
 }
