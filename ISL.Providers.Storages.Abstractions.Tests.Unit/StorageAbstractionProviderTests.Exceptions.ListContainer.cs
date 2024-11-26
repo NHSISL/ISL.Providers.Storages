@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -32,13 +32,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()))
+                provider.ListFilesInContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<List<string>> listContainerTask =
                 this.storageAbstractionProvider
-                    .ListContainerAsync(It.IsAny<string>());
+                    .ListFilesInContainerAsync(It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(testCode: listContainerTask.AsTask);
@@ -48,7 +48,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 expectedStorageValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()),
+                provider.ListFilesInContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -72,13 +72,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()))
+                provider.ListFilesInContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<List<string>> listContainerTask =
                 this.storageAbstractionProvider
-                    .ListContainerAsync(It.IsAny<string>());
+                    .ListFilesInContainerAsync(It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(testCode: listContainerTask.AsTask);
@@ -88,7 +88,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 expectedStorageValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()),
+                provider.ListFilesInContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -111,13 +111,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()))
+                provider.ListFilesInContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<List<string>> listContainerTask =
                 this.storageAbstractionProvider
-                    .ListContainerAsync(It.IsAny<string>());
+                    .ListFilesInContainerAsync(It.IsAny<string>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(testCode: listContainerTask.AsTask);
@@ -127,7 +127,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 expectedStorageDependencyProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()),
+                provider.ListFilesInContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -150,13 +150,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()))
+                provider.ListFilesInContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<List<string>> listContainerTask =
                 this.storageAbstractionProvider
-                    .ListContainerAsync(It.IsAny<string>());
+                    .ListFilesInContainerAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: listContainerTask.AsTask);
@@ -166,7 +166,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 expectedStorageServiceProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()),
+                provider.ListFilesInContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -191,13 +191,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: uncatagorizedStorageProviderException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()))
+                provider.ListFilesInContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someException);
 
             // when
             ValueTask<List<string>> listContainerTask =
                 this.storageAbstractionProvider
-                    .ListContainerAsync(It.IsAny<string>());
+                    .ListFilesInContainerAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: listContainerTask.AsTask);
@@ -207,7 +207,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 expectedStorageServiceProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.ListContainerAsync(It.IsAny<string>()),
+                provider.ListFilesInContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();

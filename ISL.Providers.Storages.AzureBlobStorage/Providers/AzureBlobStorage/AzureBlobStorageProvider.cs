@@ -184,8 +184,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
-        public ValueTask<List<string>> ListContainerAsync(string container) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// Asynchronously lists all files in the specified storage container.
+        /// </summary>
+        /// <param name="container">The name of the storage container to list files from.</param>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> containing the list of file names.</returns>
+        /// /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
+            await this.storageService.ListFilesInContainerAsync(container);
 
         public ValueTask<string> GetAccessTokenAsync(
             string path,
