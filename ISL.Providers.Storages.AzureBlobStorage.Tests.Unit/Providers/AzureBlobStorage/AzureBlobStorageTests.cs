@@ -1,6 +1,7 @@
 ﻿using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Tynamix.ObjectFiller;
@@ -26,6 +27,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             string result = new MnemonicString(wordCount: 1, wordMinLength: length, wordMaxLength: length).GetValue();
 
             return result.Length > length ? result.Substring(0, length) : result;
+        }
+
+        private static DateTimeOffset GetRandomFutureDateTimeOffset()
+        {
+            DateTime futureStartDate = DateTimeOffset.UtcNow.AddDays(1).Date;
+            int randomDaysInFuture = GetRandomNumber();
+            DateTime futureEndDate = futureStartDate.AddDays(randomDaysInFuture).Date;
+
+            return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
         }
 
         private static int GetRandomNumber() =>
