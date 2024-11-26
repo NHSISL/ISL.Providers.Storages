@@ -75,7 +75,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             var expectedAzureBlobStorageProviderDependencyValidationException =
                 new AzureBlobStorageProviderDependencyValidationException(
                     message: "Azure blob storage provider dependency validation error occurred, " +
-            "fix errors and try again.",
+                            "fix errors and try again.",
                     innerException: (Xeption)storageDependencyValidationException.InnerException,
                     data: storageDependencyValidationException.InnerException.Data);
 
@@ -95,6 +95,53 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualAzureBlobStorageProviderDependencyValidationException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyValidationException);
+
+            this.storageServiceMock.Verify(service =>
+                service.CreateFileAsync(inputStream, inputFileName, inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowProviderDependencyExceptionOnCreateFile()
+        {
+            // given
+            string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
+            Stream randomStream = new HasLengthStream();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
+            Stream inputStream = randomStream;
+
+            var storageDependencyException = new StorageDependencyException(
+                message: "Storage dependency error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyException =
+                new AzureBlobStorageProviderDependencyException(
+                    message: "Azure blob storage provider dependency error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageDependencyException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.CreateFileAsync(inputStream, inputFileName, inputContainer))
+                    .ThrowsAsync(storageDependencyException);
+
+            // when
+            ValueTask createFileTask =
+                this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputFileName, inputContainer);
+
+            AzureBlobStorageProviderDependencyException
+                actualAzureBlobStorageProviderDependencyException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
+                        testCode: createFileTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
                 service.CreateFileAsync(inputStream, inputFileName, inputContainer),
