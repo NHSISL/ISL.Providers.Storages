@@ -1,5 +1,4 @@
 ﻿using Moq;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlobStorage
@@ -10,12 +9,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         public async Task ShouldCreateContainerAsync()
         {
             // given
-            string randomContainerName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new HasLengthStream();
-            string inputContainerName = randomContainerName;
             string inputContainer = randomContainer;
-            Stream inputStream = randomStream;
 
             // when
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
