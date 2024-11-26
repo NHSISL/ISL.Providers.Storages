@@ -4,7 +4,8 @@ using Xeptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions
 {
-    public class AzureBlobStorageProviderDependencyValidationException : Xeption, IStorageProviderDependencyValidationException
+    public class AzureBlobStorageProviderDependencyValidationException 
+        : Xeption, IStorageProviderDependencyValidationException
     {
         /// <summary>
         /// This exception is thrown when a dependency validation error occurs while using the storage provider.
