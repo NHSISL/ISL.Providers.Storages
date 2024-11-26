@@ -14,6 +14,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -81,7 +82,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return blobSasBuilder;
         }
 
-        public DataLakeSasBuilder GetDataLakeSasBuilder(
+        public async ValueTask<string> GetSasTokenAsync(
             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
         {
             var directorySasBuilder = new DataLakeSasBuilder()
@@ -95,19 +96,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 ExpiresOn = expiresOn
             };
 
-            return directorySasBuilder;
+            var sasQueryParameters = directorySasBuilder.ToSasQueryParameters(
+                StorageSharedKeyCredential);
+
+            return sasQueryParameters.ToString();
         }
 
         public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
             new BlobUriBuilder(uri);
-
-        public DataLakeUriBuilder GetDataLakeUriBuilder(
-            Uri uri, string container, string directoryPath, DataLakeSasQueryParameters sasQueryParameters) =>
-            new DataLakeUriBuilder(uri)
-            {
-                FileSystemName = container,
-                DirectoryOrFilePath = directoryPath,
-                Sas = sasQueryParameters
-            };
     }
 }

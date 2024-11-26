@@ -5,7 +5,6 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -146,7 +145,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
-        public ValueTask<string> CreateDirectorySasToken(
+        public ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
@@ -155,27 +154,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
 
-            var sasBuilder = new DataLakeSasBuilder()
-            {
-                Identifier = accessPolicyIdentifier,
-                Resource = "d",
-                Path = directoryPath,
-                IsDirectory = true,
-                FileSystemName = container,
-                StartsOn = dateTimeOffset,
-                ExpiresOn = expiresOn
-            };
+            var sasToken = await this.blobStorageBroker.GetSasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
 
-            //var sasBuilder = this.blobStorageBroker.GetDataLakeSasBuilder(
-            //  container, directoryPath, accessPolicyIdentifier, expiresOn);
-
-            var sasToken = sasBuilder.ToSasQueryParameters(
-                this.blobStorageBroker.StorageSharedKeyCredential);
-
-            var uri = this.blobStorageBroker.GetDataLakeUriBuilder(
-                this.blobStorageBroker.DataLakeServiceClient.Uri, container, directoryPath, sasToken);
-
-            return uri.ToString();
+            return sasToken;
         });
 
         public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>

@@ -10,6 +10,7 @@ using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -31,18 +32,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             string blobContainerName,
             DateTimeOffset expiresOn);
 
-        DataLakeSasBuilder GetDataLakeSasBuilder(
+        ValueTask<string> GetSasTokenAsync(
             string container,
             string directoryPath,
             string accessPolicyIdentifier,
             DateTimeOffset expiresOn);
 
         BlobUriBuilder GetBlobUriBuilder(Uri uri);
-
-        DataLakeUriBuilder GetDataLakeUriBuilder(
-            Uri uri,
-            string container,
-            string directoryPath,
-            DataLakeSasQueryParameters sasQueryParameters);
     }
 }

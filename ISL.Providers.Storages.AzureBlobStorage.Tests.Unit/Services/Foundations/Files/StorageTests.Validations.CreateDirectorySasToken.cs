@@ -49,7 +49,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasToken(
+                this.storageService.CreateDirectorySasTokenAsync(
                     invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier, invalidExpiresOn);
 
             StorageValidationException actualStorageValidationException =

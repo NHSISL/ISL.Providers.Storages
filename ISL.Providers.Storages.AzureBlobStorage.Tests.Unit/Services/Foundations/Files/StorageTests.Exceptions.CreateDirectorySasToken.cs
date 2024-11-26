@@ -44,7 +44,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasToken(
+                this.storageService.CreateDirectorySasTokenAsync(
                     someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
@@ -96,7 +96,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasToken(
+                this.storageService.CreateDirectorySasTokenAsync(
                     someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
 
             StorageDependencyException actualStorageDependencyException =
@@ -148,7 +148,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasToken(
+                this.storageService.CreateDirectorySasTokenAsync(
                     someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
 
             StorageServiceException actualStorageServiceException =
