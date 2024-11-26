@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.IO;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
+using System.IO;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -66,9 +66,9 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someException,
                     data: someException.Data);
 
-            StorageProviderValidationException expectedStorageValidationProviderException =
-                new StorageProviderValidationException(
-                    message: "Storage provider validation errors occurred, please try again.",
+            StorageProviderDependencyValidationException expectedStorageValidationProviderException =
+                new StorageProviderDependencyValidationException(
+                    message: "Storage provider dependency validation errors occurred, please try again.",
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
@@ -80,8 +80,8 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 this.storageAbstractionProvider
                     .CreateFileAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>());
 
-            StorageProviderValidationException actualStorageValidationProviderException =
-                await Assert.ThrowsAsync<StorageProviderValidationException>(testCode: createFileTask.AsTask);
+            StorageProviderDependencyValidationException actualStorageValidationProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(testCode: createFileTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
