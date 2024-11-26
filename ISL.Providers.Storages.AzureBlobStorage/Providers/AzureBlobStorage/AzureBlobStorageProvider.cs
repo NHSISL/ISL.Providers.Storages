@@ -147,8 +147,27 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
 
-        public async ValueTask CreateContainerAsync(string container) =>
-            await this.storageService.CreateContainerAsync(container);
+        /// <summary>
+        /// Creates a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the created storage containe.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask CreateContainerAsync(string container)
+        {
+            try
+            {
+                await this.storageService.CreateContainerAsync(container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+        }
 
         public ValueTask<List<string>> ListContainerAsync(string container) =>
             throw new NotImplementedException();
