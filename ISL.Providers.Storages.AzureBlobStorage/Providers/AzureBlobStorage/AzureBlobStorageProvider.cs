@@ -147,6 +147,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
 
+        public ValueTask CreateContainerAsync(string container) =>
+            throw new NotImplementedException();
+
         public ValueTask<List<string>> ListContainerAsync(string container) =>
             throw new NotImplementedException();
 
