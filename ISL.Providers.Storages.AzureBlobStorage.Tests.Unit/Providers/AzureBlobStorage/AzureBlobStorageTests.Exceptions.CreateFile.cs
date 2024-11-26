@@ -14,7 +14,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         public async Task ShouldThrowProviderValidationExceptionOnCreateFile()
         {
             // given
-            // given
             string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
             Stream randomStream = new HasLengthStream();
