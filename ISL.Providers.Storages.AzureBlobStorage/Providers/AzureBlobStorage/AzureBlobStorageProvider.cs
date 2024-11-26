@@ -105,9 +105,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
-
-        public ValueTask DeleteFileAsync(string fileName, string container) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// Asynchronously deletes a file from the specified storage container.
+        /// </summary>
+        /// <param name="fileName">The name of the file to delete.</param>
+        /// <param name="container">The name of the storage container where the file is located.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask DeleteFileAsync(string fileName, string container) =>
+            await this.storageService.DeleteFileAsync(fileName, container);
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
