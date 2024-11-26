@@ -175,7 +175,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
-        public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
+        private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
             string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
 
@@ -226,7 +226,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
-        public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
             CreateBlobContainerAccessPolicyFiller().Create();
 
         private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
@@ -242,21 +242,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return filler;
         }
 
-        private static DataLakeSasQueryParameters CreateRandomDataLakeSasQueryParameters() =>
-            CreateDataLakeSasQueryParametersFiller().Create();
-
-        private static Filler<DataLakeSasQueryParameters> CreateDataLakeSasQueryParametersFiller()
-        {
-            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            var filler = new Filler<DataLakeSasQueryParameters>();
-
-            filler.Setup()
-                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
-                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset);
-
-            return filler;
-        }
-
         private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
         {
             var filler = new Filler<BlobSignedIdentifier>();
@@ -267,7 +252,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return filler;
         }
 
-        public static List<string> GetPolicyNames() =>
+        private static List<string> GetPolicyNames() =>
             new List<string>
             {
                 "read",
