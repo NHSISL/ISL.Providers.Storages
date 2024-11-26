@@ -3,7 +3,6 @@
 // ---------------------------------------------------------
 
 using Azure;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
@@ -19,7 +18,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         BlobServiceClient BlobServiceClient { get; }
         DataLakeServiceClient DataLakeServiceClient { get; }
         int TokenLifetimeDays { get; }
-        StorageSharedKeyCredential StorageSharedKeyCredential { get; }
 
         Response<UserDelegationKey> GetUserDelegationKey(
             DateTimeOffset? startsOn,

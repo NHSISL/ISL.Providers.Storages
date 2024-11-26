@@ -23,7 +23,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         public BlobServiceClient BlobServiceClient { get; private set; }
         public DataLakeServiceClient DataLakeServiceClient { get; private set; }
         public int TokenLifetimeDays { get; private set; }
-        public StorageSharedKeyCredential StorageSharedKeyCredential { get; private set; }
+        private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
