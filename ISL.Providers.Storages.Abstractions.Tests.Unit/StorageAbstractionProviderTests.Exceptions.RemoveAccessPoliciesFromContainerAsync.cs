@@ -32,13 +32,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask removeAccessPoliciesFromContainerTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
                     .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: removeAccessPoliciesFromContainerTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
