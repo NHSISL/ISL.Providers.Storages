@@ -47,6 +47,13 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
 
         /// <summary>
+        /// Creates a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the created storage containe.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask CreateContainerAsync(string container);
+
+        /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>

@@ -4,6 +4,7 @@
 
 using Azure;
 using Azure.Identity;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -137,7 +138,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<string, DateTimeOffset> GetInvalidDownloadArguments()
+        public static TheoryData<string, DateTimeOffset> GetInvalidSasArguments()
         {
             DateTimeOffset defaultDateTimeOffset = default;
             DateTimeOffset pastDateTimeOffset = DateTimeOffset.MinValue;
@@ -174,7 +175,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
-        public static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
+        private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
             string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
 
@@ -225,7 +226,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
-        public static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
             CreateBlobContainerAccessPolicyFiller().Create();
 
         private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
@@ -251,7 +252,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return filler;
         }
 
-        public static List<string> GetPolicyNames() =>
+        private static List<string> GetPolicyNames() =>
             new List<string>
             {
                 "read",
@@ -263,6 +264,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
                 actualList => this.compareLogic.Compare(expectedList, actualList).AreEqual;
+
+        private Expression<Func<Uri, bool>> SameUriAs(
+            Uri expectedUri) =>
+                actualUri => this.compareLogic.Compare(expectedUri, actualUri).AreEqual;
+
+        private Expression<Func<StorageSharedKeyCredential, bool>> SameStorageSharedKeyCredentialAs(
+            StorageSharedKeyCredential expectedCredential) =>
+                actualCredential => this.compareLogic.Compare(expectedCredential, actualCredential).AreEqual;
 
         private static UserDelegationKey CreateUserDelegationKey() =>
             new Mock<UserDelegationKey>().Object;
