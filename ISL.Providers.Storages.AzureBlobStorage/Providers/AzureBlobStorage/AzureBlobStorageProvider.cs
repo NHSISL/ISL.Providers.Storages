@@ -257,7 +257,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the container where the access policies will be created.</param>
-        /// <param name="policyNames"><see cref="List<string>"/>The names of the policies you want to create. 
+        /// <param name="policyNames"><see cref="List{string}"/>The names of the policies you want to create. 
         /// Options are read, write, delete and fullaccess.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
@@ -329,11 +329,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
-        public ValueTask<string> GetAccessTokenAsync(
-            string path,
-            string container,
-            string accessLevel,
-            DateTimeOffset expiresOn) =>
+        /// <summary>
+        /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
+        /// the provided access policy.
+        /// </summary>
+        /// <param name="container">The name of the storage container where the SAS token will be created.</param>
+        /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
+        /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
             throw new NotImplementedException();
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(

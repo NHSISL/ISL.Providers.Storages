@@ -61,14 +61,16 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask<List<string>> ListFilesInContainerAsync(string container);
 
         /// <summary>
-        /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
+        /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
+        /// the provided access policy.
         /// </summary>
-        /// <param name="path">The path within the container for which the access token is generated.</param>
-        /// <param name="container">The name of the storage container.</param>
-        /// <param name="accessLevel">The access level for the token (e.g., "read" or "write").</param>
-        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the access token will expire.</param>
+        /// <param name="container">The name of the storage container where the SAS token will be created.</param>
+        /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
+        /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
-        ValueTask<string> GetAccessTokenAsync(string path, string container, string accessLevel, DateTimeOffset expiresOn);
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
 
         /// <summary>
         /// Creates the provided stored access policies on the container.
