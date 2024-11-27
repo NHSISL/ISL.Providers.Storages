@@ -227,7 +227,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageServiceProviderException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask CreateFolderInContainerAsync(string container, string folder) =>
-            throw new NotImplementedException();
+        public async ValueTask CreateFolderInContainerAsync(string container, string folder) =>
+            await this.storageProvider.CreateFolderInContainerAsync(container, folder);
     }
 }
