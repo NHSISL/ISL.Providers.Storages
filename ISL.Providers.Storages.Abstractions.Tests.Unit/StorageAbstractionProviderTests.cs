@@ -4,6 +4,7 @@
 
 using ISL.Providers.Storages.Abstractions;
 using Moq;
+using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 {
@@ -19,5 +20,8 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             this.storageAbstractionProvider =
                 new StorageAbstractionProvider(this.storageProviderMock.Object);
         }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
     }
 }
