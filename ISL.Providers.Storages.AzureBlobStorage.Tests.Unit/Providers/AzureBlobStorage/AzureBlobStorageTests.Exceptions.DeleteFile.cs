@@ -46,7 +46,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.Verify(service =>
                 service.DeleteFileAsync(inputFileName, inputContainer),
-                Times.Once);
+                    Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -90,7 +90,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.Verify(service =>
                 service.DeleteFileAsync(inputFileName, inputContainer),
-                Times.Once);
+                    Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -133,7 +133,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.Verify(service =>
                 service.DeleteFileAsync(inputFileName, inputContainer),
-                Times.Once);
+                    Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -176,7 +176,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.Verify(service =>
                 service.DeleteFileAsync(inputFileName, inputContainer),
-                Times.Once);
+                    Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }

@@ -27,6 +27,7 @@
 		<PackageLicenseFile>License.txt</PackageLicenseFile>
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<NoWarn>CS1998</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -51,8 +52,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Identity" Version="1.12.1" />
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.22.1" />
+		<PackageReference Include="Azure.Identity" Version="1.13.1" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
+		<PackageReference Include="Azure.Storage.Files.DataLake" Version="12.21.0" />
 		<PackageReference Include="GovukNotify" Version="7.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
 		<PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />

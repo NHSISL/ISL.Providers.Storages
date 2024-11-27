@@ -64,7 +64,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             var expectedAzureBlobStorageProviderDependencyValidationException =
                 new AzureBlobStorageProviderDependencyValidationException(
                     message: "Azure blob storage provider dependency validation error occurred, " +
-                            "fix errors and try again.",
+                        "fix errors and try again.",
                     innerException: (Xeption)storageDependencyValidationException.InnerException,
                     data: storageDependencyValidationException.InnerException.Data);
 
@@ -106,7 +106,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             var expectedAzureBlobStorageProviderDependencyException =
                 new AzureBlobStorageProviderDependencyException(
                     message: "Azure blob storage provider dependency error occurred, " +
-                            "contact support.",
+                        "contact support.",
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
@@ -147,7 +147,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             var expectedAzureBlobStorageProviderServiceException =
                 new AzureBlobStorageProviderServiceException(
                     message: "Azure blob storage provider service error occurred, " +
-                            "contact support.",
+                        "contact support.",
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
