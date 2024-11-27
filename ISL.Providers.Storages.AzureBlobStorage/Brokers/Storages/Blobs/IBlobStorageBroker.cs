@@ -8,6 +8,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +30,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             string blobName,
             string blobContainerName,
             DateTimeOffset expiresOn);
+
+        ValueTask CreateFileAsync(Stream input, string fileName, string container);
 
         ValueTask<string> GetSasTokenAsync(
             string container,

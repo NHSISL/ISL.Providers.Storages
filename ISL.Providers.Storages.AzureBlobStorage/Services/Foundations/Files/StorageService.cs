@@ -32,12 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreate(input, fileName, container);
 
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
-            await blobClient.UploadAsync(input);
+            await this.blobStorageBroker.CreateFileAsync(input, fileName, container);
         });
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>

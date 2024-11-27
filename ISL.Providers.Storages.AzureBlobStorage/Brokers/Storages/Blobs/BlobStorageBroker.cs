@@ -12,6 +12,7 @@ using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,6 +81,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
 
             return blobSasBuilder;
+        }
+
+        public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
+        {
+            BlobClient blobClient =
+                BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
+
+            await blobClient.UploadAsync(input);
         }
 
         public async ValueTask<string> GetSasTokenAsync(
