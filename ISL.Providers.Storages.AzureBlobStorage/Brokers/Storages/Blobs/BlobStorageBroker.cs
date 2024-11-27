@@ -85,22 +85,29 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
         {
-            BlobClient blobClient =
-                BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
+            BlobClient blobClient = BlobServiceClient
+                .GetBlobContainerClient(container)
+                .GetBlobClient(fileName);
 
             await blobClient.UploadAsync(input);
         }
 
         public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
         {
-            BlobClient blobClient =
-                BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
+            BlobClient blobClient = BlobServiceClient
+                .GetBlobContainerClient(container)
+                .GetBlobClient(fileName);
 
             await blobClient.DownloadToAsync(output);
+        }
+
+        public async ValueTask DeleteFileAsync(string fileName, string container)
+        {
+            BlobClient blobClient = BlobServiceClient
+                .GetBlobContainerClient(container)
+                .GetBlobClient(fileName);
+
+            await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
         }
 
         public async ValueTask<string> GetSasTokenAsync(

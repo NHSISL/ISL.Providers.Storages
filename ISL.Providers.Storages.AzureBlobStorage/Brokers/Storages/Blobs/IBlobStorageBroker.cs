@@ -33,6 +33,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         ValueTask CreateFileAsync(Stream input, string fileName, string container);
         ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
+        ValueTask DeleteFileAsync(string fileName, string container);
 
         ValueTask<string> GetSasTokenAsync(
             string container,

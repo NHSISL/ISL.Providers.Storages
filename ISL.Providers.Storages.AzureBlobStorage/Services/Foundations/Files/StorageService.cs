@@ -35,25 +35,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         });
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
-        TryCatch((ReturningNothingFunction)(async () =>
+        TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRetrieve(output, fileName, container);
             await this.blobStorageBroker.RetrieveFileAsync(output, fileName, container);
-        }));
-
-
+        });
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnDelete(fileName, container);
-
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
-            await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
+            await this.blobStorageBroker.DeleteFileAsync(fileName, container);
         });
 
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
