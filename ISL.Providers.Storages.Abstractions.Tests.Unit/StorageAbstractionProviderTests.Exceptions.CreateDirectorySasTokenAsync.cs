@@ -77,17 +77,60 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createAndAssignAccessPoliciesToContainerAsyncTask =
+            ValueTask<string> createDirectorySasTokenTask =
                 this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
 
             StorageProviderDependencyValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(
-                    testCode: createAndAssignAccessPoliciesToContainerAsyncTask.AsTask);
+                    testCode: createDirectorySasTokenTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
                 expectedStorageValidationProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.CreateDirectorySasTokenAsync(
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()),
+                        Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task
+            ShouldThrowDependencyExceptionOnCreateDirectorySasTokenAsyncWhenTypeIStorageDependencyException()
+        {
+            // given
+            var someException = new Xeption();
+
+            var someStorageValidationException =
+                new SomeStorageDependencyException(
+                    message: "Some storage provider dependency exception occurred",
+                    innerException: someException);
+
+            StorageProviderDependencyException expectedStorageDependencyProviderException =
+                new StorageProviderDependencyException(
+                    message: "Storage provider dependency error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.CreateDirectorySasTokenAsync(
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask<string> createDirectorySasTokenTask =
+                this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
+
+            StorageProviderDependencyException actualStorageDependencyProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyException>(
+                    testCode: createDirectorySasTokenTask.AsTask);
+
+            // then
+            actualStorageDependencyProviderException.Should().BeEquivalentTo(
+                expectedStorageDependencyProviderException);
 
             this.storageProviderMock.Verify(provider =>
                 provider.CreateDirectorySasTokenAsync(
