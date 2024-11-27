@@ -343,7 +343,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
-            throw new NotImplementedException();
+            this.storageService.CreateDirectorySasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)
