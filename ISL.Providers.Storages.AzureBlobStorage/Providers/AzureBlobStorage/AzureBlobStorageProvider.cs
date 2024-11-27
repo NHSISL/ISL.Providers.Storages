@@ -52,7 +52,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -91,7 +91,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -168,7 +168,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -205,7 +205,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -242,7 +242,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -283,7 +283,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -310,16 +310,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         {
             return new AzureBlobStorageProviderValidationException(
                 message: "Azure blob storage provider validation error occurred, fix errors and try again.",
-                innerException,
-                data: innerException.Data);
-        }
-
-        private static AzureBlobStorageProviderDependencyValidationException
-            CreateProviderDependencyValidationException(Xeption innerException)
-        {
-            return new AzureBlobStorageProviderDependencyValidationException(
-                message: "Azure blob storage provider dependency validation error occurred, " +
-                    "fix errors and try again.",
                 innerException,
                 data: innerException.Data);
         }
