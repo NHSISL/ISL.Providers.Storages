@@ -6,7 +6,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldCreateFolderAsync()
+        public async Task ShouldCreateFolderInContainerAsync()
         {
             // given
             string randomContainer = GetRandomString();
@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             string inputFolder = randomFolder;
 
             // when
-            await this.azureBlobStorageProvider.CreateFolderAsync(inputContainer, inputFolder);
+            await this.azureBlobStorageProvider.CreateFolderInContainerAsync(inputContainer, inputFolder);
 
             // then
             this.storageServiceMock.Verify(service =>
