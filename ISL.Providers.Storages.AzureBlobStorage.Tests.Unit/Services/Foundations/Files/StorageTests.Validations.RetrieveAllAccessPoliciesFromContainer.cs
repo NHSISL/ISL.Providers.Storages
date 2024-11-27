@@ -4,7 +4,7 @@
 
 using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -12,26 +12,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Theory]
-        [MemberData(nameof(GetInvalidSasArguments))]
-        public async Task ShouldThrowValidationExceptionOnGetDownloadLinkIfArgumentInvalidAsync(
-            string invalidText, DateTimeOffset invalidDateTimeOffset)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnRetrieveALlAccessPoliciesIfArgumentsInvalidAsync(string invalidText)
         {
             // given
-            string invalidFileName = invalidText;
             string invalidContainer = invalidText;
-            DateTimeOffset invalidExpiresOn = invalidDateTimeOffset;
 
             var invalidArgumentStorageException =
                 new InvalidArgumentStorageException(
                     message: "Invalid storage service argument(s), please fix the errors and try again.");
-
-            invalidArgumentStorageException.AddData(
-                key: "ExpiresOn",
-                values: "Date is invalid");
-
-            invalidArgumentStorageException.AddData(
-                key: "FileName",
-                values: "Text is invalid");
 
             invalidArgumentStorageException.AddData(
                 key: "Container",
@@ -43,22 +34,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: invalidArgumentStorageException);
 
             // when
-            ValueTask<string> getDownloadLinkTask =
-                this.storageService.GetDownloadLinkAsync(invalidFileName, invalidContainer, invalidExpiresOn);
+            ValueTask<List<string>> retrieveAllAccessPoliciesTask =
+                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(invalidContainer);
 
             StorageValidationException actualStorageValidationException =
-                await Assert.ThrowsAsync<StorageValidationException>(getDownloadLinkTask.AsTask);
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: retrieveAllAccessPoliciesTask.AsTask);
 
             // then
             actualStorageValidationException
                 .Should().BeEquivalentTo(expectedStorageValidationException);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -86,16 +86,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return fileNames;
         });
 
-
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
 
             BlobClient blobClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container)
-                        .GetBlobClient(fileName);
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
 
             var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
             var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
@@ -155,6 +154,41 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         });
 
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnCreateDirectorySasToken(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+
+            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+
+            var sasToken = await this.blobStorageBroker.GetSasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+
+            return sasToken;
+        });
+
+        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
+
+            BlobContainerClient containerClient =
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy = await containerClient.GetAccessPolicyAsync();
+            List<string> signedIdentifiers = new List<string>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier.Id);
+            }
+
+            return signedIdentifiers;
+        });
+
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
         {
@@ -162,8 +196,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
 
             BlobContainerClient containerClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container);
+                this.blobStorageBroker.BlobServiceClient
+                    .GetBlobContainerClient(container);
 
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         });

@@ -104,6 +104,26 @@ namespace ISL.Providers.Storages.Abstractions
         });
 
         /// <summary>
+        /// Creates a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the created storage containe.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask CreateContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            await storageProvider.CreateContainerAsync(container);
+        });
+
+        /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>

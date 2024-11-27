@@ -10,7 +10,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Models
         public string AzureTenantId { get; set; }
         public int TokenLifetimeDays { get; set; }
         public string StorageAccountName { get; set; }
-        // TODO Remove and move to secure location
         public string StorageAccountAccessKey { get; set; }
     }
 }
