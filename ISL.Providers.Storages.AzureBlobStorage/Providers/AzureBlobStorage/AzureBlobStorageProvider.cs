@@ -257,6 +257,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
+        /// <summary>
+        /// Creates the provided stored access policies on the container.
+        /// </summary>
+        /// <param name="container">The name of the container where the access policies will be created.</param>
+        /// <param name="policyNames"><see cref="List<string>"/>The names of the policies you want to create. 
+        /// Options are read, write, delete and fullaccess.</param>
+        /// /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
+            string inputContainer, List<string> inputPolicyNames) =>
+            throw new NotImplementedException();
+
         public ValueTask<string> GetAccessTokenAsync(
             string path,
             string container,
