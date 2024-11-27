@@ -85,7 +85,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return fileNames;
         });
 
-
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
@@ -144,6 +143,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
 
             await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
+        });
+
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnCreateDirectorySasToken(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+
+            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+
+            var sasToken = await this.blobStorageBroker.GetSasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+
+            return sasToken;
         });
 
         public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>

@@ -5,6 +5,7 @@
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -12,6 +13,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -19,6 +21,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
         public int TokenLifetimeDays { get; private set; }
+        private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -31,14 +34,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             this.BlobServiceClient = new BlobServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                credential: new DefaultAzureCredential(
-                    new DefaultAzureCredentialOptions
-                    {
-                        VisualStudioTenantId = azureBlobStoreConfigurations.AzureTenantId,
-                    }),
+                credential: new DefaultAzureCredential(),
                 options: blobServiceClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
+
+            this.StorageSharedKeyCredential = new StorageSharedKeyCredential(
+                azureBlobStoreConfigurations.StorageAccountName,
+                azureBlobStoreConfigurations.StorageAccountAccessKey);
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
@@ -61,6 +64,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
 
             return blobSasBuilder;
+        }
+
+        public async ValueTask<string> GetSasTokenAsync(
+            string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
+        {
+            var directorySasBuilder = new DataLakeSasBuilder()
+            {
+                Identifier = accessPolicyIdentifier,
+                Resource = "d",
+                Path = directoryPath,
+                IsDirectory = true,
+                FileSystemName = container,
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            var sasQueryParameters = directorySasBuilder.ToSasQueryParameters(
+                StorageSharedKeyCredential);
+
+            return sasQueryParameters.ToString();
         }
 
         public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>

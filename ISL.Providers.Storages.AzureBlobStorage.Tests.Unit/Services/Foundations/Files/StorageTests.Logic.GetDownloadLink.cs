@@ -2,13 +2,13 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
+using System;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
