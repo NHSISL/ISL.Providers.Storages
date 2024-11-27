@@ -137,10 +137,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageServiceProviderException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask<List<string>> ListContainerAsync(string container) =>
+        public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
         TryCatch(async () =>
         {
-            return await storageProvider.ListContainerAsync(container);
+            return await storageProvider.ListFilesInContainerAsync(container);
         });
 
         /// <summary>
