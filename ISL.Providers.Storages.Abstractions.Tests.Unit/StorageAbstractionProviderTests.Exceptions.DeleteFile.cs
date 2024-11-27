@@ -2,11 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -65,9 +65,9 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someException,
                     data: someException.Data);
 
-            StorageProviderValidationException expectedStorageValidationProviderException =
-                new StorageProviderValidationException(
-                    message: "Storage provider validation errors occurred, please try again.",
+            StorageProviderDependencyValidationException expectedStorageValidationProviderException =
+                new StorageProviderDependencyValidationException(
+                    message: "Storage provider dependency validation errors occurred, please try again.",
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
@@ -79,8 +79,8 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 this.storageAbstractionProvider
                     .DeleteFileAsync(It.IsAny<string>(), It.IsAny<string>());
 
-            StorageProviderValidationException actualStorageValidationProviderException =
-                await Assert.ThrowsAsync<StorageProviderValidationException>(testCode: deleteFileTask.AsTask);
+            StorageProviderDependencyValidationException actualStorageValidationProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(testCode: deleteFileTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(

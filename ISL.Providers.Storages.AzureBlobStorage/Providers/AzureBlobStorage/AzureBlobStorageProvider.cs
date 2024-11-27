@@ -52,7 +52,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -91,7 +91,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -149,13 +149,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// </summary>
         /// <param name="fileName">The name of the file to generate a download link for.</param>
         /// <param name="container">The name of the storage container where the file is located.</param>
-        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the download link will expire.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the download link 
+        /// will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the download link.</returns>
         /// /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        public async ValueTask<string> GetDownloadLinkAsync(
+            string fileName, string container, DateTimeOffset expiresOn)
         {
             try
             {
@@ -168,7 +170,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -205,7 +207,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -242,7 +244,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -283,7 +285,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
             catch (StorageDependencyValidationException storageDependencyValidationException)
             {
-                throw CreateProviderDependencyValidationException(
+                throw CreateProviderValidationException(
                     storageDependencyValidationException.InnerException as Xeption);
             }
             catch (StorageDependencyException storageDependencyException)
@@ -332,16 +334,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         {
             return new AzureBlobStorageProviderValidationException(
                 message: "Azure blob storage provider validation error occurred, fix errors and try again.",
-                innerException,
-                data: innerException.Data);
-        }
-
-        private static AzureBlobStorageProviderDependencyValidationException
-            CreateProviderDependencyValidationException(Xeption innerException)
-        {
-            return new AzureBlobStorageProviderDependencyValidationException(
-                message: "Azure blob storage provider dependency validation error occurred, " +
-                    "fix errors and try again.",
                 innerException,
                 data: innerException.Data);
         }
