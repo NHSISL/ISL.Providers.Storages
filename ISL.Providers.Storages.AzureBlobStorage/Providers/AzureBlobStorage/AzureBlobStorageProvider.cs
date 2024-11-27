@@ -341,10 +341,42 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public ValueTask<string> CreateDirectorySasTokenAsync(
-             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
-            this.storageService.CreateDirectorySasTokenAsync(
-                container, directoryPath, accessPolicyIdentifier, expiresOn);
+        public async ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
+        {
+            try
+            {
+                return await this.storageService.CreateDirectorySasTokenAsync(
+                    container, directoryPath, accessPolicyIdentifier, expiresOn);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
+
+        public ValueTask<string> GetAccessTokenAsync(
+            string path,
+            string container,
+            string accessLevel,
+            DateTimeOffset expiresOn) =>
+            throw new NotImplementedException();
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)

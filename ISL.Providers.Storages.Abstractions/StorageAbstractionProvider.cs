@@ -170,6 +170,34 @@ namespace ISL.Providers.Storages.Abstractions
         });
 
         /// <summary>
+        /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
+        /// </summary>
+        /// <param name="path">The path within the container for which the access token is generated.</param>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="accessLevel">The access level for the token (e.g., "read" or "write").</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the access token will expire.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask<string> GetAccessTokenAsync(
+            string path,
+            string container,
+            string accessLevel,
+            DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
+        {
+            return await storageProvider.GetAccessTokenAsync(path, container, accessLevel, expiresOn);
+        });
+
+
+        /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the storage container where the access policies will be created.</param>
