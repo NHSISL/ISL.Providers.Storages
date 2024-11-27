@@ -41,6 +41,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 EnableTenantDiscovery = true
             };
 
+            this.StorageSharedKeyCredential = new StorageSharedKeyCredential(
+                accountName: azureBlobStoreConfigurations.StorageAccountName,
+                accountKey: azureBlobStoreConfigurations.StorageAccountAccessKey);
+
             this.BlobServiceClient = new BlobServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                 credential: new DefaultAzureCredential(),
@@ -48,14 +52,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             this.DataLakeServiceClient = new DataLakeServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                credential: new StorageSharedKeyCredential(azureBlobStoreConfigurations.StorageAccountName, azureBlobStoreConfigurations.StorageAccountAccessKey),
+
+                credential: this.StorageSharedKeyCredential,
+
                 dataLakeClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
-
-            this.StorageSharedKeyCredential = new StorageSharedKeyCredential(
-                azureBlobStoreConfigurations.StorageAccountName,
-                azureBlobStoreConfigurations.StorageAccountAccessKey);
         }
 
         public Response<UserDelegationKey> GetUserDelegationKey(
