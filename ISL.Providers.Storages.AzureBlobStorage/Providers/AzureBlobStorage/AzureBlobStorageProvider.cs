@@ -36,7 +36,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="container">The name of the storage container where the file will be stored.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
@@ -75,7 +74,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="container">The name of the storage container where the file is located.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
@@ -113,7 +111,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="container">The name of the storage container where the file is located.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask DeleteFileAsync(string fileName, string container)
@@ -152,8 +149,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the download link 
         /// will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the download link.</returns>
-        /// /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask<string> GetDownloadLinkAsync(
@@ -191,7 +187,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="container">The name of the created storage containe.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateContainerAsync(string container)
@@ -227,8 +222,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the list of file names.</returns>
-        /// /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask<List<string>> ListFilesInContainerAsync(string container)
@@ -265,9 +259,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="container">The name of the container where the access policies will be created.</param>
         /// <param name="policyNames"><see cref="List<string>"/>The names of the policies you want to create. 
         /// Options are read, write, delete and fullaccess.</param>
-        /// /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
@@ -304,9 +297,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// Removes all stored access policies from the container.
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
-        /// /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container)
