@@ -88,6 +88,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

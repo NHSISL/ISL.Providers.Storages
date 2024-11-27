@@ -2,7 +2,6 @@
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -12,7 +11,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     {
         [Fact]
         public async Task
-            ShouldThrowValidationExceptionOnCreateAndAssignAccessPoliciesToContainerAsyncWhenTypeIStorageValidationException()
+            ShouldThrowValidationExceptionOnRemoveAccessPoliciesFromContainerAsyncWhenTypeIStorageValidationException()
         {
             // given
             var someException = new Xeption();
@@ -29,24 +28,24 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask createAndAssignAccessPoliciesToContainerTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
-                    .CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>());
+                    .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: createAndAssignAccessPoliciesToContainerTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
                 expectedStorageValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()),
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -54,7 +53,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowDependencyValidationExceptionOnCreateAndAssignAccessPoliciesToContainerAsyncWhenTypeIStorageDependencyValidationException()
+            ShouldThrowDependencyValidationExceptionOnRemoveAccessPoliciesFromContainerAsyncWhenTypeIStorageDependencyValidationException()
         {
             // given
             var someException = new Xeption();
@@ -71,24 +70,24 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask createAndAssignAccessPoliciesToContainerAsyncTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
-                    .CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>());
+                    .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderDependencyValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(
-                    testCode: createAndAssignAccessPoliciesToContainerAsyncTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
                 expectedStorageValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()),
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -96,7 +95,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowDependencyExceptionOnCreateAndAssignAccessPoliciesToContainerAsyncWhenTypeIStorageDependencyException()
+            ShouldThrowDependencyExceptionOnRemoveAccessPoliciesFromContainerAsyncWhenTypeIStorageDependencyException()
         {
             // given
             var someException = new Xeption();
@@ -112,24 +111,24 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask createAndAssignAccessPoliciesToContainerAsyncTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
-                    .CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>());
+                    .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: createAndAssignAccessPoliciesToContainerAsyncTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
                 expectedStorageDependencyProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()),
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -137,7 +136,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowServiceExceptionOnCreateAndAssignAccessPoliciesToContainerAsyncWhenTypeIStorageServiceException()
+            ShouldThrowServiceExceptionOnRemoveAccessPoliciesFromContainerAsyncWhenTypeIStorageServiceException()
         {
             // given
             var someException = new Xeption();
@@ -153,24 +152,24 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask createAndAssignAccessPoliciesToContainerAsyncTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
-                    .CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>());
+                    .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createAndAssignAccessPoliciesToContainerAsyncTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
                 expectedStorageServiceProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()),
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -178,7 +177,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowUncatagorizedServiceExceptionOnCreateAndAssignAccessPoliciesToContainerAsyncWhenTypeIsNotExpected()
+            ShouldThrowUncatagorizedServiceExceptionOnRemoveAccessPoliciesFromContainerAsyncWhenTypeIsNotExpected()
         {
             // given
             var someException = new Xeption();
@@ -196,24 +195,24 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: uncatagorizedStorageProviderException);
 
             this.storageProviderMock.Setup(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()))
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask createAndAssignAccessPoliciesToContainerAsyncTask =
+            ValueTask removeAccessPoliciesFromContainerAsyncTask =
                 this.storageAbstractionProvider
-                    .CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>());
+                    .RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createAndAssignAccessPoliciesToContainerAsyncTask.AsTask);
+                    testCode: removeAccessPoliciesFromContainerAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
                 expectedStorageServiceProviderException);
 
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(It.IsAny<string>(), It.IsAny<List<string>>()),
+                provider.RemoveAccessPoliciesFromContainerAsync(It.IsAny<string>()),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
