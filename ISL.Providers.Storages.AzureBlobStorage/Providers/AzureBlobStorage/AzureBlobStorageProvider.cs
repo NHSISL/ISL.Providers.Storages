@@ -307,8 +307,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
-            throw new NotImplementedException();
+        public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
+            await this.storageService.RemoveAccessPoliciesFromContainerAsync(container);
 
         public ValueTask<string> GetAccessTokenAsync(
             string path,
