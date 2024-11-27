@@ -1,12 +1,7 @@
-﻿// ---------------------------------------------------------
-// Copyright (c) North East London ICB. All rights reserved.
-// ---------------------------------------------------------
-
-using FluentAssertions;
+﻿using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -15,13 +10,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnCreateAccessPolicyAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnCreateDirectoryAsync(
             Exception dependencyValidationException)
         {
             // given
-            string randomString = GetRandomString();
-            string inputContainer = randomString;
-            List<string> inputPolicyNames = GetPolicyNames();
+            string randomContainerString = GetRandomString();
+            string inputContainer = randomContainerString;
+            string randomDirectoryString = GetRandomString();
+            string inputDirectory = randomDirectoryString;
 
             var failedStorageDependencyValidationException =
                 new FailedStorageDependencyValidationException(
@@ -33,24 +29,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency validation error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyValidationException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.dataLakeServiceClientMock.Setup(client =>
+                client.GetFileSystemClient(inputContainer))
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+            ValueTask createDirectoryTask =
+                this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(
-                    testCode: createAccessPolicyTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createDirectoryTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.dataLakeServiceClientMock.Verify(client =>
+                client.GetFileSystemClient(inputContainer),
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
@@ -63,12 +58,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnCreateAccessPolicyAsync(Exception dependencyException)
+        public async Task ShouldThrowDependencyExceptionOnCreateDirectoryAsync(Exception dependencyException)
         {
             // given
-            string randomString = GetRandomString();
-            string inputContainer = randomString;
-            List<string> inputPolicyNames = GetPolicyNames();
+            string randomContainerString = GetRandomString();
+            string inputContainer = randomContainerString;
+            string randomDirectoryString = GetRandomString();
+            string inputDirectory = randomDirectoryString;
 
             var failedStorageDependencyException =
                 new FailedStorageDependencyException(
@@ -80,23 +76,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.dataLakeServiceClientMock.Setup(client =>
+                client.GetFileSystemClient(inputContainer))
                     .Throws(dependencyException);
 
             // when
-            ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+            ValueTask createDirectoryTask =
+                this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             StorageDependencyException actualStorageDependencyException =
-                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createAccessPolicyTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createDirectoryTask.AsTask);
 
             // then
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.dataLakeServiceClientMock.Verify(client =>
+                client.GetFileSystemClient(inputContainer),
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
@@ -108,13 +104,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateAccessPolicyAsync()
+        public async Task ShouldThrowServiceExceptionOnCreateDirectoryAsync()
         {
             // given
             Exception someException = new Exception();
-            string randomString = GetRandomString();
-            string inputContainer = randomString;
-            List<string> inputPolicyNames = GetPolicyNames();
+            string randomContainerString = GetRandomString();
+            string inputContainer = randomContainerString;
+            string randomDirectoryString = GetRandomString();
+            string inputDirectory = randomDirectoryString;
 
             var failedStorageServiceException =
                 new FailedStorageServiceException(
@@ -126,24 +123,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage service error occurred, please fix errors and try again.",
                     innerException: failedStorageServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.dataLakeServiceClientMock.Setup(client =>
+                client.GetFileSystemClient(inputContainer))
                     .Throws(someException);
 
             // when
-            ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+            ValueTask createDirectoryTask =
+                this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             StorageServiceException actualStorageServiceException =
-                await Assert.ThrowsAsync<StorageServiceException>(testCode: createAccessPolicyTask.AsTask);
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: createDirectoryTask.AsTask);
 
             // then
             actualStorageServiceException
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.dataLakeServiceClientMock.Verify(client =>
+                client.GetFileSystemClient(inputContainer),
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
