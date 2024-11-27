@@ -144,8 +144,46 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
-        public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
-            throw new NotImplementedException();
+        /// <summary>
+        /// Asynchronously generates a download link for a file in the specified storage container.
+        /// </summary>
+        /// <param name="fileName">The name of the file to generate a download link for.</param>
+        /// <param name="container">The name of the storage container where the file is located.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the download link 
+        /// will expire.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the download link.</returns>
+        /// /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<string> GetDownloadLinkAsync(
+            string fileName, string container, DateTimeOffset expiresOn)
+        {
+            try
+            {
+                return await this.storageService.GetDownloadLinkAsync(fileName, container, expiresOn);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderDependencyValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
 
         /// <summary>
         /// Creates a container in the storage account.
