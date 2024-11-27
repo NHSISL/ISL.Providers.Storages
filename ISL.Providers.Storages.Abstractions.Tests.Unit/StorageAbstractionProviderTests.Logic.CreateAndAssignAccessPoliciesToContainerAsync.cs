@@ -23,11 +23,11 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             // when
             await this.storageAbstractionProvider
-                .CreateAndAssignAccessPoliciesToContainerAsync(inputPolicyNames, inputContainer);
+                .CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
 
             // then
             this.storageProviderMock.Verify(provider =>
-                provider.CreateAndAssignAccessPoliciesToContainerAsync(inputPolicyNames, inputContainer),
+                provider.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
