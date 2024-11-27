@@ -207,6 +207,6 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
-            throw new NotImplementedException();
+            await this.storageProvider.RemoveAccessPoliciesFromContainerAsync(container);
     }
 }
