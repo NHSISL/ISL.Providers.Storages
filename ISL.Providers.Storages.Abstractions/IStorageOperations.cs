@@ -58,7 +58,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the list of file names.</returns>
-        ValueTask<List<string>> ListContainerAsync(string container);
+        ValueTask<List<string>> ListFilesInContainerAsync(string container);
 
         /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
