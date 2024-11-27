@@ -93,6 +93,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             await blobClient.UploadAsync(input);
         }
 
+        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
+        {
+            BlobClient blobClient =
+                BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
+
+            await blobClient.DownloadToAsync(output);
+        }
+
         public async ValueTask<string> GetSasTokenAsync(
             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
         {

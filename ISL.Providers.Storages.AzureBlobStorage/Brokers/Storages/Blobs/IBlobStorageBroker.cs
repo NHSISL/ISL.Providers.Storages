@@ -32,6 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset expiresOn);
 
         ValueTask CreateFileAsync(Stream input, string fileName, string container);
+        ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
 
         ValueTask<string> GetSasTokenAsync(
             string container,
