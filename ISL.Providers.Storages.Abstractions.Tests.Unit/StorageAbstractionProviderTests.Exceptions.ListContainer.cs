@@ -66,9 +66,9 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     innerException: someException,
                     data: someException.Data);
 
-            StorageProviderValidationException expectedStorageValidationProviderException =
-                new StorageProviderValidationException(
-                    message: "Storage provider validation errors occurred, please try again.",
+            StorageProviderDependencyValidationException expectedStorageDependencyValidationProviderException =
+                new StorageProviderDependencyValidationException(
+                    message: "Storage provider dependency validation errors occurred, please try again.",
                     innerException: someStorageValidationException);
 
             this.storageProviderMock.Setup(provider =>
@@ -80,12 +80,12 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                 this.storageAbstractionProvider
                     .ListFilesInContainerAsync(It.IsAny<string>());
 
-            StorageProviderValidationException actualStorageValidationProviderException =
-                await Assert.ThrowsAsync<StorageProviderValidationException>(testCode: listContainerTask.AsTask);
+            StorageProviderDependencyValidationException actualStorageValidationProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(testCode: listContainerTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
-                expectedStorageValidationProviderException);
+                expectedStorageDependencyValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
                 provider.ListFilesInContainerAsync(It.IsAny<string>()),
