@@ -8,6 +8,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -21,7 +22,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
+
+        BlobSasBuilder GetBlobSasBuilder(
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset expiresOn);
+
+        ValueTask<string> GetSasTokenAsync(
+            string container,
+            string directoryPath,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn);
+
         BlobUriBuilder GetBlobUriBuilder(Uri uri);
     }
 }
