@@ -269,8 +269,34 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
-            string inputContainer, List<string> inputPolicyNames) =>
-            await this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+            string inputContainer, List<string> inputPolicyNames)
+        {
+            try
+            {
+                await this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                    inputContainer, inputPolicyNames);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderDependencyValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
 
         public ValueTask<string> GetAccessTokenAsync(
             string path,
