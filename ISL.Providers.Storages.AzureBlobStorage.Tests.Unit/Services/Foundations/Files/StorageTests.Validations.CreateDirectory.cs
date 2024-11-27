@@ -1,10 +1,5 @@
-﻿// ---------------------------------------------------------
-// Copyright (c) North East London ICB. All rights reserved.
-// ---------------------------------------------------------
-
-using FluentAssertions;
+﻿using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -12,28 +7,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Theory]
-        [MemberData(nameof(InvalidArgumentsStreamLengthZero))]
-        public async Task ShouldThrowValidationExceptionOnCreateIfArgumentsInvalidAsync(Stream invalidStream, string invalidText)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowValidationExceptionOnCreateDirectoryIfArgumentsInvalidAsync(string invalidText)
         {
             // given
-            string invalidFileName = invalidText;
             string invalidContainer = invalidText;
-            Stream invalidInputStream = invalidStream;
+            string invalidDirectory = invalidText;
 
             var invalidArgumentStorageException =
                 new InvalidArgumentStorageException(
                     message: "Invalid storage service argument(s), please fix the errors and try again.");
 
             invalidArgumentStorageException.AddData(
-                key: "Input",
-                values: "Stream is invalid");
-
-            invalidArgumentStorageException.AddData(
-                key: "FileName",
+                key: "Container",
                 values: "Text is invalid");
 
             invalidArgumentStorageException.AddData(
-                key: "Container",
+                key: "Directory",
                 values: "Text is invalid");
 
             var expectedStorageValidationException =
@@ -42,11 +34,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: invalidArgumentStorageException);
 
             // when
-            ValueTask createFileTask =
-                this.storageService.CreateFileAsync(invalidInputStream, invalidFileName, invalidContainer);
+            ValueTask createDirectoryTask =
+                this.storageService.CreateDirectoryAsync(invalidContainer, invalidDirectory);
 
             StorageValidationException actualStorageValidationException =
-                await Assert.ThrowsAsync<StorageValidationException>(testCode: createFileTask.AsTask);
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: createDirectoryTask.AsTask);
 
             // then
             actualStorageValidationException

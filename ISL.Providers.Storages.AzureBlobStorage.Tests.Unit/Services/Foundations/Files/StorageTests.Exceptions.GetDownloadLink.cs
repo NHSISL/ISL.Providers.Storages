@@ -2,11 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using Moq;
+using System;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
@@ -56,6 +56,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -104,6 +106,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -152,6 +156,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
+            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
             this.blobContainerClientMock.VerifyNoOtherCalls();
             this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

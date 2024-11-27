@@ -90,5 +90,12 @@ namespace ISL.Providers.Storages.Abstractions
         /// The names of the policies you want to create. Options are read, write, delete and fullaccess.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames);
+
+        /// <summary>
+        /// Removes all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
     }
 }
