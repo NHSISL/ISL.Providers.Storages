@@ -11,9 +11,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            List<string> randomPolicyNames = GetRandomStringList();
             string inputContainer = randomContainer;
-            List<string> inputPolicyNames = randomPolicyNames;
+
+            List<string> inputPolicyNames = new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
+            };
 
             // when
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
