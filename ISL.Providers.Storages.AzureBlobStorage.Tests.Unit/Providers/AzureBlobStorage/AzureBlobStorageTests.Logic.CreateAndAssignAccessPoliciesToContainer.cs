@@ -16,7 +16,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             List<string> inputPolicyNames = randomPolicyNames;
 
             // when
-            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+                inputContainer, inputPolicyNames);
 
             // then
             this.storageServiceMock.Verify(service =>
