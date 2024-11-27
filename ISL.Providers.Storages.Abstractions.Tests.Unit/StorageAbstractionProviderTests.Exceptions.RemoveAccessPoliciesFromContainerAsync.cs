@@ -185,7 +185,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             var uncatagorizedStorageProviderException =
                 new UncatagorizedStorageProviderException(
                     message: "Storage provider not properly implemented. Uncatagorized errors found, " +
-                            "contact the storage provider owner for support.",
+                        "contact the storage provider owner for support.",
                     innerException: someException,
                     data: someException.Data);
 
