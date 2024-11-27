@@ -163,11 +163,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// </exception>
         public ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
-        TryCatch(async () =>
-        {
-            return await storageProvider.CreateDirectorySasTokenAsync(
-                container, directoryPath, accessPolicyIdentifier, expiresOn);
-        });
+            throw new NotImplementedException();
 
         /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
