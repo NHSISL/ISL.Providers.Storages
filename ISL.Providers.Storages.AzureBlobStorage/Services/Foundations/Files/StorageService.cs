@@ -58,20 +58,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
-        TryCatch(async () =>
+        TryCatch((ReturningStringFunction)(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
+            return GetDownloadLinkAsync(fileName, container, expiresOn);
+        }));
 
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
 
-            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
-            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
-
-            return blobUriBuilder.ToUri().ToString();
-        });
 
         public ValueTask CreateContainerAsync(string container) =>
         TryCatch(async () =>

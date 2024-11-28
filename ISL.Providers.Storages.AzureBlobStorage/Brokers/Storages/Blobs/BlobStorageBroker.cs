@@ -129,6 +129,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return fileNames;
         }
 
+        public async ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        {
+            BlobClient blobClient =
+                BlobServiceClient
+                    .GetBlobContainerClient(container)
+                    .GetBlobClient(fileName);
+
+            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
+            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+
+            return blobUriBuilder.ToUri().ToString();
+        }
+
         public async ValueTask<string> GetSasTokenAsync(
             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
         {
@@ -150,6 +163,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
-            new BlobUriBuilder(uri);
+            new BlobUriBuilder(uri)
+            {
+                BlobContainerName =
+            };
     }
 }
