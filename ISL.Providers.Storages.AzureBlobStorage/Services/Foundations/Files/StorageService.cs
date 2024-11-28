@@ -123,15 +123,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
 
-            return await this.blobStorageBroker.RetrieveAllAccessPoliciesFromContainerAsync(container);
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<string> signedIdentifiers = new List<string>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier.Id);
+            }
+
+            return signedIdentifiers;
         });
+
 
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRemoveAccessPolicies(container);
-            await this.blobStorageBroker.RemoveAccessPoliciesFromContainerAsync(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            await this.blobStorageBroker.RemoveAccessPoliciesFromContainerAsync(blobContainerClient);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(

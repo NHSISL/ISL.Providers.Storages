@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Azure.Storage.Blobs.Models;
+using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,12 +15,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomString = GetRandomString();
             List<string> randomStringList = GetRandomStringList();
             string inputContainer = randomString;
-            List<string> outputAccessPolicies = randomStringList;
-            List<string> expectedAccessPolicies = outputAccessPolicies;
+            BlobContainerAccessPolicy randomBlobContainerAccessPolicy = CreateRandomBlobContainerAccessPolicy();
+            BlobContainerAccessPolicy outputBlobContainerAccessPolicy = randomBlobContainerAccessPolicy;
+            var expectedAccessPolicies = new List<string>();
+
+            foreach (var signedIdentifier in outputBlobContainerAccessPolicy.SignedIdentifiers)
+            {
+                expectedAccessPolicies.Add(signedIdentifier.Id);
+            }
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer))
-                    .ReturnsAsync(outputAccessPolicies);
+                broker.GetBlobContainerClient(inputContainer))
+                    .Returns(blobContainerClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object))
+                    .ReturnsAsync(outputBlobContainerAccessPolicy);
 
             // when
             List<string> actualAccessPolicies = await this.storageService
@@ -29,7 +40,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualAccessPolicies.Should().BeEquivalentTo(expectedAccessPolicies);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

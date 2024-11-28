@@ -36,8 +36,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask AssignAccessPoliciesToContainerAsync(
             BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers);
 
-        ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
-        ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
+        ValueTask<BlobContainerAccessPolicy> GetAccessPolicyAsync(BlobContainerClient blobContainerClient);
+        ValueTask RemoveAccessPoliciesFromContainerAsync(BlobContainerClient containerClient);
 
         ValueTask<string> CreateDirectorySasTokenAsync(
             string container,

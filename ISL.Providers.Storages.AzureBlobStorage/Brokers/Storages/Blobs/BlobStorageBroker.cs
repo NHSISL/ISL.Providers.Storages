@@ -139,29 +139,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers) =>
             await blobContainerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
 
-        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
-        {
-            BlobContainerClient containerClient = BlobServiceClient
-                .GetBlobContainerClient(container);
+        public async ValueTask<BlobContainerAccessPolicy> GetAccessPolicyAsync(
+            BlobContainerClient blobContainerClient) =>
+            await blobContainerClient.GetAccessPolicyAsync();
 
-            BlobContainerAccessPolicy containerAccessPolicy = await containerClient.GetAccessPolicyAsync();
-            List<string> signedIdentifiers = new List<string>();
-
-            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
-            {
-                signedIdentifiers.Add(signedIdentifier.Id);
-            }
-
-            return signedIdentifiers;
-        }
-
-        public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container)
+        public async ValueTask RemoveAccessPoliciesFromContainerAsync(BlobContainerClient containerClient)
         {
             List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
-
-            BlobContainerClient containerClient = BlobServiceClient
-                .GetBlobContainerClient(container);
-
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         }
 
