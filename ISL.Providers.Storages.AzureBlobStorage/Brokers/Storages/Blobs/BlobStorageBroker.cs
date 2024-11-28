@@ -130,6 +130,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return fileNames;
         }
 
+        public async ValueTask CreateDirectoryAsync(string container, string directory)
+        {
+            DataLakeFileSystemClient dataLakeFileSystemClient = DataLakeServiceClient.GetFileSystemClient(container);
+            await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
+        }
+
         public async ValueTask<string> GetDownloadLinkAsync(
             string fileName, string container, DateTimeOffset expiresOn)
         {

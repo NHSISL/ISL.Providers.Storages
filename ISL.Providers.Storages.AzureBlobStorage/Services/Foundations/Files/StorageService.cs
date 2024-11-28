@@ -4,7 +4,6 @@
 
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Files.DataLake;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -76,8 +75,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateDirectory(container, directory);
-            DataLakeFileSystemClient dataLakeFileSystemClient = this.blobStorageBroker.DataLakeServiceClient.GetFileSystemClient(container);
-            await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
+            await this.blobStorageBroker.CreateDirectoryAsync(container, directory);
         });
 
         public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>

@@ -14,28 +14,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomDirectory = GetRandomString();
             string inputDirectory = randomDirectory;
 
-            this.dataLakeServiceClientMock.Setup(service =>
-                service.GetFileSystemClient(inputContainer))
-                    .Returns(this.dataLakeFileSystemClientMock.Object);
-
             // when
             await this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             // then
-            this.dataLakeServiceClientMock.Verify(service =>
-                service.GetFileSystemClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory),
                     Times.Once);
 
-            this.dataLakeFileSystemClientMock.Verify(client =>
-                client.CreateDirectoryAsync(inputDirectory, null, default),
-                    Times.Once);
-
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -29,8 +29,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency validation error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyValidationException);
 
-            this.dataLakeServiceClientMock.Setup(client =>
-                client.GetFileSystemClient(inputContainer))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory))
                     .Throws(dependencyValidationException);
 
             // when
@@ -44,16 +44,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageDependencyValidationException
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
-            this.dataLakeServiceClientMock.Verify(client =>
-                client.GetFileSystemClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -76,8 +72,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyException);
 
-            this.dataLakeServiceClientMock.Setup(client =>
-                client.GetFileSystemClient(inputContainer))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory))
                     .Throws(dependencyException);
 
             // when
@@ -91,16 +87,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
-            this.dataLakeServiceClientMock.Verify(client =>
-                client.GetFileSystemClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -123,8 +115,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage service error occurred, please fix errors and try again.",
                     innerException: failedStorageServiceException);
 
-            this.dataLakeServiceClientMock.Setup(client =>
-                client.GetFileSystemClient(inputContainer))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory))
                     .Throws(someException);
 
             // when
@@ -138,16 +130,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageServiceException
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
-            this.dataLakeServiceClientMock.Verify(client =>
-                client.GetFileSystemClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateDirectoryAsync(inputContainer, inputDirectory),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
