@@ -196,7 +196,6 @@ namespace ISL.Providers.Storages.Abstractions
             return await storageProvider.GetAccessTokenAsync(path, container, accessLevel, expiresOn);
         });
 
-
         /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
