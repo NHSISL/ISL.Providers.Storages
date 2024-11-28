@@ -162,14 +162,12 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<string> CreateDirectorySasTokenAsync(
-            string container,
-            string directoryPath,
-            string accessPolicyIdentifier,
-            DateTimeOffset expiresOn) =>
-            TryCatch(async () =>
-            {
-                return await this.storageProvider.CreateDirectorySasTokenAsync(container, directoryPath, accessPolicyIdentifier, expiresOn);
-            });
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
+        {
+            return await storageProvider.CreateDirectorySasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+        });
 
         /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
