@@ -49,7 +49,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// <summary>
         /// Creates a container in the storage account.
         /// </summary>
-        /// <param name="container">The name of the created storage containe.</param>
+        /// <param name="container">The name of the created storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask CreateContainerAsync(string container);
 
@@ -97,5 +97,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
+
+        /// <summary>
+        /// Creates a folder within the specified container.
+        /// </summary>
+        /// <param name="container">The name of the storage container to create the folder in.</param>
+        /// <param name="folder">The name of the folder to create.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask CreateFolderInContainerAsync(string container, string folder);
     }
 }

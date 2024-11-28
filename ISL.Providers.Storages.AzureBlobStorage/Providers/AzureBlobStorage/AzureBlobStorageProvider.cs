@@ -371,6 +371,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
+        /// <summary>
+        /// Creates a folder within the specified container.
+        /// </summary>
+        /// <param name="container">The name of the storage container to create the folder in.</param>
+        /// <param name="folder">The name of the folder to create.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask CreateFolderInContainerAsync(string container, string folder) =>
+            throw new NotImplementedException();
+
         public ValueTask<string> GetAccessTokenAsync(
             string path,
             string container,
