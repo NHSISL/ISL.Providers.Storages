@@ -294,7 +294,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
-            
 
         public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
             throw new NotImplementedException();
