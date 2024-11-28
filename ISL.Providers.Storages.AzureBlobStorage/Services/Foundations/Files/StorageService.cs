@@ -2,13 +2,13 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
-using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -115,14 +115,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return sasToken;
         });
-
-        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
-        {
-            "read" => "rl",
-            "write" => "w",
-            "delete" => "d",
-            "fullaccess" => "rlwd",
-            _ => ""
-        };
     }
 }

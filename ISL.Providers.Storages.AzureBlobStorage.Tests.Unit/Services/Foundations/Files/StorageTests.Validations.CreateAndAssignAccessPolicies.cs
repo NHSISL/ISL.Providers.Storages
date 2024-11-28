@@ -2,10 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using FluentAssertions;
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
@@ -42,7 +42,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(invalidContainer, invalidPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                    invalidContainer, invalidPolicyNames);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
@@ -81,7 +82,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, invalidPolicyNameList);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                    inputContainer, invalidPolicyNameList);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
@@ -115,7 +117,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask createAccessPolicyTask =
-                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, invalidPolicyNames);
+                this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                    inputContainer, invalidPolicyNames);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);

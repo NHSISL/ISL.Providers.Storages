@@ -5,10 +5,7 @@
 using Azure;
 using Azure.Identity;
 using Azure.Storage;
-using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Files.DataLake;
-using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
@@ -20,7 +17,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -29,14 +25,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
-        private readonly Mock<BlobServiceClient> blobServiceClientMock;
-        private readonly Mock<DataLakeServiceClient> dataLakeServiceClientMock;
-        private readonly Mock<DataLakeFileSystemClient> dataLakeFileSystemClientMock;
-        private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
-        private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
-        private readonly Mock<BlobContainerClient> blobContainerClientMock;
-        private readonly Mock<BlobClient> blobClientMock;
-        private readonly Mock<Response> blobClientResponseMock;
         private readonly StorageService storageService;
         private readonly ICompareLogic compareLogic;
 
@@ -44,23 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
-            this.blobServiceClientMock = new Mock<BlobServiceClient>();
-            this.dataLakeServiceClientMock = new Mock<DataLakeServiceClient>();
-            this.dataLakeFileSystemClientMock = new Mock<DataLakeFileSystemClient>();
-            this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
-            this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
-            this.blobContainerClientMock = new Mock<BlobContainerClient>();
-            this.blobClientMock = new Mock<BlobClient>();
-            this.blobClientResponseMock = new Mock<Response>();
             this.compareLogic = new CompareLogic();
-
-            this.blobStorageBrokerMock.Setup(broker =>
-                broker.BlobServiceClient)
-                    .Returns(blobServiceClientMock.Object);
-
-            this.blobStorageBrokerMock.Setup(broker =>
-                broker.DataLakeServiceClient)
-                    .Returns(dataLakeServiceClientMock.Object);
 
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object,
@@ -92,13 +64,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             }
 
             return randomStringList;
-        }
-
-        public byte[] CreateRandomData()
-        {
-            string randomMessage = GetRandomString();
-
-            return Encoding.UTF8.GetBytes(randomMessage);
         }
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
@@ -182,83 +147,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             }
 
             return blobItems;
-        }
-
-        private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
-        {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
-
-            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
-            {
-                new BlobSignedIdentifier
-                {
-                    Id = $"read_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "rl"
-                    }
-                },
-                new BlobSignedIdentifier
-                {
-                    Id = $"write_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "w"
-                    }
-                },
-                new BlobSignedIdentifier
-                {
-                    Id = $"delete_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "d"
-                    }
-                },
-                new BlobSignedIdentifier
-                {
-                    Id = $"fullaccess_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "rlwd"
-                    }
-                }
-            };
-
-            return signedIdentifiers;
-        }
-
-        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
-            CreateBlobContainerAccessPolicyFiller().Create();
-
-        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
-        {
-            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            var filler = new Filler<BlobContainerAccessPolicy>();
-
-            filler.Setup()
-                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
-                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
-                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
-
-            return filler;
-        }
-
-        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
-        {
-            var filler = new Filler<BlobSignedIdentifier>();
-
-            filler.Setup()
-                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
-
-            return filler;
         }
 
         private static List<string> GetPolicyNames() =>

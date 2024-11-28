@@ -2,6 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
@@ -11,19 +17,13 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal class BlobStorageBroker : IBlobStorageBroker
     {
-        public BlobServiceClient BlobServiceClient { get; private set; }
-        public DataLakeServiceClient DataLakeServiceClient { get; private set; }
+        private BlobServiceClient BlobServiceClient { get; set; }
+        private DataLakeServiceClient DataLakeServiceClient { get; set; }
         private int TokenLifetimeDays { get; set; }
         private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
 
@@ -131,7 +131,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         public async ValueTask CreateDirectoryAsync(string container, string directory)
         {
-            DataLakeFileSystemClient dataLakeFileSystemClient = DataLakeServiceClient.GetFileSystemClient(container);
+            DataLakeFileSystemClient dataLakeFileSystemClient =
+                DataLakeServiceClient.GetFileSystemClient(container);
+
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
         }
 

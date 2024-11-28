@@ -1,8 +1,12 @@
-﻿using FluentAssertions;
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using Moq;
+﻿// ---------------------------------------------------------
+// Copyright (c) North East London ICB. All rights reserved.
+// ---------------------------------------------------------
+
 using System;
 using System.Threading.Tasks;
+using FluentAssertions;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using Moq;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
@@ -38,7 +42,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createDirectoryTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+                    testCode: createDirectoryTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
