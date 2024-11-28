@@ -2,7 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
@@ -52,21 +51,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateContainerName(container);
-            List<string> fileNames = new List<string>();
 
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container);
-
-            AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
-
-            await foreach (BlobItem blobItem in blobItems)
-            {
-                fileNames.Add(blobItem.Name);
-            }
-
-            return fileNames;
+            return await this.blobStorageBroker.ListContainerAsync(container);
         });
+
+
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
         TryCatch(async () =>

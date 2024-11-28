@@ -8,6 +8,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateFileAsync(Stream input, string fileName, string container);
         ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
         ValueTask DeleteFileAsync(string fileName, string container);
+        ValueTask<List<string>> ListContainerAsync(string container);
 
         ValueTask<string> GetSasTokenAsync(
             string container,

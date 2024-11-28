@@ -12,6 +12,7 @@ using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -108,6 +109,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 .GetBlobClient(fileName);
 
             await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
+        }
+
+        public async ValueTask<List<string>> ListContainerAsync(string container)
+        {
+            List<string> fileNames = new List<string>();
+
+            BlobContainerClient containerClient =
+                BlobServiceClient
+                    .GetBlobContainerClient(container);
+
+            AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
+
+            await foreach (BlobItem blobItem in blobItems)
+            {
+                fileNames.Add(blobItem.Name);
+            }
+
+            return fileNames;
         }
 
         public async ValueTask<string> GetSasTokenAsync(

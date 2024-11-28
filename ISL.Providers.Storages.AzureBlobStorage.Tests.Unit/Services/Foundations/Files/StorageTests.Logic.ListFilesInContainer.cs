@@ -2,7 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
@@ -20,20 +19,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomContainer;
             var randomAsyncPageable = CreateAsyncPageableBlobItem();
             var outputAsyncPageable = randomAsyncPageable;
-            List<string> expectedFileNames = new List<string>();
+            List<string> outputFileNames = GetRandomStringList();
+            List<string> expectedFileNames = outputFileNames;
 
-            await foreach (BlobItem blobItem in outputAsyncPageable)
-            {
-                expectedFileNames.Add(blobItem.Name);
-            }
-
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
-                    .Returns(blobContainerClientMock.Object);
-
-            this.blobContainerClientMock.Setup(client =>
-                client.GetBlobsAsync(BlobTraits.None, BlobStates.None, null, default))
-                    .Returns(outputAsyncPageable);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.ListContainerAsync(inputContainer))
+                    .ReturnsAsync(outputFileNames);
 
             // when
             var actualFileNames = await this.storageService.ListFilesInContainerAsync(inputContainer);
@@ -41,20 +32,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualFileNames.Should().BeEquivalentTo(expectedFileNames);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.ListContainerAsync(inputContainer),
                     Times.Once);
 
-            this.blobContainerClientMock.Verify(client =>
-                client.GetBlobsAsync(BlobTraits.None, BlobStates.None, null, default),
-                    Times.Once);
-
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
