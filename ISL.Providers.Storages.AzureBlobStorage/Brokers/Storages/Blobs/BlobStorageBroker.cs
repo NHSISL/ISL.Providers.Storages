@@ -181,7 +181,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                     .GetBlobContainerClient(container)
                     .GetBlobClient(fileName);
 
-            var userDelegationKey = BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
+            var userDelegationKey = GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
 
             var sasBuilder = new BlobSasBuilder()
             {
@@ -227,22 +227,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default) =>
             BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
-
-        private BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
-        {
-            var blobSasBuilder = new BlobSasBuilder()
-            {
-                BlobContainerName = blobContainerName,
-                BlobName = blobName,
-                Resource = "b",
-                StartsOn = DateTimeOffset.UtcNow,
-                ExpiresOn = expiresOn
-            };
-
-            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
-
-            return blobSasBuilder;
-        }
 
         private string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {
