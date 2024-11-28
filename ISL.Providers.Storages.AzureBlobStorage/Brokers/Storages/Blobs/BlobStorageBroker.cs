@@ -182,6 +182,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return signedIdentifiers;
         }
 
+        public async ValueTask RemoveAccessPoliciesFromContainerAsync(string container)
+        {
+            List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
+
+            BlobContainerClient containerClient = BlobServiceClient
+                .GetBlobContainerClient(container);
+
+            await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
+        }
+
         public async ValueTask<string> GetDownloadLinkAsync(
             string fileName, string container, DateTimeOffset expiresOn)
         {

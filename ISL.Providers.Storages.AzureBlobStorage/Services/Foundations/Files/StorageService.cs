@@ -2,8 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -100,13 +98,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRemoveAccessPolicies(container);
-            List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
-
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container);
-
-            await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
+            await this.blobStorageBroker.RemoveAccessPoliciesFromContainerAsync(container);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(
