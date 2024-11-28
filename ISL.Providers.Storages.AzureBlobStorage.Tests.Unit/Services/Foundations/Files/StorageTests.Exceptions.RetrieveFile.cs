@@ -23,7 +23,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Stream someStream = new ZeroLengthStream();
             string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
+            Stream outputStream = someStream;
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
@@ -38,12 +38,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyValidationException);
 
             // when
             ValueTask createFileTask =
-                this.storageService.RetrieveFileAsync(inputStream, inputFileName, inputContainer);
+                this.storageService.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createFileTask.AsTask);
@@ -53,10 +53,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -68,7 +69,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Stream someStream = new ZeroLengthStream();
             string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
+            Stream outputStream = someStream;
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
@@ -83,12 +84,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyException);
 
             // when
             ValueTask createFileTask =
-                this.storageService.RetrieveFileAsync(inputStream, inputFileName, inputContainer);
+                this.storageService.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(testCode: createFileTask.AsTask);
@@ -98,10 +99,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -113,7 +115,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Stream someStream = new ZeroLengthStream();
             string someFileName = randomString;
             string someContainer = randomString;
-            Stream inputStream = someStream;
+            Stream outputStream = someStream;
             string inputFileName = someFileName;
             string inputContainer = someContainer;
 
@@ -128,12 +130,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageServiceException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(someException);
 
             // when
             ValueTask createFileTask =
-                this.storageService.RetrieveFileAsync(inputStream, inputFileName, inputContainer);
+                this.storageService.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(testCode: createFileTask.AsTask);
@@ -143,10 +145,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RetrieveFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

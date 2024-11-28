@@ -60,23 +60,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
-        public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
-        {
-            BlobClient blobClient = BlobServiceClient
-                .GetBlobContainerClient(container)
-                .GetBlobClient(fileName);
+        public BlobContainerClient GetBlobContainerClient(string container) =>
+            BlobServiceClient.GetBlobContainerClient(container);
 
+        public BlobClient GetBlobClient(
+            BlobContainerClient blobContainerClient, string fileName) =>
+            blobContainerClient.GetBlobClient(fileName);
+
+        public async ValueTask CreateFileAsync(BlobClient blobClient, Stream input) =>
             await blobClient.UploadAsync(input);
-        }
 
-        public async ValueTask RetrieveFileAsync(Stream output, string fileName, string container)
-        {
-            BlobClient blobClient = BlobServiceClient
-                .GetBlobContainerClient(container)
-                .GetBlobClient(fileName);
-
+        public async ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output) =>
             await blobClient.DownloadToAsync(output);
-        }
 
         public async ValueTask DeleteFileAsync(string fileName, string container)
         {

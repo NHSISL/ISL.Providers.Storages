@@ -5,7 +5,10 @@
 using Azure;
 using Azure.Identity;
 using Azure.Storage;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Files.DataLake;
+using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
@@ -25,6 +28,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         private readonly Mock<IBlobStorageBroker> blobStorageBrokerMock;
         private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+        private readonly Mock<BlobServiceClient> blobServiceClientMock;
+        private readonly Mock<DataLakeServiceClient> dataLakeServiceClientMock;
+        private readonly Mock<DataLakeFileSystemClient> dataLakeFileSystemClientMock;
+        private readonly Mock<BlobSasBuilder> blobSasBuilderMock;
+        private readonly Mock<BlobUriBuilder> blobUriBuilderMock;
+        private readonly Mock<BlobContainerClient> blobContainerClientMock;
+        private readonly Mock<BlobClient> blobClientMock;
+        private readonly Mock<Response> blobClientResponseMock;
         private readonly StorageService storageService;
         private readonly ICompareLogic compareLogic;
 
@@ -32,6 +43,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             this.blobStorageBrokerMock = new Mock<IBlobStorageBroker>();
             this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+            this.blobServiceClientMock = new Mock<BlobServiceClient>();
+            this.dataLakeServiceClientMock = new Mock<DataLakeServiceClient>();
+            this.dataLakeFileSystemClientMock = new Mock<DataLakeFileSystemClient>();
+            this.blobSasBuilderMock = new Mock<BlobSasBuilder>();
+            this.blobUriBuilderMock = new Mock<BlobUriBuilder>(new Uri("http://mytest.com/"));
+            this.blobContainerClientMock = new Mock<BlobContainerClient>();
+            this.blobClientMock = new Mock<BlobClient>();
+            this.blobClientResponseMock = new Mock<Response>();
             this.compareLogic = new CompareLogic();
 
             this.storageService = new StorageService(

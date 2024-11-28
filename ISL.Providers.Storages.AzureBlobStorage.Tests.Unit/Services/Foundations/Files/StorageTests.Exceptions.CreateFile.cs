@@ -38,7 +38,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyValidationException);
 
             // when
@@ -53,7 +53,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -84,7 +84,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyException);
 
             // when
@@ -99,7 +99,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageServiceException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer))
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(someException);
 
             // when
@@ -144,7 +144,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateFileAsync(inputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

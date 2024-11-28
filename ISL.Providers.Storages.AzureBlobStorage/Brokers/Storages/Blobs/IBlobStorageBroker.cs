@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure.Storage.Blobs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +12,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal interface IBlobStorageBroker
     {
-        ValueTask CreateFileAsync(Stream input, string fileName, string container);
-        ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
+        BlobContainerClient GetBlobContainerClient(string container);
+        BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
+        ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
+        ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(string fileName, string container);
         ValueTask CreateContainerAsync(string container);
         ValueTask CreateDirectoryAsync(string container, string directory);

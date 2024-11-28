@@ -20,12 +20,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomContainer;
             Stream outputStream = new MemoryStream();
 
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
+                    .Returns(blobContainerClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName))
+                    .Returns(blobClientMock.Object);
+
             // when
             await this.storageService.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
 
             // then
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.RetrieveFileAsync(blobClientMock.Object, outputStream),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
