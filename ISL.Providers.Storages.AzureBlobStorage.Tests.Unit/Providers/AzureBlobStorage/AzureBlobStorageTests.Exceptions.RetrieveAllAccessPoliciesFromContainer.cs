@@ -51,7 +51,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         }
 
         [Fact]
-        public async Task ShouldThrowProviderDependencyValidationExceptionOnRetrieveAllAccessPoliciesFromContainer()
+        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllAccessPoliciesFromContainerDependencyValidation()
         {
             // given
             string randomContainer = GetRandomString();
@@ -63,8 +63,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             var expectedAzureBlobStorageProviderDependencyValidationException =
                 new AzureBlobStorageProviderValidationException(
-                    message: "Azure blob storage provider dependency validation error occurred, " +
-                            "fix errors and try again.",
+                    message: "Azure blob storage provider validation error occurred, fix errors and try again.",
                     innerException: (Xeption)storageDependencyValidationException.InnerException,
                     data: storageDependencyValidationException.InnerException.Data);
 
