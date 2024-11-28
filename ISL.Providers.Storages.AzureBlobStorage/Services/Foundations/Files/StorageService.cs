@@ -82,34 +82,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
-            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmmss");
+            DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
 
-            BlobContainerClient containerClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container);
-
-            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
-
-            foreach (string policyName in policyNames)
-            {
-                string permissions = ConvertPolicyNameToPermissions(policyName);
-
-                var blobSignedIdentifier = new BlobSignedIdentifier
-                {
-                    Id = $"{policyName}_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = dateTimeOffset,
-                        PolicyExpiresOn = dateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
-                        Permissions = permissions
-                    }
-                };
-
-                signedIdentifiers.Add(blobSignedIdentifier);
-            }
-
-            await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
+            await this.blobStorageBroker.CreateAndAssignAccessPoliciesToContainerAsync(
+                container, policyNames, currentDateTimeOffset);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(

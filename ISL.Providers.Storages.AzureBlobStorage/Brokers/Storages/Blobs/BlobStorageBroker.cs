@@ -24,7 +24,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     {
         public BlobServiceClient BlobServiceClient { get; private set; }
         public DataLakeServiceClient DataLakeServiceClient { get; private set; }
-        public int TokenLifetimeDays { get; private set; }
+        private int TokenLifetimeDays { get; set; }
         private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
@@ -116,9 +116,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         {
             List<string> fileNames = new List<string>();
 
-            BlobContainerClient containerClient =
-                BlobServiceClient
-                    .GetBlobContainerClient(container);
+            BlobContainerClient containerClient = BlobServiceClient
+                .GetBlobContainerClient(container);
 
             AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
 
@@ -134,6 +133,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         {
             DataLakeFileSystemClient dataLakeFileSystemClient = DataLakeServiceClient.GetFileSystemClient(container);
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
+        }
+
+        public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
+            string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset)
+        {
+            string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
+
+            BlobContainerClient containerClient = BlobServiceClient
+                .GetBlobContainerClient(container);
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
+
+            foreach (string policyName in policyNames)
+            {
+                string permissions = ConvertPolicyNameToPermissions(policyName.ToLower());
+
+                var blobSignedIdentifier = new BlobSignedIdentifier
+                {
+                    Id = $"{policyName}_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = currentDateTimeOffset,
+                        PolicyExpiresOn = currentDateTimeOffset.AddDays(TokenLifetimeDays),
+                        Permissions = permissions
+                    }
+                };
+
+                signedIdentifiers.Add(blobSignedIdentifier);
+            }
+
+            await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
         }
 
         public async ValueTask<string> GetDownloadLinkAsync(
@@ -173,5 +203,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             return sasQueryParameters.ToString();
         }
+
+        private string ConvertPolicyNameToPermissions(string policyName) => policyName switch
+        {
+            "read" => "rl",
+            "write" => "w",
+            "delete" => "d",
+            "fullaccess" => "rlwd",
+            _ => ""
+        };
     }
 }

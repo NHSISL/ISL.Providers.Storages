@@ -19,13 +19,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     {
         BlobServiceClient BlobServiceClient { get; }
         DataLakeServiceClient DataLakeServiceClient { get; }
-        int TokenLifetimeDays { get; }
 
         Response<UserDelegationKey> GetUserDelegationKey(
             DateTimeOffset? startsOn,
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default(CancellationToken));
-
 
         BlobSasBuilder GetBlobSasBuilder(
             string blobName,
@@ -39,6 +37,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateDirectoryAsync(string container, string directory);
         ValueTask<List<string>> ListContainerAsync(string container);
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
+
+        ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
+            string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset);
 
         ValueTask<string> GetSasTokenAsync(
             string container,
