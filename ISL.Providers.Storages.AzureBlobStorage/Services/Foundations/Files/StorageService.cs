@@ -5,6 +5,7 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -75,8 +76,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            BlobSasBuilder sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
 
-            return await this.blobStorageBroker.GetDownloadLinkAsync(fileName, container, expiresOn);
+            string downloadLink = await this.blobStorageBroker
+                .GetDownloadLinkAsync(blobClient, sasBuilder, expiresOn);
+
+            return downloadLink;
         });
 
         public ValueTask CreateContainerAsync(string container) =>

@@ -5,6 +5,7 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,13 +17,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     {
         BlobContainerClient GetBlobContainerClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
+        BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(BlobClient blobClient);
         ValueTask CreateContainerAsync(string container);
         ValueTask CreateDirectoryAsync(string container, string directory);
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
-        ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
+
+        ValueTask<string> GetDownloadLinkAsync(
+            BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn);
 
         ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
             string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset);

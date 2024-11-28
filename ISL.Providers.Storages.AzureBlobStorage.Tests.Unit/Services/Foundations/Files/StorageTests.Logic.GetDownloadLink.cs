@@ -26,10 +26,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string outputDowloadLink = randomDownloadLink;
             string expectedDowloadLink = outputDowloadLink;
 
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
+                    .Returns(blobContainerClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName))
+                    .Returns(blobClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn))
+                    .Returns(blobSasBuilderMock.Object);
+
             this.blobStorageBrokerMock.Setup(client =>
                 client.GetDownloadLinkAsync(
-                    inputFileName,
-                    inputContainer,
+                    blobClientMock.Object,
+                    blobSasBuilderMock.Object,
                     inputExpiresOn))
                         .ReturnsAsync(outputDowloadLink);
 
@@ -40,10 +52,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualDownloadLink.Should().BeEquivalentTo(expectedDowloadLink);
 
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn),
+                    Times.Once);
+
             this.blobStorageBrokerMock.Verify(client =>
                 client.GetDownloadLinkAsync(
-                    inputFileName,
-                    inputContainer,
+                    blobClientMock.Object,
+                    blobSasBuilderMock.Object,
                     inputExpiresOn),
                         Times.Once);
 

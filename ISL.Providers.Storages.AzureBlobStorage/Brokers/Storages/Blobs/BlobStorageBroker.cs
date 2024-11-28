@@ -165,33 +165,47 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         }
 
+        //public async ValueTask<string> GetDownloadLinkAsync(
+        //    string fileName, string container, DateTimeOffset expiresOn)
+        //{
+        //    BlobClient blobClient = BlobServiceClient
+        //            .GetBlobContainerClient(container)
+        //            .GetBlobClient(fileName);
+
+        //    var userDelegationKey = GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
+
+        //    var sasBuilder = new BlobSasBuilder()
+        //    {
+        //        BlobContainerName = container,
+        //        BlobName = fileName,
+        //        Resource = "b",
+        //        StartsOn = DateTimeOffset.UtcNow,
+        //        ExpiresOn = expiresOn
+        //    };
+
+        //    sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+        //    var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
+        //    {
+        //        Sas = sasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
+        //    };
+
+        //    return blobUriBuilder.ToUri().ToString();
+        //}
+
         public async ValueTask<string> GetDownloadLinkAsync(
-            string fileName, string container, DateTimeOffset expiresOn)
+            BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn)
         {
-            BlobClient blobClient = BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
             var userDelegationKey = GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
-
-            var sasBuilder = new BlobSasBuilder()
-            {
-                BlobContainerName = container,
-                BlobName = fileName,
-                Resource = "b",
-                StartsOn = DateTimeOffset.UtcNow,
-                ExpiresOn = expiresOn
-            };
-
-            sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
             {
-                Sas = sasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
+                Sas = blobSasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
             };
 
             return blobUriBuilder.ToUri().ToString();
         }
+
 
         public async ValueTask<string> CreateDirectorySasTokenAsync(
             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
@@ -218,6 +232,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DateTimeOffset expiresOn,
             CancellationToken cancellationToken = default) =>
             BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+
+        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
+        {
+            var blobSasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = blobContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            return blobSasBuilder;
+        }
 
         private string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {
