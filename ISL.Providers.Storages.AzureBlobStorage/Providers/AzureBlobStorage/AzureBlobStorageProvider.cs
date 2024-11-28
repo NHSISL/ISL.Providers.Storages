@@ -265,6 +265,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             throw new NotImplementedException();
 
         /// <summary>
+
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the container where the access policies will be created.</param>
@@ -339,6 +340,42 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+        
+        /// <summary>
+        /// Retrieves all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
+        {
+            try
+            {
+                return await this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
 
         /// <summary>
         /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
@@ -381,6 +418,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
+        /// <summary>
+        /// Creates a folder within the specified container.
+        /// </summary>
+        /// <param name="container">The name of the storage container to create the folder in.</param>
+        /// <param name="folder">The name of the folder to create.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask CreateFolderInContainerAsync(string container, string folder) =>
+            throw new NotImplementedException();
 
         public ValueTask<string> GetAccessTokenAsync(
             string path,
