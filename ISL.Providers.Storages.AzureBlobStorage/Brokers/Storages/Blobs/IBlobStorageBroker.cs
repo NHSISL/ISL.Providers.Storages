@@ -5,26 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using Azure;
-using Azure.Storage.Blobs.Models;
-using Azure.Storage.Sas;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal interface IBlobStorageBroker
     {
-        Response<UserDelegationKey> GetUserDelegationKey(
-            DateTimeOffset? startsOn,
-            DateTimeOffset expiresOn,
-            CancellationToken cancellationToken = default(CancellationToken));
-
-        BlobSasBuilder GetBlobSasBuilder(
-            string blobName,
-            string blobContainerName,
-            DateTimeOffset expiresOn);
-
         ValueTask CreateFileAsync(Stream input, string fileName, string container);
         ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
         ValueTask DeleteFileAsync(string fileName, string container);
@@ -39,7 +25,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
 
-        ValueTask<string> GetSasTokenAsync(
+        ValueTask<string> CreateDirectorySasTokenAsync(
             string container,
             string directoryPath,
             string accessPolicyIdentifier,

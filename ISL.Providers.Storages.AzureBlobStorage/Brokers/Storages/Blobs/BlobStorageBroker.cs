@@ -2,12 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Identity;
@@ -17,6 +11,12 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -60,27 +60,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
-        public Response<UserDelegationKey> GetUserDelegationKey(
-            DateTimeOffset? startsOn,
-            DateTimeOffset expiresOn,
-            CancellationToken cancellationToken = default) =>
-            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
 
-        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
-        {
-            var blobSasBuilder = new BlobSasBuilder()
-            {
-                BlobContainerName = blobContainerName,
-                BlobName = blobName,
-                Resource = "b",
-                StartsOn = DateTimeOffset.UtcNow,
-                ExpiresOn = expiresOn
-            };
-
-            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
-
-            return blobSasBuilder;
-        }
 
         public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
         {
@@ -202,7 +182,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                     .GetBlobClient(fileName);
 
             var userDelegationKey = BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
-            var sasBuilder = GetBlobSasBuilder(fileName, container, expiresOn);
+
+            var sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = container,
+                BlobName = fileName,
+                Resource = "b",
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
             {
@@ -212,7 +202,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return blobUriBuilder.ToUri().ToString();
         }
 
-        public async ValueTask<string> GetSasTokenAsync(
+        public async ValueTask<string> CreateDirectorySasTokenAsync(
             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
         {
             var directorySasBuilder = new DataLakeSasBuilder()
@@ -230,6 +220,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 StorageSharedKeyCredential);
 
             return sasQueryParameters.ToString();
+        }
+
+        private Response<UserDelegationKey> GetUserDelegationKey(
+            DateTimeOffset? startsOn,
+            DateTimeOffset expiresOn,
+            CancellationToken cancellationToken = default) =>
+            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
+
+        private BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
+        {
+            var blobSasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = blobContainerName,
+                BlobName = blobName,
+                Resource = "b",
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = expiresOn
+            };
+
+            blobSasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            return blobSasBuilder;
         }
 
         private string ConvertPolicyNameToPermissions(string policyName) => policyName switch
