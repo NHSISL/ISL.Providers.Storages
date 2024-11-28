@@ -110,9 +110,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
 
-            await this.blobStorageBroker.CreateAndAssignAccessPoliciesToContainerAsync(
-                container, policyNames, currentDateTimeOffset);
+            List<BlobSignedIdentifier> signedIdentifiers =
+                await this.blobStorageBroker.CreateAccessPoliciesAsync(policyNames, currentDateTimeOffset);
+
+            await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
+                blobContainerClient, signedIdentifiers);
         });
 
         public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
@@ -144,5 +148,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return sasToken;
         });
+
+        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
+        {
+            "read" => "rl",
+            "write" => "w",
+            "delete" => "d",
+            "fullaccess" => "rlwd",
+            _ => ""
+        };
     }
 }

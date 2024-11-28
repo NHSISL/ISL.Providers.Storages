@@ -168,6 +168,76 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobItems;
         }
 
+        private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
+        {
+            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
+            {
+                new BlobSignedIdentifier
+                {
+                    Id = $"read_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rl"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"write_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "w"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"delete_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "d"
+                    }
+                },
+                new BlobSignedIdentifier
+                {
+                    Id = $"fullaccess_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = createdDateTimeOffset,
+                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
+                        Permissions = "rlwd"
+                    }
+                }
+            };
+            return signedIdentifiers;
+        }
+
+        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
+            CreateBlobContainerAccessPolicyFiller().Create();
+
+        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
+        {
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            var filler = new Filler<BlobContainerAccessPolicy>();
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
+                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
+                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
+            return filler;
+        }
+        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
+        {
+            var filler = new Filler<BlobSignedIdentifier>();
+            filler.Setup()
+                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
+            return filler;
+        }
+
         private static List<string> GetPolicyNames() =>
             new List<string>
             {

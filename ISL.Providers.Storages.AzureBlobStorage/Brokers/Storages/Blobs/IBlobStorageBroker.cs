@@ -30,8 +30,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<string> GetDownloadLinkAsync(
             BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn);
 
-        ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
-            string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset);
+        ValueTask<List<BlobSignedIdentifier>> CreateAccessPoliciesAsync(
+            List<string> policyNames, DateTimeOffset currentDateTimeOffset);
+
+        ValueTask AssignAccessPoliciesToContainerAsync(
+            BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers);
 
         ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);

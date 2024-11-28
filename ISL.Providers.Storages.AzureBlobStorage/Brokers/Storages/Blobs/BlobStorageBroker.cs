@@ -107,13 +107,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             DataLakeFileSystemClient dataLakeFileSystemClient, string directory) =>
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
 
-        public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
-            string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset)
+        public async ValueTask<List<BlobSignedIdentifier>> CreateAccessPoliciesAsync(
+            List<string> policyNames, DateTimeOffset currentDateTimeOffset)
         {
             string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
-
-            BlobContainerClient containerClient = BlobServiceClient
-                .GetBlobContainerClient(container);
 
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
@@ -135,8 +132,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 signedIdentifiers.Add(blobSignedIdentifier);
             }
 
-            await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
+            return signedIdentifiers;
         }
+
+        public async ValueTask AssignAccessPoliciesToContainerAsync(
+            BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers) =>
+            await blobContainerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
 
         public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
         {
