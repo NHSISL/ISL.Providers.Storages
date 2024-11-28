@@ -51,7 +51,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         }
 
         [Fact]
-        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllAccessPoliciesFromContainerDependencyValidation()
+        public async Task 
+            ShouldThrowProviderValidationExceptionOnRetrieveAllAccessPoliciesFromContainerDependencyValidation()
         {
             // given
             string randomContainer = GetRandomString();
