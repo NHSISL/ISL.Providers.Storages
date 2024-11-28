@@ -197,6 +197,25 @@ namespace ISL.Providers.Storages.Abstractions
         });
 
         /// <summary>
+        /// Retrieves all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            return await storageProvider.RetrieveAllAccessPoliciesFromContainerAsync(container);
+        });
+
+        /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the storage container where the access policies will be created.</param>
