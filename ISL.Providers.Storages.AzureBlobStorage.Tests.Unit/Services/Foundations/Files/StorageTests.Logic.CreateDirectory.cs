@@ -1,9 +1,4 @@
-﻿// ---------------------------------------------------------
-// Copyright (c) North East London ICB. All rights reserved.
-// ---------------------------------------------------------
-
-using Azure.Storage.Blobs.Models;
-using Moq;
+﻿using Moq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -11,18 +6,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Fact]
-        public async Task ShouldCreateContainerAsync()
+        public async Task ShouldCreateDirectoryAsync()
         {
             // given
             string randomContainer = GetRandomString();
             string inputContainer = randomContainer;
+            string randomDirectory = GetRandomString();
+            string inputDirectory = randomDirectory;
+
+            this.dataLakeServiceClientMock.Setup(service =>
+                service.GetFileSystemClient(inputContainer))
+                    .Returns(this.dataLakeFileSystemClientMock.Object);
 
             // when
-            await this.storageService.CreateContainerAsync(inputContainer);
+            await this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             // then
-            this.blobServiceClientMock.Verify(client =>
-                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default),
+            this.dataLakeServiceClientMock.Verify(service =>
+                service.GetFileSystemClient(inputContainer),
+                    Times.Once);
+
+            this.dataLakeFileSystemClientMock.Verify(client =>
+                client.CreateDirectoryAsync(inputDirectory, null, default),
                     Times.Once);
 
             this.blobServiceClientMock.VerifyNoOtherCalls();
