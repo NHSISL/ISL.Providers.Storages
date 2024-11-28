@@ -49,7 +49,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// <summary>
         /// Creates a container in the storage account.
         /// </summary>
-        /// <param name="container">The name of the created storage containe.</param>
+        /// <param name="container">The name of the created storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask CreateContainerAsync(string container);
 
@@ -59,6 +59,18 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container to list files from.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the list of file names.</returns>
         ValueTask<List<string>> ListFilesInContainerAsync(string container);
+
+        /// <summary>
+        /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
+        /// the provided access policy.
+        /// </summary>
+        /// <param name="container">The name of the storage container where the SAS token will be created.</param>
+        /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
+        /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
 
         /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
@@ -85,5 +97,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
+
+        /// <summary>
+        /// Creates a folder within the specified container.
+        /// </summary>
+        /// <param name="container">The name of the storage container to create the folder in.</param>
+        /// <param name="folder">The name of the folder to create.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask CreateFolderInContainerAsync(string container, string folder);
     }
 }
