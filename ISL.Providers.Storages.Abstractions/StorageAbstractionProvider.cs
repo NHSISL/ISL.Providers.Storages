@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 
 namespace ISL.Providers.Storages.Abstractions
 {
@@ -23,13 +24,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="fileName">The name of the file to create in the container.</param>
         /// <param name="container">The name of the storage container where the file will be stored.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask CreateFileAsync(Stream input, string fileName, string container) =>
@@ -45,13 +46,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="fileName">The name of the file to retrieve in the container.</param>
         /// <param name="container">The name of the storage container where the file is located.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
@@ -66,13 +67,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="fileName">The name of the file to delete.</param>
         /// <param name="container">The name of the storage container where the file is located.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask DeleteFileAsync(string fileName, string container) =>
@@ -88,13 +89,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container where the file is located.</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the download link will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the download link.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
@@ -108,13 +109,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the created storage containe.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask CreateContainerAsync(string container) =>
@@ -128,13 +129,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the list of file names.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
@@ -152,13 +153,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<string> CreateDirectorySasTokenAsync(
@@ -177,13 +178,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="accessLevel">The access level for the token (e.g., "read" or "write").</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the access token will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<string> GetAccessTokenAsync(
@@ -201,13 +202,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
@@ -222,13 +223,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="policyNames"><see cref="List<string>"/>
         /// The names of the policies you want to create. Options are read, write, delete and fullaccess.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
@@ -242,13 +243,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
@@ -263,13 +264,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container to create the folder in.</param>
         /// <param name="folder">The name of the folder to create.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask CreateFolderInContainerAsync(string container, string folder) =>
