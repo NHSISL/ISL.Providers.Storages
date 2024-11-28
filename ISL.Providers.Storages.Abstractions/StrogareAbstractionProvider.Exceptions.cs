@@ -2,10 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using Xeptions;
 
 namespace ISL.Providers.Storages.Abstractions
@@ -26,10 +26,6 @@ namespace ISL.Providers.Storages.Abstractions
             catch (Xeption ex) when (ex is IStorageProviderValidationException)
             {
                 throw CreateValidationException(ex);
-            }
-            catch (Xeption ex) when (ex is IStorageProviderDependencyValidationException)
-            {
-                throw CreateDependencyValidationException(ex);
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyException)
             {
@@ -62,10 +58,6 @@ namespace ISL.Providers.Storages.Abstractions
             {
                 throw CreateValidationException(ex);
             }
-            catch (Xeption ex) when (ex is IStorageProviderDependencyValidationException)
-            {
-                throw CreateDependencyValidationException(ex);
-            }
             catch (Xeption ex) when (ex is IStorageProviderDependencyException)
             {
                 throw CreateDependencyException(ex);
@@ -96,10 +88,6 @@ namespace ISL.Providers.Storages.Abstractions
             catch (Xeption ex) when (ex is IStorageProviderValidationException)
             {
                 throw CreateValidationException(ex);
-            }
-            catch (Xeption ex) when (ex is IStorageProviderDependencyValidationException)
-            {
-                throw CreateDependencyValidationException(ex);
             }
             catch (Xeption ex) when (ex is IStorageProviderDependencyException)
             {
@@ -132,18 +120,6 @@ namespace ISL.Providers.Storages.Abstractions
                     data: exception.Data);
 
             return storageValidationProviderException;
-        }
-
-        private StorageProviderDependencyValidationException CreateDependencyValidationException(
-            Xeption exception)
-        {
-            var storageDependencyValidationProviderException =
-                new StorageProviderDependencyValidationException(
-                    message: "Storage provider dependency validation errors occurred, please try again.",
-                    innerException: exception,
-                    data: exception.Data);
-
-            return storageDependencyValidationProviderException;
         }
 
         private StorageProviderDependencyException CreateDependencyException(
