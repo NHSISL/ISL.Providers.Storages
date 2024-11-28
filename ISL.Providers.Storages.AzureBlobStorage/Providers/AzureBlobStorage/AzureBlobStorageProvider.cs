@@ -254,6 +254,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
+        /// Retrieves all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+            throw new NotImplementedException();
+
+        /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the container where the access policies will be created.</param>
