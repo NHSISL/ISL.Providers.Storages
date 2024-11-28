@@ -175,5 +175,47 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowUncatagorizedServiceExceptionOnRetrieveAllAccessPoliciesFromContainerAsyncWhenTypeIsNotExpected()
+        {
+            // given
+            var someException = new Xeption();
+
+            var uncatagorizedStorageProviderException =
+                new UncatagorizedStorageProviderException(
+                    message: "Storage provider not properly implemented. Uncatagorized errors found, " +
+                            "contact the storage provider owner for support.",
+                    innerException: someException,
+                    data: someException.Data);
+
+            StorageProviderServiceException expectedStorageServiceProviderException =
+                new StorageProviderServiceException(
+                    message: "Uncatagorized storage provider service error occurred, contact support.",
+                    innerException: uncatagorizedStorageProviderException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>()))
+                    .ThrowsAsync(someException);
+
+            // when
+            ValueTask<List<string>> retrieveAllAccessPoliciesFromContainerAsyncTask =
+                this.storageAbstractionProvider
+                    .RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>());
+
+            StorageProviderServiceException actualStorageServiceProviderException =
+                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: retrieveAllAccessPoliciesFromContainerAsyncTask.AsTask);
+
+            // then
+            actualStorageServiceProviderException.Should().BeEquivalentTo(
+                expectedStorageServiceProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
