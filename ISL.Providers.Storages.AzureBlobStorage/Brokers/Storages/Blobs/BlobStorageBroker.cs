@@ -60,8 +60,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
-
-
         public async ValueTask CreateFileAsync(Stream input, string fileName, string container)
         {
             BlobClient blobClient = BlobServiceClient
