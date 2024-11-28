@@ -41,6 +41,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
             string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset);
 
+        ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
+
         ValueTask<string> GetSasTokenAsync(
             string container,
             string directoryPath,

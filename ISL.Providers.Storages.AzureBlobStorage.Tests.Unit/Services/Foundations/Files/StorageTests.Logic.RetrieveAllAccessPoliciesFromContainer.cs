@@ -1,6 +1,4 @@
-﻿using Azure;
-using Azure.Storage.Blobs.Models;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,43 +12,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             // given
             string randomString = GetRandomString();
+            List<string> randomStringList = GetRandomStringList();
             string inputContainer = randomString;
-            BlobContainerAccessPolicy randomBlobContainerAccessPolicy = CreateRandomBlobContainerAccessPolicy();
-            BlobContainerAccessPolicy outputBlobContainerAccessPolicy = randomBlobContainerAccessPolicy;
-            var expectedResult = new List<string>();
+            List<string> outputAccessPolicies = randomStringList;
+            List<string> expectedAccessPolicies = outputAccessPolicies;
 
-            foreach (var signedIdentifier in outputBlobContainerAccessPolicy.SignedIdentifiers)
-            {
-                expectedResult.Add(signedIdentifier.Id);
-            }
-
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
-                    .Returns(blobContainerClientMock.Object);
-
-            this.blobContainerClientMock.Setup(client =>
-                client.GetAccessPolicyAsync(null, default))
-                    .Returns(Task.FromResult(Response
-                        .FromValue(outputBlobContainerAccessPolicy, blobClientResponseMock.Object)));
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer))
+                    .ReturnsAsync(outputAccessPolicies);
 
             // when
-            List<string> actualResult = await this.storageService
+            List<string> actualAccessPolicies = await this.storageService
                 .RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
 
             // then
-            actualResult.Should().BeEquivalentTo(expectedResult);
+            actualAccessPolicies.Should().BeEquivalentTo(expectedAccessPolicies);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer),
                     Times.Once);
 
-            this.blobContainerClientMock.Verify(client =>
-                client.GetAccessPolicyAsync(null, default),
-                    Times.Once);
-
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
