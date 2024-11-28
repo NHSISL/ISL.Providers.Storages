@@ -35,6 +35,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateFileAsync(Stream input, string fileName, string container);
         ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
         ValueTask DeleteFileAsync(string fileName, string container);
+        ValueTask CreateContainerAsync(string container);
         ValueTask<List<string>> ListContainerAsync(string container);
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
 

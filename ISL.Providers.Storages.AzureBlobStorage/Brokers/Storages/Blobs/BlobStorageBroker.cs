@@ -109,6 +109,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
         }
 
+        public async ValueTask CreateContainerAsync(string container) =>
+            await BlobServiceClient.CreateBlobContainerAsync(container);
+
         public async ValueTask<List<string>> ListContainerAsync(string container)
         {
             List<string> fileNames = new List<string>();
