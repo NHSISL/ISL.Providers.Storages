@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using Moq;
 using System.Collections.Generic;
@@ -19,12 +20,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomContainer;
             var randomAsyncPageable = CreateAsyncPageableBlobItem();
             var outputAsyncPageable = randomAsyncPageable;
-            List<string> outputFileNames = GetRandomStringList();
-            List<string> expectedFileNames = outputFileNames;
+            List<string> expectedFileNames = new List<string>();
+
+            await foreach (BlobItem blobItem in outputAsyncPageable)
+            {
+                expectedFileNames.Add(blobItem.Name);
+            }
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.ListContainerAsync(inputContainer))
-                    .ReturnsAsync(outputFileNames);
+                broker.GetBlobContainerClient(inputContainer))
+                    .Returns(blobContainerClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobsAsync(blobContainerClientMock.Object))
+                    .ReturnsAsync(outputAsyncPageable);
 
             // when
             var actualFileNames = await this.storageService.ListFilesInContainerAsync(inputContainer);
@@ -33,7 +42,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualFileNames.Should().BeEquivalentTo(expectedFileNames);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.ListContainerAsync(inputContainer),
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobsAsync(blobContainerClientMock.Object),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

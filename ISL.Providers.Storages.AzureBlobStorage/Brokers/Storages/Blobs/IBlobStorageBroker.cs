@@ -2,7 +2,9 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,10 +18,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
-        ValueTask DeleteFileAsync(string fileName, string container);
+        ValueTask DeleteFileAsync(BlobClient blobClient);
         ValueTask CreateContainerAsync(string container);
         ValueTask CreateDirectoryAsync(string container, string directory);
-        ValueTask<List<string>> ListContainerAsync(string container);
+        ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
         ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
 
         ValueTask CreateAndAssignAccessPoliciesToContainerAsync(

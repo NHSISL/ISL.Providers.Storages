@@ -2,7 +2,9 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -46,15 +48,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnDelete(fileName, container);
-            await this.blobStorageBroker.DeleteFileAsync(fileName, container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            await this.blobStorageBroker.DeleteFileAsync(blobClient);
         });
 
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateContainerName(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            AsyncPageable<BlobItem> blobItems = await this.blobStorageBroker.GetBlobsAsync(blobContainerClient);
+            List<string> fileNames = new List<string>();
 
-            return await this.blobStorageBroker.ListContainerAsync(container);
+            await foreach (BlobItem blobItem in blobItems)
+            {
+                fileNames.Add(blobItem.Name);
+            }
+
+            return fileNames;
         });
 
 

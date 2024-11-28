@@ -73,17 +73,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         public async ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output) =>
             await blobClient.DownloadToAsync(output);
 
-        public async ValueTask DeleteFileAsync(string fileName, string container)
-        {
-            BlobClient blobClient = BlobServiceClient
-                .GetBlobContainerClient(container)
-                .GetBlobClient(fileName);
-
+        public async ValueTask DeleteFileAsync(BlobClient blobClient) =>
             await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
-        }
 
         public async ValueTask CreateContainerAsync(string container) =>
             await BlobServiceClient.CreateBlobContainerAsync(container);
+
+        public async ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient) =>
+            blobContainerClient.GetBlobsAsync();
+
 
         public async ValueTask<List<string>> ListContainerAsync(string container)
         {
