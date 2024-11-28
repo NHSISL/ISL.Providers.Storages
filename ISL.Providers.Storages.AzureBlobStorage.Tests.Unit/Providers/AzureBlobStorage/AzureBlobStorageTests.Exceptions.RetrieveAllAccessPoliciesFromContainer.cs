@@ -3,7 +3,6 @@ using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exception
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
 using Moq;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -63,7 +62,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 innerException: new Xeption());
 
             var expectedAzureBlobStorageProviderDependencyValidationException =
-                new AzureBlobStorageProviderDependencyValidationException(
+                new AzureBlobStorageProviderValidationException(
                     message: "Azure blob storage provider dependency validation error occurred, " +
                             "fix errors and try again.",
                     innerException: (Xeption)storageDependencyValidationException.InnerException,
@@ -77,9 +76,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             ValueTask<List<string>> retrievePoliciesTask =
                 this.azureBlobStorageProvider.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
 
-            AzureBlobStorageProviderDependencyValidationException
+            AzureBlobStorageProviderValidationException
                 actualAzureBlobStorageProviderDependencyValidationException =
-                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyValidationException>(
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
                         testCode: retrievePoliciesTask.AsTask);
 
             // then
