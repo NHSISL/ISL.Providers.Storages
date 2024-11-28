@@ -161,14 +161,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return sasToken;
         });
-
-        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
-        {
-            "read" => "rl",
-            "write" => "w",
-            "delete" => "d",
-            "fullaccess" => "rlwd",
-            _ => ""
-        };
     }
 }

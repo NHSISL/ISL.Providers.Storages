@@ -23,12 +23,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(BlobClient blobClient);
-        ValueTask CreateContainerAsync(string container);
-        ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
-        ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask<string> GetDownloadLinkAsync(
             BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn);
+
+        ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
+        ValueTask CreateContainerAsync(string container);
+        ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask<List<BlobSignedIdentifier>> CreateAccessPoliciesAsync(
             List<string> policyNames, DateTimeOffset currentDateTimeOffset);
