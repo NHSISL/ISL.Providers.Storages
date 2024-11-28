@@ -93,5 +93,46 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowDependencyExceptionOnRetrieveAllAccessPoliciesFromContainerAsyncWhenTypeIStorageDependencyException()
+        {
+            // given
+            var someException = new Xeption();
+
+            var someStorageValidationException =
+                new SomeStorageDependencyException(
+                    message: "Some storage provider dependency exception occurred",
+                    innerException: someException);
+
+            StorageProviderDependencyException expectedStorageDependencyProviderException =
+                new StorageProviderDependencyException(
+                    message: "Storage provider dependency error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask<List<string>> retrieveAllAccessPoliciesFromContainerAsyncTask =
+                this.storageAbstractionProvider
+                    .RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>());
+
+            StorageProviderDependencyException actualStorageDependencyProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyException>(
+                    testCode: retrieveAllAccessPoliciesFromContainerAsyncTask.AsTask);
+
+            // then
+            actualStorageDependencyProviderException.Should().BeEquivalentTo(
+                expectedStorageDependencyProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RetrieveAllAccessPoliciesFromContainerAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
