@@ -2,7 +2,7 @@
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
 using Moq;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -11,15 +11,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldThrowProviderValidationExceptionOnRetrieveFile()
+        public async Task ShouldThrowProviderValidationExceptionOnListFilesInContainer()
         {
             // given
-            string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new ZeroLengthStream();
-            string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream outputStream = randomStream;
 
             var storageValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",
@@ -32,38 +28,34 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                service.ListFilesInContainerAsync(inputContainer))
                     .ThrowsAsync(storageValidationException);
 
             // when
-            ValueTask retrieveFileTask =
-                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.azureBlobStorageProvider.ListFilesInContainerAsync(inputContainer);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
-                    testCode: retrieveFileTask.AsTask);
+                    testCode: listFilesTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                service.ListFilesInContainerAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowProviderValidationExceptionOnRetrieveFileDependencyValidation()
+        public async Task ShouldThrowProviderValidationExceptionOnListFilesInContainerDependencyValidation()
         {
             // given
-            string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new ZeroLengthStream();
-            string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream outputStream = randomStream;
 
             var storageDependencyValidationException = new StorageDependencyValidationException(
                 message: "Storage dependency validation error occurred, please fix errors and try again.",
@@ -76,39 +68,35 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                service.ListFilesInContainerAsync(inputContainer))
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
-            ValueTask retrieveFileTask =
-                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.azureBlobStorageProvider.ListFilesInContainerAsync(inputContainer);
 
             AzureBlobStorageProviderValidationException
                 actualAzureBlobStorageProviderValidationException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
-                        testCode: retrieveFileTask.AsTask);
+                        testCode: listFilesTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                service.ListFilesInContainerAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowProviderDependencyExceptionOnRetrieveFile()
+        public async Task ShouldThrowProviderDependencyExceptionOnListFilesInContainer()
         {
             // given
-            string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new ZeroLengthStream();
-            string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream outputStream = randomStream;
 
             var storageDependencyException = new StorageDependencyException(
                 message: "Storage dependency error occurred, please fix errors and try again.",
@@ -121,39 +109,35 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                service.ListFilesInContainerAsync(inputContainer))
                     .ThrowsAsync(storageDependencyException);
 
             // when
-            ValueTask retrieveFileTask =
-                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.azureBlobStorageProvider.ListFilesInContainerAsync(inputContainer);
 
             AzureBlobStorageProviderDependencyException
                 actualAzureBlobStorageProviderDependencyException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
-                        testCode: retrieveFileTask.AsTask);
+                        testCode: listFilesTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderDependencyException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                service.ListFilesInContainerAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowProviderServiceExceptionOnRetrieveFile()
+        public async Task ShouldThrowProviderServiceExceptionOnListFilesInContainer()
         {
             // given
-            string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            Stream randomStream = new ZeroLengthStream();
-            string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            Stream outputStream = randomStream;
 
             var storageServiceException = new StorageServiceException(
                 message: "Storage service error occurred, please fix errors and try again.",
@@ -166,24 +150,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer))
+                service.ListFilesInContainerAsync(inputContainer))
                     .ThrowsAsync(storageServiceException);
 
             // when
-            ValueTask retrieveFileTask =
-                this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFileName, inputContainer);
+            ValueTask<List<string>> listFilesTask =
+                this.azureBlobStorageProvider.ListFilesInContainerAsync(inputContainer);
 
             AzureBlobStorageProviderServiceException
                 actualAzureBlobStorageProviderServiceException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
-                        testCode: retrieveFileTask.AsTask);
+                        testCode: listFilesTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderServiceException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.RetrieveFileAsync(outputStream, inputFileName, inputContainer),
+                service.ListFilesInContainerAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

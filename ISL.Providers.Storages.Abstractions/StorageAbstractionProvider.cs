@@ -144,6 +144,32 @@ namespace ISL.Providers.Storages.Abstractions
         });
 
         /// <summary>
+        /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
+        /// the provided access policy.
+        /// </summary>
+        /// <param name="container">The name of the storage container where the SAS token will be created.</param>
+        /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
+        /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask<string> CreateDirectorySasTokenAsync(
+             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+        TryCatch(async () =>
+        {
+            return await storageProvider.CreateDirectorySasTokenAsync(
+                container, directoryPath, accessPolicyIdentifier, expiresOn);
+        });
+
+        /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given access level.
         /// </summary>
         /// <param name="path">The path within the container for which the access token is generated.</param>
@@ -170,6 +196,7 @@ namespace ISL.Providers.Storages.Abstractions
             return await storageProvider.GetAccessTokenAsync(path, container, accessLevel, expiresOn);
         });
 
+
         /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
@@ -190,6 +217,26 @@ namespace ISL.Providers.Storages.Abstractions
         TryCatch(async () =>
         {
             await this.storageProvider.CreateAndAssignAccessPoliciesToContainerAsync(container, policyNames);
+        });
+
+        /// <summary>
+        /// Removes all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            await this.storageProvider.RemoveAccessPoliciesFromContainerAsync(container);
         });
     }
 }
