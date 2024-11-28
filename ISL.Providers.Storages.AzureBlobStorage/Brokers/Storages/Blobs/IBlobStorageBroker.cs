@@ -5,6 +5,7 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
     internal interface IBlobStorageBroker
     {
         BlobContainerClient GetBlobContainerClient(string container);
+        DataLakeFileSystemClient GetDataLakeFileSystemClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
         BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(BlobClient blobClient);
         ValueTask CreateContainerAsync(string container);
-        ValueTask CreateDirectoryAsync(string container, string directory);
+        ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask<string> GetDownloadLinkAsync(

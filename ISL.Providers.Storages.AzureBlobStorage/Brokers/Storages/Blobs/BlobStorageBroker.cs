@@ -63,6 +63,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         public BlobContainerClient GetBlobContainerClient(string container) =>
             BlobServiceClient.GetBlobContainerClient(container);
 
+        public DataLakeFileSystemClient GetDataLakeFileSystemClient(string container) =>
+            DataLakeServiceClient.GetFileSystemClient(container);
+
         public BlobClient GetBlobClient(
             BlobContainerClient blobContainerClient, string fileName) =>
             blobContainerClient.GetBlobClient(fileName);
@@ -100,13 +103,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return fileNames;
         }
 
-        public async ValueTask CreateDirectoryAsync(string container, string directory)
-        {
-            DataLakeFileSystemClient dataLakeFileSystemClient =
-                DataLakeServiceClient.GetFileSystemClient(container);
-
+        public async ValueTask CreateDirectoryAsync(
+            DataLakeFileSystemClient dataLakeFileSystemClient, string directory) =>
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
-        }
 
         public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
             string container, List<string> policyNames, DateTimeOffset currentDateTimeOffset)
@@ -164,34 +163,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         }
-
-        //public async ValueTask<string> GetDownloadLinkAsync(
-        //    string fileName, string container, DateTimeOffset expiresOn)
-        //{
-        //    BlobClient blobClient = BlobServiceClient
-        //            .GetBlobContainerClient(container)
-        //            .GetBlobClient(fileName);
-
-        //    var userDelegationKey = GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
-
-        //    var sasBuilder = new BlobSasBuilder()
-        //    {
-        //        BlobContainerName = container,
-        //        BlobName = fileName,
-        //        Resource = "b",
-        //        StartsOn = DateTimeOffset.UtcNow,
-        //        ExpiresOn = expiresOn
-        //    };
-
-        //    sasBuilder.SetPermissions(BlobSasPermissions.Read);
-
-        //    var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
-        //    {
-        //        Sas = sasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
-        //    };
-
-        //    return blobUriBuilder.ToUri().ToString();
-        //}
 
         public async ValueTask<string> GetDownloadLinkAsync(
             BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn)
