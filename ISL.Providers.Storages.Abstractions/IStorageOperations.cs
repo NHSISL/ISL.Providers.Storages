@@ -87,9 +87,14 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
-        /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyException" />
-        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
         ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
 
         /// <summary>
