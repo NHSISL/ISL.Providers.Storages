@@ -36,13 +36,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask RetrieveFileAsync(Stream output, string fileName, string container);
         ValueTask DeleteFileAsync(string fileName, string container);
         ValueTask<List<string>> ListContainerAsync(string container);
+        ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn);
 
         ValueTask<string> GetSasTokenAsync(
             string container,
             string directoryPath,
             string accessPolicyIdentifier,
             DateTimeOffset expiresOn);
-
-        BlobUriBuilder GetBlobUriBuilder(Uri uri);
     }
 }

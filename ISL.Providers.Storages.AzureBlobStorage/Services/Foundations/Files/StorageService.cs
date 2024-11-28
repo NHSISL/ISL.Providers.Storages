@@ -58,13 +58,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
 
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
-        TryCatch((ReturningStringFunction)(async () =>
+        TryCatch(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
-            return GetDownloadLinkAsync(fileName, container, expiresOn);
-        }));
 
-
+            return await this.blobStorageBroker.GetDownloadLinkAsync(fileName, container, expiresOn);
+        });
 
         public ValueTask CreateContainerAsync(string container) =>
         TryCatch(async () =>

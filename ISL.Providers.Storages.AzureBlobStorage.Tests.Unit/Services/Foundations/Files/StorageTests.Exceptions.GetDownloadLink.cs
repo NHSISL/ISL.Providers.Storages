@@ -36,31 +36,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency validation error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyValidationException);
 
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
-                    .Throws(dependencyValidationException);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset))
+                .ThrowsAsync(dependencyValidationException);
 
             // when
             ValueTask<string> getDownloadLinkTask =
                 this.storageService.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: getDownloadLinkTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+                    testCode: getDownloadLinkTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -86,9 +83,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyException);
 
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
-                    .Throws(dependencyException);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset))
+                .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<string> getDownloadLinkTask =
@@ -101,16 +98,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -136,9 +129,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage service error occurred, please fix errors and try again.",
                     innerException: failedStorageServiceException);
 
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
-                    .Throws(someException);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset))
+                .ThrowsAsync(someException);
 
             // when
             ValueTask<string> getDownloadLinkTask =
@@ -151,16 +144,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageServiceException
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetDownloadLinkAsync(inputFileName, inputContainer, inputDateTimeOffset),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

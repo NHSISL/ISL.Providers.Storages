@@ -54,9 +54,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             this.DataLakeServiceClient = new DataLakeServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-
                 credential: this.StorageSharedKeyCredential,
-
                 dataLakeClientOptions);
 
             this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
@@ -129,15 +127,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return fileNames;
         }
 
-        public async ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn)
+        public async ValueTask<string> GetDownloadLinkAsync(
+            string fileName, string container, DateTimeOffset expiresOn)
         {
-            BlobClient blobClient =
-                BlobServiceClient
+            BlobClient blobClient = BlobServiceClient
                     .GetBlobContainerClient(container)
                     .GetBlobClient(fileName);
 
-            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
-            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
+            var userDelegationKey = BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
+            var sasBuilder = GetBlobSasBuilder(fileName, container, expiresOn);
+
+            var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
+            {
+                Sas = sasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
+            };
 
             return blobUriBuilder.ToUri().ToString();
         }
@@ -161,11 +164,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             return sasQueryParameters.ToString();
         }
-
-        public BlobUriBuilder GetBlobUriBuilder(Uri uri) =>
-            new BlobUriBuilder(uri)
-            {
-                BlobContainerName =
-            };
     }
 }
