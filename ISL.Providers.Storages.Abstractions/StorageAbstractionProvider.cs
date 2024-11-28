@@ -205,7 +205,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
-            throw new NotImplementedException();
+            await storageProvider.RetrieveAllAccessPoliciesFromContainerAsync(container);
 
 
         /// <summary>
