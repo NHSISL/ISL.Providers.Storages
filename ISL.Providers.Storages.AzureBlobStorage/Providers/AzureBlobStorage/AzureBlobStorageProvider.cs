@@ -4,7 +4,6 @@ using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -253,6 +252,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
+        /// <summary>
+        /// Retrieves all container names in the storage account.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> representing container names.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<List<string>> RetrieveAllContainersAsync() =>
+            throw new NotImplementedException();
 
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
