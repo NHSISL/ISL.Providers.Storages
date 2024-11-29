@@ -3,7 +3,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.Extensions.DependencyInjection;
 using System;

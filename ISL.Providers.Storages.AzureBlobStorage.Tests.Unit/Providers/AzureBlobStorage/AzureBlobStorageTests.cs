@@ -1,5 +1,5 @@
 ﻿using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
+using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Moq;
 using System;
 using System.Collections.Generic;
