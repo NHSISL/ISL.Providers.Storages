@@ -263,7 +263,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             new Mock<UserDelegationKey>().Object;
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
-        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
+        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(
+            type: typeof(AuthenticationFailedException));
 
         private static ArgumentException CreateArgumentException() =>
             (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));
@@ -275,7 +276,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             (StorageException)RuntimeHelpers.GetUninitializedObject(type: typeof(StorageException));
 
         private static OperationCanceledException CreateOperationCanceledException() =>
-            (OperationCanceledException)RuntimeHelpers.GetUninitializedObject(type: typeof(OperationCanceledException));
+            (OperationCanceledException)RuntimeHelpers.GetUninitializedObject(
+                type: typeof(OperationCanceledException));
 
         private static TimeoutException CreateTimeoutException() =>
             (TimeoutException)RuntimeHelpers.GetUninitializedObject(type: typeof(TimeoutException));

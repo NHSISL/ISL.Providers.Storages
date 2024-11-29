@@ -22,10 +22,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal class BlobStorageBroker : IBlobStorageBroker
     {
-        private BlobServiceClient BlobServiceClient { get; set; }
-        private DataLakeServiceClient DataLakeServiceClient { get; set; }
-        private int TokenLifetimeDays { get; set; }
-        private StorageSharedKeyCredential StorageSharedKeyCredential { get; set; }
+        private readonly BlobServiceClient BlobServiceClient;
+        private readonly DataLakeServiceClient DataLakeServiceClient;
+        private readonly StorageSharedKeyCredential StorageSharedKeyCredential;
+        private readonly int TokenLifetimeDays;
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
