@@ -289,6 +289,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
+        /// Deletes a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the deleted storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask DeleteContainerAsync(string container) =>
+            throw new NotImplementedException();
+
+        /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
