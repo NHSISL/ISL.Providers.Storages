@@ -157,7 +157,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             return blobSasBuilder;
         }
-
-
     }
 }
