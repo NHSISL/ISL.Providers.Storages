@@ -53,12 +53,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -99,12 +95,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -146,12 +138,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -2,10 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using FluentAssertions;
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
@@ -15,7 +15,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnRetrieveALlAccessPoliciesIfArgumentsInvalidAsync(string invalidText)
+        public async Task ShouldThrowValidationExceptionOnRetrieveALlAccessPoliciesIfArgumentsInvalidAsync(
+            string invalidText)
         {
             // given
             string invalidContainer = invalidText;
@@ -38,15 +39,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(invalidContainer);
 
             StorageValidationException actualStorageValidationException =
-                await Assert.ThrowsAsync<StorageValidationException>(testCode: retrieveAllAccessPoliciesTask.AsTask);
+                await Assert.ThrowsAsync<StorageValidationException>(
+                    testCode: retrieveAllAccessPoliciesTask.AsTask);
 
             // then
             actualStorageValidationException
                 .Should().BeEquivalentTo(expectedStorageValidationException);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }

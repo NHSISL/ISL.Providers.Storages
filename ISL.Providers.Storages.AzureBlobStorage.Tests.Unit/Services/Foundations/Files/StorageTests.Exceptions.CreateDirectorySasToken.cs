@@ -48,7 +48,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     someContainer, someDirectoryPath, someAccessPolicyIdentifier, someDateTimeOffset);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createDirectorySasTokenTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+                    testCode: createDirectorySasTokenTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -58,9 +59,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
@@ -110,9 +108,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
@@ -162,9 +157,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }

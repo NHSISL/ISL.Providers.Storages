@@ -2,10 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure;
-using Azure.Storage.Blobs.Models;
 using FluentAssertions;
-using Force.DeepCloner;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -20,79 +17,62 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string randomFileName = GetRandomString();
             string randomContainer = GetRandomString();
-            string inputFileName = randomFileName.DeepClone();
-            string inputContainer = randomContainer.DeepClone();
-            string blobClientContainer = inputContainer.DeepClone();
-            string blobClientBlobName = inputFileName.DeepClone();
+            string randomDownloadLink = GetRandomString();
+            string inputFileName = randomFileName;
+            string inputContainer = randomContainer;
             DateTimeOffset currentDateTimeOffset = DateTimeOffset.UtcNow;
             DateTimeOffset futureDateTimeOffset = GetRandomFutureDateTimeOffset();
             DateTimeOffset inputExpiresOn = futureDateTimeOffset;
-            string mockDownloadLink = "http://mytest.com/";
-            string outputDowloadLink = mockDownloadLink.DeepClone();
-            string expectedDowloadLink = outputDowloadLink.DeepClone();
-            UserDelegationKey randomKey = CreateUserDelegationKey();
-            UserDelegationKey outputKey = randomKey;
+            string outputDowloadLink = randomDownloadLink;
+            string expectedDowloadLink = outputDowloadLink;
 
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
                     .Returns(blobContainerClientMock.Object);
 
-            this.blobContainerClientMock.Setup(client =>
-                client.GetBlobClient(inputFileName))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName))
                     .Returns(blobClientMock.Object);
 
-            this.blobStorageBrokerMock.Setup(client =>
-                client.GetUserDelegationKey(It.IsAny<DateTimeOffset>(), inputExpiresOn, default))
-                    .Returns(Response.FromValue(outputKey, blobClientResponseMock.Object));
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn))
+                    .Returns(blobSasBuilderMock.Object);
 
             this.blobStorageBrokerMock.Setup(client =>
-                client.GetBlobSasBuilder(
-                    inputFileName,
-                    inputContainer,
+                client.GetDownloadLinkAsync(
+                    blobClientMock.Object,
+                    blobSasBuilderMock.Object,
                     inputExpiresOn))
-                        .Returns(blobSasBuilderMock.Object);
-
-            this.blobStorageBrokerMock.Setup(client =>
-                client.GetBlobUriBuilder(
-                    It.IsAny<Uri>()))
-                        .Returns(blobUriBuilderMock.Object);
+                        .ReturnsAsync(outputDowloadLink);
 
             // when
-            var actualDownloadLink = await this.storageService.GetDownloadLinkAsync(inputFileName, inputContainer, inputExpiresOn);
+            var actualDownloadLink = await this.storageService
+                .GetDownloadLinkAsync(inputFileName, inputContainer, inputExpiresOn);
 
             // then
             actualDownloadLink.Should().BeEquivalentTo(expectedDowloadLink);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
-            this.blobContainerClientMock.Verify(client =>
-                client.GetBlobClient(inputFileName),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobClient(blobContainerClientMock.Object, inputFileName),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn),
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(client =>
-                client.GetBlobSasBuilder(
-                    inputFileName,
-                    inputContainer,
+                client.GetDownloadLinkAsync(
+                    blobClientMock.Object,
+                    blobSasBuilderMock.Object,
                     inputExpiresOn),
                         Times.Once);
 
-            this.blobStorageBrokerMock.Verify(client =>
-                client.GetBlobUriBuilder(
-                    It.IsAny<Uri>()),
-                        Times.Once);
-
-            this.blobClientMock.Verify(client =>
-                client.Uri,
-                    Times.Once);
-
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

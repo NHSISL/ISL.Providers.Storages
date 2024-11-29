@@ -14,28 +14,27 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomDirectory = GetRandomString();
             string inputDirectory = randomDirectory;
 
-            this.dataLakeServiceClientMock.Setup(service =>
-                service.GetFileSystemClient(inputContainer))
-                    .Returns(this.dataLakeFileSystemClientMock.Object);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetDataLakeFileSystemClient(inputContainer))
+                    .Returns(dataLakeFileSystemClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.CreateDirectoryAsync(dataLakeFileSystemClientMock.Object, inputDirectory));
 
             // when
             await this.storageService.CreateDirectoryAsync(inputContainer, inputDirectory);
 
             // then
-            this.dataLakeServiceClientMock.Verify(service =>
-                service.GetFileSystemClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetDataLakeFileSystemClient(inputContainer),
                     Times.Once);
 
-            this.dataLakeFileSystemClientMock.Verify(client =>
-                client.CreateDirectoryAsync(inputDirectory, null, default),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateDirectoryAsync(dataLakeFileSystemClientMock.Object, inputDirectory),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
@@ -54,14 +53,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobClientResponseMock = new Mock<Response>();
             this.compareLogic = new CompareLogic();
 
-            this.blobStorageBrokerMock.Setup(broker =>
-                broker.BlobServiceClient)
-                    .Returns(blobServiceClientMock.Object);
-
-            this.blobStorageBrokerMock.Setup(broker =>
-                broker.DataLakeServiceClient)
-                    .Returns(dataLakeServiceClientMock.Object);
-
             this.storageService = new StorageService(
                 this.blobStorageBrokerMock.Object,
                 this.dateTimeBrokerMock.Object);
@@ -92,13 +83,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             }
 
             return randomStringList;
-        }
-
-        public byte[] CreateRandomData()
-        {
-            string randomMessage = GetRandomString();
-
-            return Encoding.UTF8.GetBytes(randomMessage);
         }
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
@@ -187,7 +171,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
             string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
-
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
                 new BlobSignedIdentifier
@@ -231,7 +214,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     }
                 }
             };
-
             return signedIdentifiers;
         }
 
@@ -242,22 +224,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
             var filler = new Filler<BlobContainerAccessPolicy>();
-
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
                 .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
                 .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
-
             return filler;
         }
-
         private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
         {
             var filler = new Filler<BlobSignedIdentifier>();
-
             filler.Setup()
                 .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
-
             return filler;
         }
 
@@ -286,7 +263,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             new Mock<UserDelegationKey>().Object;
 
         private static AuthenticationFailedException CreateAuthenticationFailedException() =>
-        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(type: typeof(AuthenticationFailedException));
+        (AuthenticationFailedException)RuntimeHelpers.GetUninitializedObject(
+            type: typeof(AuthenticationFailedException));
 
         private static ArgumentException CreateArgumentException() =>
             (ArgumentException)RuntimeHelpers.GetUninitializedObject(type: typeof(ArgumentException));
@@ -298,7 +276,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             (StorageException)RuntimeHelpers.GetUninitializedObject(type: typeof(StorageException));
 
         private static OperationCanceledException CreateOperationCanceledException() =>
-            (OperationCanceledException)RuntimeHelpers.GetUninitializedObject(type: typeof(OperationCanceledException));
+            (OperationCanceledException)RuntimeHelpers.GetUninitializedObject(
+                type: typeof(OperationCanceledException));
 
         private static TimeoutException CreateTimeoutException() =>
             (TimeoutException)RuntimeHelpers.GetUninitializedObject(type: typeof(TimeoutException));
