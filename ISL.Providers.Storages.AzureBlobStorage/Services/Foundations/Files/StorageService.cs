@@ -111,9 +111,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
-            List<BlobSignedIdentifier> signedIdentifiers =
-                await this.blobStorageBroker.CreateAccessPoliciesAsync(policyNames, currentDateTimeOffset);
+            foreach (string policyName in policyNames)
+            {
+                string permissions = ConvertPolicyNameToPermissions(policyName.ToLower());
+
+                var blobSignedIdentifier = new BlobSignedIdentifier
+                {
+                    Id = $"{policyName}_{timestamp}",
+                    AccessPolicy = new BlobAccessPolicy
+                    {
+                        PolicyStartsOn = currentDateTimeOffset,
+                        PolicyExpiresOn = currentDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
+                        Permissions = permissions
+                    }
+                };
+
+                signedIdentifiers.Add(blobSignedIdentifier);
+            }
 
             await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
                 blobContainerClient, signedIdentifiers);
@@ -161,5 +178,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return sasToken;
         });
+
+        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
+        {
+            "read" => "rl",
+            "write" => "w",
+            "delete" => "d",
+            "fullaccess" => "rlwd",
+            _ => ""
+        };
     }
 }

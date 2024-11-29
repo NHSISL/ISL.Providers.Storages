@@ -16,6 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal interface IBlobStorageBroker
     {
+        int TokenLifetimeDays { get; }
         BlobContainerClient GetBlobContainerClient(string container);
         DataLakeFileSystemClient GetDataLakeFileSystemClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
@@ -30,9 +31,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
         ValueTask CreateContainerAsync(string container);
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
-
-        ValueTask<List<BlobSignedIdentifier>> CreateAccessPoliciesAsync(
-            List<string> policyNames, DateTimeOffset currentDateTimeOffset);
 
         ValueTask AssignAccessPoliciesToContainerAsync(
             BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers);

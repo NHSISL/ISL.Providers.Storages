@@ -17,8 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
             DateTimeOffset inputDateTimeOffset = randomDateTimeOffset;
             List<string> inputPolicyNames = GetPolicyNames();
-            List<BlobSignedIdentifier> outputSignedIdentifiers = SetupSignedIdentifiers(inputDateTimeOffset);
-
+            List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(inputDateTimeOffset);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffsetAsync())
@@ -29,8 +28,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(blobContainerClientMock.Object);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.CreateAccessPoliciesAsync(inputPolicyNames, inputDateTimeOffset))
-                    .ReturnsAsync(outputSignedIdentifiers);
+                broker.TokenLifetimeDays)
+                    .Returns(365);
 
             // when
             await this.storageService
@@ -46,12 +45,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateAccessPoliciesAsync(inputPolicyNames, inputDateTimeOffset),
-                    Times.Once());
+                broker.TokenLifetimeDays,
+                    Times.Exactly(inputPolicyNames.Count));
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.AssignAccessPoliciesToContainerAsync(
-                    blobContainerClientMock.Object, outputSignedIdentifiers),
+                    blobContainerClientMock.Object,
+                    It.Is(SameBlobSignedIdentifierListAs(inputSignedIdentifiers))),
                         Times.Once());
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
