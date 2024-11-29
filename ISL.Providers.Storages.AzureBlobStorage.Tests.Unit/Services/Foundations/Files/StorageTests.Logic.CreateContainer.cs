@@ -2,7 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using Azure.Storage.Blobs.Models;
 using Moq;
 using System.Threading.Tasks;
 
@@ -21,16 +20,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             await this.storageService.CreateContainerAsync(inputContainer);
 
             // then
-            this.blobServiceClientMock.Verify(client =>
-                client.CreateBlobContainerAsync(inputContainer, PublicAccessType.None, null, default),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.CreateContainerAsync(inputContainer),
                     Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

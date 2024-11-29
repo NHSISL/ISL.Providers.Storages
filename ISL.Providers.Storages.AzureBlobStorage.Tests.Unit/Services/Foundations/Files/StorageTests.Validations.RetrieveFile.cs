@@ -2,10 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using FluentAssertions;
-using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System.IO;
 using System.Threading.Tasks;
+using FluentAssertions;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Files
 {
@@ -13,7 +13,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(InvalidArgumentsStreamHasLength))]
-        public async Task ShouldThrowValidationExceptionOnRetrieveIfArgumentsInvalidAsync(Stream invalidStream, string invalidText)
+        public async Task ShouldThrowValidationExceptionOnRetrieveIfArgumentsInvalidAsync(
+            Stream invalidStream, string invalidText)
         {
             // given
             string invalidFileName = invalidText;
@@ -52,11 +53,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualFileValidationException
                 .Should().BeEquivalentTo(expectedStorageValidationException);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
         }
     }

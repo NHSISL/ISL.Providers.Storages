@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .ReturnsAsync(currentDateTimeOffset);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetSasTokenAsync(
+                broker.CreateDirectorySasTokenAsync(
                     inputContainer,
                     inputDirectoryPath,
                     inputAccessPolicyIdentifier,
@@ -52,16 +52,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetSasTokenAsync(
+                broker.CreateDirectorySasTokenAsync(
                     inputContainer,
                     inputDirectoryPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn),
                         Times.Once);
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }

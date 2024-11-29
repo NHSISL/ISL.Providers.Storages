@@ -15,22 +15,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomString = GetRandomString();
             string inputContainer = randomString;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
-            List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(randomDateTimeOffset);
-
-            List<string> inputPolicyNames = new List<string>
-            {
-                "read",
-                "write",
-                "delete",
-                "fullaccess"
-            };
+            DateTimeOffset inputDateTimeOffset = randomDateTimeOffset;
+            List<string> inputPolicyNames = GetPolicyNames();
+            List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(inputDateTimeOffset);
 
             this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffsetAsync())
                     .ReturnsAsync(randomDateTimeOffset);
 
-            this.blobServiceClientMock.Setup(client =>
-                client.GetBlobContainerClient(inputContainer))
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
                     .Returns(blobContainerClientMock.Object);
 
             this.blobStorageBrokerMock.Setup(broker =>
@@ -46,28 +40,22 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetCurrentDateTimeOffsetAsync(),
                     Times.Once);
 
-            this.blobServiceClientMock.Verify(client =>
-                client.GetBlobContainerClient(inputContainer),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.TokenLifetimeDays,
                     Times.Exactly(inputPolicyNames.Count));
 
-            this.blobContainerClientMock.Verify(client =>
-                client.SetAccessPolicyAsync(
-                    PublicAccessType.None,
-                    It.Is(SameBlobSignedIdentifierListAs(inputSignedIdentifiers)),
-                    null,
-                    default),
-                        Times.Once);
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.AssignAccessPoliciesToContainerAsync(
+                    blobContainerClientMock.Object,
+                    It.Is(SameBlobSignedIdentifierListAs(inputSignedIdentifiers))),
+                        Times.Once());
 
-            this.blobServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeServiceClientMock.VerifyNoOtherCalls();
-            this.dataLakeFileSystemClientMock.VerifyNoOtherCalls();
-            this.blobContainerClientMock.VerifyNoOtherCalls();
-            this.blobClientMock.VerifyNoOtherCalls();
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

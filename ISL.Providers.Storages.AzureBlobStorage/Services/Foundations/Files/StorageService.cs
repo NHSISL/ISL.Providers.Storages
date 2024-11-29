@@ -6,6 +6,7 @@ using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
+using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
@@ -31,52 +32,36 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreate(input, fileName, container);
-
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
-            await blobClient.UploadAsync(input);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            await this.blobStorageBroker.CreateFileAsync(blobClient, input);
         });
 
         public ValueTask RetrieveFileAsync(Stream output, string fileName, string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRetrieve(output, fileName, container);
-
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
-            await blobClient.DownloadToAsync(output);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            await this.blobStorageBroker.RetrieveFileAsync(blobClient, output);
         });
 
         public ValueTask DeleteFileAsync(string fileName, string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnDelete(fileName, container);
-
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
-
-            await blobClient.DeleteAsync(DeleteSnapshotsOption.None);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            await this.blobStorageBroker.DeleteFileAsync(blobClient);
         });
 
         public ValueTask<List<string>> ListFilesInContainerAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateContainerName(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            AsyncPageable<BlobItem> blobItems = await this.blobStorageBroker.GetBlobsAsync(blobContainerClient);
             List<string> fileNames = new List<string>();
-
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container);
-
-            AsyncPageable<BlobItem> blobItems = containerClient.GetBlobsAsync();
 
             await foreach (BlobItem blobItem in blobItems)
             {
@@ -86,64 +71,60 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return fileNames;
         });
 
+
+
         public ValueTask<string> GetDownloadLinkAsync(string fileName, string container, DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
+            BlobSasBuilder sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
 
-            BlobClient blobClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container)
-                    .GetBlobClient(fileName);
+            string downloadLink = await this.blobStorageBroker
+                .GetDownloadLinkAsync(blobClient, sasBuilder, expiresOn);
 
-            var sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
-            var blobUriBuilder = this.blobStorageBroker.GetBlobUriBuilder(blobClient.Uri);
-
-            return blobUriBuilder.ToUri().ToString();
+            return downloadLink;
         });
 
         public ValueTask CreateContainerAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateContainerName(container);
-            await this.blobStorageBroker.BlobServiceClient.CreateBlobContainerAsync(container);
+            await this.blobStorageBroker.CreateContainerAsync(container);
         });
 
         public ValueTask CreateDirectoryAsync(string container, string directory) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateDirectory(container, directory);
-            DataLakeFileSystemClient dataLakeFileSystemClient = this.blobStorageBroker.DataLakeServiceClient.GetFileSystemClient(container);
-            await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
-        });
 
-        public ValueTask SetContainerACLAsync(string container, string accessType, string permissions) =>
-            throw new NotImplementedException();
+            DataLakeFileSystemClient dataLakeFileSystemClient =
+                this.blobStorageBroker.GetDataLakeFileSystemClient(container);
+
+            await this.blobStorageBroker.CreateDirectoryAsync(dataLakeFileSystemClient, directory);
+        });
 
         public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
-            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            string timestamp = dateTimeOffset.ToString("yyyyMMddHHmmss");
-
-            BlobContainerClient containerClient =
-                    this.blobStorageBroker.BlobServiceClient
-                        .GetBlobContainerClient(container);
-
+            DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
             foreach (string policyName in policyNames)
             {
-                string permissions = ConvertPolicyNameToPermissions(policyName);
+                string permissions = ConvertPolicyNameToPermissions(policyName.ToLower());
 
                 var blobSignedIdentifier = new BlobSignedIdentifier
                 {
                     Id = $"{policyName}_{timestamp}",
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = dateTimeOffset,
-                        PolicyExpiresOn = dateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
+                        PolicyStartsOn = currentDateTimeOffset,
+                        PolicyExpiresOn = currentDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
                         Permissions = permissions
                     }
                 };
@@ -151,7 +132,36 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 signedIdentifiers.Add(blobSignedIdentifier);
             }
 
-            await containerClient.SetAccessPolicyAsync(permissions: signedIdentifiers);
+            await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
+                blobContainerClient, signedIdentifiers);
+        });
+
+        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<string> signedIdentifiers = new List<string>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier.Id);
+            }
+
+            return signedIdentifiers;
+        });
+
+
+        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRemoveAccessPolicies(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+            await this.blobStorageBroker.RemoveAccessPoliciesFromContainerAsync(blobContainerClient);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(
@@ -163,43 +173,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
 
-            var sasToken = await this.blobStorageBroker.GetSasTokenAsync(
+            var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
                 container, directoryPath, accessPolicyIdentifier, expiresOn);
 
             return sasToken;
-        });
-
-        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
-        TryCatch(async () =>
-        {
-            ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
-
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container);
-
-            BlobContainerAccessPolicy containerAccessPolicy = await containerClient.GetAccessPolicyAsync();
-            List<string> signedIdentifiers = new List<string>();
-
-            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
-            {
-                signedIdentifiers.Add(signedIdentifier.Id);
-            }
-
-            return signedIdentifiers;
-        });
-
-        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
-        TryCatch(async () =>
-        {
-            ValidateStorageArgumentsOnRemoveAccessPolicies(container);
-            List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
-
-            BlobContainerClient containerClient =
-                this.blobStorageBroker.BlobServiceClient
-                    .GetBlobContainerClient(container);
-
-            await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);
         });
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
