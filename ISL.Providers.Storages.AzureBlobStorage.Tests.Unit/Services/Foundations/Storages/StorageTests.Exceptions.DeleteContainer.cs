@@ -41,7 +41,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 this.storageService.DeleteContainerAsync(inputContainer);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: deleteContainerTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+                    testCode: deleteContainerTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -88,6 +89,48 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.DeleteContainerAsync(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnDeleteContainerAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string randomString = GetRandomString();
+            string someContainer = randomString;
+            string inputContainer = someContainer;
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.DeleteContainerAsync(inputContainer))
+                    .ThrowsAsync(someException);
+
+            // when
+            ValueTask deleteContainerTask =
+                this.storageService.DeleteContainerAsync(inputContainer);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: deleteContainerTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.DeleteContainerAsync(inputContainer),
