@@ -297,7 +297,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask DeleteContainerAsync(string container) =>
-            throw new NotImplementedException();
+            await this.storageService.DeleteContainerAsync(container);
 
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
