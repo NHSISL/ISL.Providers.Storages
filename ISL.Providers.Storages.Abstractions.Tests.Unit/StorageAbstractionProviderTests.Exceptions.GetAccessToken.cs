@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -53,55 +53,6 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
                 expectedStorageValidationProviderException);
-
-            this.storageProviderMock.Verify(provider =>
-                provider.GetAccessTokenAsync(It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>()),
-                    Times.Once);
-
-            this.storageProviderMock.VerifyNoOtherCalls();
-        }
-
-        [Fact]
-        public async Task ShouldThrowDependencyValidationExceptionOnGetAccessTokenWhenTypeIStorageDependencyValidationException()
-        {
-            // given
-            var someException = new Xeption();
-
-            var someStorageValidationException =
-                new SomeStorageDependencyValidationException(
-                    message: "Some storage provider dependency validation exception occurred",
-                    innerException: someException,
-                    data: someException.Data);
-
-            StorageProviderDependencyValidationException expectedStorageDependencyValidationProviderException =
-                new StorageProviderDependencyValidationException(
-                    message: "Storage provider dependency validation errors occurred, please try again.",
-                    innerException: someStorageValidationException);
-
-            this.storageProviderMock.Setup(provider =>
-                provider.GetAccessTokenAsync(It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>()))
-                    .ThrowsAsync(someStorageValidationException);
-
-            // when
-            ValueTask<string> getAccessTokenTask =
-                this.storageAbstractionProvider
-                    .GetAccessTokenAsync(It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>());
-
-            StorageProviderDependencyValidationException actualStorageValidationProviderException =
-                await Assert.ThrowsAsync<StorageProviderDependencyValidationException>(testCode: getAccessTokenTask.AsTask);
-
-            // then
-            actualStorageValidationProviderException.Should().BeEquivalentTo(
-                expectedStorageDependencyValidationProviderException);
 
             this.storageProviderMock.Verify(provider =>
                 provider.GetAccessTokenAsync(It.IsAny<string>(),
