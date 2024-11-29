@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Local settings
+/ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance/appsettings.Development.json
