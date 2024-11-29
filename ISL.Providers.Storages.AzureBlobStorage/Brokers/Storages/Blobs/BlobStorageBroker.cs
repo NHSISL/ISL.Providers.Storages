@@ -4,7 +4,6 @@
 
 using Azure;
 using Azure.Core.Pipeline;
-using Azure.Identity;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -47,7 +46,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
             this.BlobServiceClient = new BlobServiceClient(
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
-                credential: new DefaultAzureCredential(),
+                credential: this.StorageSharedKeyCredential,
                 options: blobServiceClientOptions);
 
             this.DataLakeServiceClient = new DataLakeServiceClient(

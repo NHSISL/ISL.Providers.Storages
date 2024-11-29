@@ -1,6 +1,7 @@
 ﻿using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
 using Microsoft.Extensions.Configuration;
+using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 {
@@ -19,9 +20,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             configuration = configurationBuilder.Build();
 
             AzureBlobStoreConfigurations azureBlobStoreConfigurations = configuration
-                .GetSection("azureBlobStoreConfigurations").Get<AzureBlobStoreConfigurations>();
+                .GetSection("AzureBlobStoreConfigurations").Get<AzureBlobStoreConfigurations>();
 
             this.azureBlobStorageProvider = new AzureBlobStorageProvider(azureBlobStoreConfigurations);
         }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
     }
 }

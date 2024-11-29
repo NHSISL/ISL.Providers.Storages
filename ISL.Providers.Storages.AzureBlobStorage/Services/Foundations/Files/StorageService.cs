@@ -21,7 +21,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         private readonly IBlobStorageBroker blobStorageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
 
-        internal StorageService(IBlobStorageBroker blobStorageBroker, IDateTimeBroker dateTimeBroker)
+        public StorageService(IBlobStorageBroker blobStorageBroker, IDateTimeBroker dateTimeBroker)
         {
             this.blobStorageBroker = blobStorageBroker;
             this.dateTimeBroker = dateTimeBroker;
