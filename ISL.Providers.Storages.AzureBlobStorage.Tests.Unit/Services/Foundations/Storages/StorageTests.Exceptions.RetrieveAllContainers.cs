@@ -52,6 +52,48 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnRetrieveAllContainersAsync(Exception dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            string someContainer = randomString;
+            string inputContainer = someContainer;
+
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.RetrieveAllContainersAsync())
+                    .ThrowsAsync(dependencyException);
+
+            // when
+            ValueTask<List<string>> createContainerTask =
+                this.storageService.RetrieveAllContainersAsync();
+
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createContainerTask.AsTask);
+
+            // then
+            actualStorageDependencyException
+                .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.RetrieveAllContainersAsync(),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
 
     }
 }

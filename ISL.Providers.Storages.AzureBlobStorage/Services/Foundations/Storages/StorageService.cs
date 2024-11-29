@@ -91,7 +91,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.CreateContainerAsync(container);
         });
 
-        public async ValueTask<List<string>> RetrieveAllContainersAsync()
+        public ValueTask<List<string>> RetrieveAllContainersAsync() =>
+        TryCatch(async () =>
         {
             AsyncPageable<BlobContainerItem> asyncPageableBlobContainerItem =
                 await this.blobStorageBroker.RetrieveAllContainersAsync();
@@ -104,7 +105,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
 
             return containerNames;
-        }
+        });
 
         public ValueTask CreateDirectoryAsync(string container, string directory) =>
         TryCatch(async () =>
