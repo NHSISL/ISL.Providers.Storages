@@ -11,7 +11,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllContainers()
+        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllContainersAsync()
         {
             // given
             var storageValidationException = new StorageValidationException(
@@ -48,7 +48,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         }
 
         [Fact]
-        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllContainersDependencyValidation()
+        public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllContainersDependencyValidationAsync()
         {
             // given
             var storageDependencyValidationException = new StorageDependencyValidationException(
@@ -86,7 +86,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         }
 
         [Fact]
-        public async Task ShouldThrowProviderDependencyExceptionOnRetrieveAllContainers()
+        public async Task ShouldThrowProviderDependencyExceptionOnRetrieveAllContainersAsync()
         {
             // given
             var storageDependencyException = new StorageDependencyException(
@@ -115,6 +115,47 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualAzureBlobStorageProviderDependencyException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveAllContainersAsync(),
+                    Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnRetrieveAllContainersAsync()
+        {
+            // given
+            string randomContainer = GetRandomString();
+            string inputContainer = randomContainer;
+
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+            "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveAllContainersAsync())
+                    .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask<List<string>> retrieveContainersTask =
+                this.azureBlobStorageProvider.RetrieveAllContainersAsync();
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: retrieveContainersTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
                 service.RetrieveAllContainersAsync(),
