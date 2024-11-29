@@ -51,9 +51,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         public async Task ShouldThrowProviderValidationExceptionOnRetrieveAllContainersDependencyValidation()
         {
             // given
-            string randomContainer = GetRandomString();
-            string inputContainer = randomContainer;
-
             var storageDependencyValidationException = new StorageDependencyValidationException(
                 message: "Storage dependency validation error occurred, please fix errors and try again.",
                 innerException: new Xeption());
@@ -80,6 +77,44 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualAzureBlobStorageProviderValidationException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveAllContainersAsync(),
+                    Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowProviderDependencyExceptionOnRetrieveAllContainers()
+        {
+            // given
+            var storageDependencyException = new StorageDependencyException(
+                message: "Storage dependency error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyException =
+                new AzureBlobStorageProviderDependencyException(
+                    message: "Azure blob storage provider dependency error occurred, " +
+            "contact support.",
+                    innerException: (Xeption)storageDependencyException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveAllContainersAsync())
+                    .ThrowsAsync(storageDependencyException);
+
+            // when
+            ValueTask<List<string>> retrieveContainersTask =
+                this.azureBlobStorageProvider.RetrieveAllContainersAsync();
+
+            AzureBlobStorageProviderDependencyException
+                actualAzureBlobStorageProviderDependencyException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
+                        testCode: retrieveContainersTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
                 service.RetrieveAllContainersAsync(),
