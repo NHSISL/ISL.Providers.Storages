@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.IO;
 using ADotNet.Clients;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ISL.Providers.Storages.Infrastructure.Services
 {
@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                 Jobs = new Dictionary<string, Job>
                 {
                     {
-                        "label",
+                        "label",k
                         new LabelJob(
                             runsOn: BuildMachines.UbuntuLatest,
                             githubToken: "${{ secrets.PAT_FOR_TAGGING }}")
@@ -44,6 +44,16 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                         {
                             Name = "Build",
                             RunsOn = BuildMachines.WindowsLatest,
+
+                            EnvironmentVariables = new Dictionary<string, string>
+                            {
+                                { "AZUREBLOBSTORECONFIGURATIONS__STORAGEACCOUNTACCESSKEY",
+                                    "${{ secrets.AZUREBLOBSTORECONFIGURATIONS__STORAGEACCOUNTACCESSKEY }}" },
+                                { "AZUREBLOBSTORECONFIGURATIONS__STORAGEACCOUNTNAME",
+                                    "${{ secrets.AZUREBLOBSTORECONFIGURATIONS__STORAGEACCOUNTNAME }}"},
+                                { "AZUREBLOBSTORECONFIGURATIONS__SERVICEURI",
+                                    "${{ secrets.AZUREBLOBSTORECONFIGURATIONS__SERVICEURI }}"},
+                            },
 
                             Steps = new List<GithubTask>
                             {
