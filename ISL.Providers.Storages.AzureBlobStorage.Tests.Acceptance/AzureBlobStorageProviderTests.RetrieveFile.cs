@@ -12,22 +12,27 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
         {
             // given
             string randomFileName = GetRandomString();
+            string randomContainer = GetRandomString();
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
+            string inputContainer = randomContainer.ToLower();
             string randomString = GetRandomString();
             byte[] randomBytes = Encoding.UTF8.GetBytes(randomString);
-            string inputContainer = "testcontainer";
             MemoryStream inputStream = new MemoryStream(randomBytes);
             MemoryStream outputStream = new MemoryStream();
             MemoryStream actualOutputStream = outputStream;
+            await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
+
+            await this.azureBlobStorageProvider.CreateFileAsync(
+                inputStream, inputFileName, inputContainer);
 
             // when
-            await this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputFileName, inputContainer);
-            await this.azureBlobStorageProvider.RetrieveFileAsync(actualOutputStream, inputFileName, inputContainer);
+            await this.azureBlobStorageProvider.RetrieveFileAsync(
+                actualOutputStream, inputFileName, inputContainer);
 
             // then
             actualOutputStream.Length.Should().BeGreaterThan(0);
-            await this.azureBlobStorageProvider.DeleteFileAsync(inputFileName, inputContainer);
+            await this.azureBlobStorageProvider.DeleteContainerAsync(inputContainer);
         }
     }
 }
