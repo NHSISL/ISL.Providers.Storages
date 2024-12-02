@@ -290,6 +290,42 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
+        /// Deletes a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the deleted storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask DeleteContainerAsync(string container)
+        {
+            try
+            {
+                await this.storageService.DeleteContainerAsync(container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
+
+        /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
