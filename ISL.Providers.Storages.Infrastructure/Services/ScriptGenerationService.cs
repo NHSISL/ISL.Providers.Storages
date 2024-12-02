@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                 Jobs = new Dictionary<string, Job>
                 {
                     {
-                        "label",k
+                        "label",
                         new LabelJob(
                             runsOn: BuildMachines.UbuntuLatest,
                             githubToken: "${{ secrets.PAT_FOR_TAGGING }}")
