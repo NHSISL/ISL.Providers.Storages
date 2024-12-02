@@ -82,6 +82,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         public async ValueTask CreateContainerAsync(string container) =>
             await BlobServiceClient.CreateBlobContainerAsync(container);
 
+        public async ValueTask<AsyncPageable<BlobContainerItem>> RetrieveAllContainersAsync() =>
+            BlobServiceClient.GetBlobContainersAsync();
+
         public async ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient) =>
             blobContainerClient.GetBlobsAsync();
 

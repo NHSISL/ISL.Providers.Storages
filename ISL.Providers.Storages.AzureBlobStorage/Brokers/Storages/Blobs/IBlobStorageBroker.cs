@@ -30,6 +30,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 
         ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
         ValueTask CreateContainerAsync(string container);
+        ValueTask<AsyncPageable<BlobContainerItem>> RetrieveAllContainersAsync();
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask AssignAccessPoliciesToContainerAsync(
