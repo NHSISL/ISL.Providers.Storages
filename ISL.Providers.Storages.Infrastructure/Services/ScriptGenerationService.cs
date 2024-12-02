@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
             }
 
             adotNetClient.SerializeAndWriteToFile(
-                githubPipeline,
+                adoPipeline: githubPipeline,
                 path: buildScriptPath);
         }
     }
