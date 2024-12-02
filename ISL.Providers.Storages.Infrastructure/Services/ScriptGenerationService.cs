@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
         public ScriptGenerationService() =>
             adotNetClient = new ADotNetClient();
 
-        public void GenerateBuildScript(string branchName, string projectName)
+        public void GenerateBuildScript(string branchName, string projectName, string dotNetVersion)
         {
             var githubPipeline = new GithubPipeline
             {
@@ -26,24 +26,35 @@ namespace ISL.Providers.Storages.Infrastructure.Services
 
                 OnEvents = new Events
                 {
-                    Push = new PushEvent { Branches = [branchName] },
-                    PullRequest = new PullRequestEvent { Branches = [branchName] }
+                    Push = new PushEvent
+                    {
+                        Branches = new string[] { branchName }
+                    },
+
+                    PullRequest = new PullRequestEvent
+                    {
+                        Types = new string[] { "opened", "synchronize", "reopened", "closed" },
+                        Branches = new string[] { branchName }
+                    }
                 },
+
+                EnvironmentVariables = new Dictionary<string, string>
+                {
+                    { "IS_RELEASE_CANDIDATE", EnvironmentVariables.IsGitHubReleaseCandidate() }
+                },
+
 
                 Jobs = new Dictionary<string, Job>
                 {
                     {
                         "label",
-                        new LabelJob(
-                            runsOn: BuildMachines.UbuntuLatest,
-                            githubToken: "${{ secrets.PAT_FOR_TAGGING }}")
+                        new LabelJobV2(runsOn: BuildMachines.UbuntuLatest)
                     },
                     {
-                        "build",
+                        "Build",
                         new Job
                         {
-                            Name = "Build",
-                            RunsOn = BuildMachines.WindowsLatest,
+                            RunsOn = BuildMachines.UbuntuLatest,
 
                             EnvironmentVariables = new Dictionary<string, string>
                             {
@@ -59,16 +70,16 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                             {
                                 new CheckoutTaskV3
                                 {
-                                    Name = "Check out"
+                                    Name = "Check Out"
                                 },
 
                                 new SetupDotNetTaskV3
                                 {
-                                    Name = "Setup .Net",
+                                    Name = "Setup Dot Net Version",
 
                                     With = new TargetDotNetVersionV3
                                     {
-                                        DotNetVersion = "8.0.302"
+                                        DotNetVersion = dotNetVersion
                                     }
                                 },
 
@@ -97,10 +108,15 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                             projectRelativePath: $"{projectName}/{projectName}.csproj",
                             githubToken: "${{ secrets.PAT_FOR_TAGGING }}",
                             branchName: branchName)
-                        {
-                            Name = "Tag and Release"
-                        }
                     },
+                    {
+                        "publish",
+                        new PublishJobV2(
+                            runsOn: BuildMachines.UbuntuLatest,
+                            dependsOn: "add_tag",
+                            dotNetVersion: dotNetVersion,
+                            nugetApiKey: "${{ secrets.NUGET_ACCESS }}")
+                    }
                 }
             };
 
@@ -113,7 +129,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
             }
 
             adotNetClient.SerializeAndWriteToFile(
-                adoPipeline: githubPipeline,
+                githubPipeline,
                 path: buildScriptPath);
         }
     }
