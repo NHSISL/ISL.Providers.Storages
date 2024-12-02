@@ -17,6 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
     public class AzureBlobStorageProvider : IAzureBlobStorageProvider
     {
         private IStorageService storageService;
+        
         public AzureBlobStorageProvider(AzureBlobStoreConfigurations configurations)
         {
             IServiceProvider serviceProvider = RegisterServices(configurations);
