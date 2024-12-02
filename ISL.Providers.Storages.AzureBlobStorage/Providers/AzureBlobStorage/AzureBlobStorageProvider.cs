@@ -3,7 +3,6 @@ using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Files;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,6 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
     public class AzureBlobStorageProvider : IAzureBlobStorageProvider
     {
         private IStorageService storageService;
+        
         public AzureBlobStorageProvider(AzureBlobStoreConfigurations configurations)
         {
             IServiceProvider serviceProvider = RegisterServices(configurations);
@@ -231,6 +231,41 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             try
             {
                 await this.storageService.CreateContainerAsync(container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all container names in the storage account.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> representing container names.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<List<string>> RetrieveAllContainersAsync()
+        {
+            try
+            {
+                return await this.storageService.RetrieveAllContainersAsync();
             }
             catch (StorageValidationException storageValidationException)
             {
