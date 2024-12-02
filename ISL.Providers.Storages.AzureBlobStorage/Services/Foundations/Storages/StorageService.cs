@@ -107,6 +107,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return containerNames;
         });
 
+        public ValueTask DeleteContainerAsync(string container) =>
+        TryCatch(async () =>
+        {
+            ValidateContainerName(container);
+            await this.blobStorageBroker.DeleteContainerAsync(container);
+        });
+
         public ValueTask CreateDirectoryAsync(string container, string directory) =>
         TryCatch(async () =>
         {
