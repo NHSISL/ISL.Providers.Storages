@@ -55,6 +55,13 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask CreateContainerAsync(string container);
 
         /// <summary>
+        /// Deletes a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the deleted storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask DeleteContainerAsync(string container);
+
+        /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
         /// <param name="container">The name of the storage container to list files from.</param>
