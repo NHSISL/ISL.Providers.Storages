@@ -34,11 +34,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .ThrowsAsync(dependencyValidationException);
 
             // when
-            ValueTask<List<string>> createContainerTask =
+            ValueTask<List<string>> retrieveContainersTask =
                 this.storageService.RetrieveAllContainersAsync();
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: createContainerTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyValidationException>(testCode: retrieveContainersTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -76,11 +76,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .ThrowsAsync(dependencyException);
 
             // when
-            ValueTask<List<string>> createContainerTask =
+            ValueTask<List<string>> retrieveContainersTask =
                 this.storageService.RetrieveAllContainersAsync();
 
             StorageDependencyException actualStorageDependencyException =
-                await Assert.ThrowsAsync<StorageDependencyException>(testCode: createContainerTask.AsTask);
+                await Assert.ThrowsAsync<StorageDependencyException>(testCode: retrieveContainersTask.AsTask);
 
             // then
             actualStorageDependencyException
@@ -118,11 +118,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask<List<string>> createContainerTask =
+            ValueTask<List<string>> retrieveContainersTask =
                 this.storageService.RetrieveAllContainersAsync();
 
             StorageServiceException actualStorageServiceException =
-                await Assert.ThrowsAsync<StorageServiceException>(testCode: createContainerTask.AsTask);
+                await Assert.ThrowsAsync<StorageServiceException>(testCode: retrieveContainersTask.AsTask);
 
             // then
             actualStorageServiceException
