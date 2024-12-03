@@ -16,7 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
     public class AzureBlobStorageProvider : IAzureBlobStorageProvider
     {
         private IStorageService storageService;
-        
+
         public AzureBlobStorageProvider(AzureBlobStoreConfigurations configurations)
         {
             IServiceProvider serviceProvider = RegisterServices(configurations);
@@ -301,7 +301,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         {
             try
             {
-                await this.storageService.DeleteContainerAsync(container);
+                await this.storageService.DeleteContainerAsync(container); m
             }
             catch (StorageValidationException storageValidationException)
             {

@@ -7,6 +7,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
@@ -125,7 +126,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.CreateDirectoryAsync(dataLakeFileSystemClient, directory);
         });
 
-        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
@@ -134,13 +135,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
-            foreach (string policyName in policyNames)
+            foreach (Policy policy in policies)
             {
-                string permissions = ConvertPolicyNameToPermissions(policyName.ToLower());
+                ValidatePermsissions(policy.Permissions);
+                string permissions = ConvertPolicyNameToPermissions(policy.Permissions);
 
                 var blobSignedIdentifier = new BlobSignedIdentifier
                 {
-                    Id = $"{policyName}_{timestamp}",
+                    Id = policy.PolicyName,
+
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = currentDateTimeOffset,
@@ -201,7 +204,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
         {
-            "read" => "rl",
+            "read" => "r",
+            "list" => "l",
             "write" => "w",
             "delete" => "d",
             "fullaccess" => "rlwd",
