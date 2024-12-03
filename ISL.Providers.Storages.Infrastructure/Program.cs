@@ -14,7 +14,8 @@ namespace ISL.Providers.Storages.Infrastructure
 
             scriptGenerationService.GenerateBuildScript(
                 branchName: "main",
-                projectName: "ISL.Providers.Storages.Abstractions");
+                projectName: "ISL.Providers.Storages.Abstractions",
+                dotNetVersion: "9.0.100");
         }
     }
 }

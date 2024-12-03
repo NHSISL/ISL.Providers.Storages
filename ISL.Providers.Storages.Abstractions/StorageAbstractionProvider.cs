@@ -2,11 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 
 namespace ISL.Providers.Storages.Abstractions
 {
@@ -123,6 +123,23 @@ namespace ISL.Providers.Storages.Abstractions
         {
             await storageProvider.CreateContainerAsync(container);
         });
+
+        /// <summary>
+        /// Deletes a container in the storage account.
+        /// </summary>
+        /// <param name="container">The name of the deleted storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageProviderValidationException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageProviderDependencyException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageProviderServiceException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask DeleteContainerAsync(string container) =>
+            throw new NotImplementedException();
 
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
