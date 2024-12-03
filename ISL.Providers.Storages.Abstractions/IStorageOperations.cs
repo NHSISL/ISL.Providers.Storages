@@ -55,6 +55,12 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask CreateContainerAsync(string container);
 
         /// <summary>
+        /// Retrieves all container names in the storage account.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> representing container names.</returns>
+        ValueTask<List<string>> RetrieveAllContainersAsync();
+
+        /// <summary>
         /// Deletes a container in the storage account.
         /// </summary>
         /// <param name="container">The name of the deleted storage container.</param>
