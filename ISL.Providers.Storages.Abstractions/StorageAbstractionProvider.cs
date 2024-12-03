@@ -125,6 +125,22 @@ namespace ISL.Providers.Storages.Abstractions
         });
 
         /// <summary>
+        /// Retrieves all container names in the storage account.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask{List{String}}"/> representing container names.</returns>
+        /// <exception cref="StorageProviderValidationException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageProviderDependencyException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageProviderServiceException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask<List<string>> RetrieveAllContainersAsync() =>
+            throw new NotImplementedException();
+
+        /// <summary>
         /// Deletes a container in the storage account.
         /// </summary>
         /// <param name="container">The name of the deleted storage container.</param>
