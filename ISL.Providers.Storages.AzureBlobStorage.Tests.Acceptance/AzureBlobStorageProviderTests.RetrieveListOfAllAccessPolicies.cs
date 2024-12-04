@@ -9,7 +9,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     public partial class AzureBlobStorageProviderTests
     {
         [Fact]
-        public async Task ShouldCreateAndAssignAccessPoliciesAsync()
+        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
@@ -40,10 +40,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            // when
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
                 inputContainer, inputAccessPolicies);
 
+            // when
             List<string> actualAccessPolicyNames =
                 await this.azureBlobStorageProvider.RetrieveListOfAllAccessPoliciesAsync(
                     inputContainer);

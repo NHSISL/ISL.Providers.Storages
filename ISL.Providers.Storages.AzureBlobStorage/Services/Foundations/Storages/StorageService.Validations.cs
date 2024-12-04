@@ -147,9 +147,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                     permission.ToLower() != "add" &&
                     permission.ToLower() != "list")
                 {
-                    throw new InvalidPolicyNameStorageException(
-                        message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
-                        "are supported at this time.");
+                    throw new InvalidPolicyPermissionStorageException(
+                        message: "Invalid permission. Read, write, delete, create, add and list" +
+                        "permissions are supported at this time.");
                 }
             }
         }

@@ -188,15 +188,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 }
             };
 
-            var invalidPolicyNameStorageException =
-                new InvalidPolicyNameStorageException(
-                    message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
-                        "are supported at this time.");
+            var InvalidPolicyPermissionStorageException =
+                new InvalidPolicyPermissionStorageException(
+                    message: "Invalid permission. Read, write, delete, create, add and list" +
+                        "permissions are supported at this time.");
 
             var expectedStorageValidationException =
                 new StorageValidationException(
                     message: "Storage validation error occurred, please fix errors and try again.",
-                    innerException: invalidPolicyNameStorageException);
+                    innerException: InvalidPolicyPermissionStorageException);
 
             // when
             ValueTask createAccessPolicyTask =

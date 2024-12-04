@@ -26,7 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
 
-        ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
+        ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
     }
 }

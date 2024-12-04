@@ -373,12 +373,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateAndAssignAccessPoliciesAsync(
-            string inputContainer, List<Policy> inputPolicyNames)
+            string inputContainer, List<Policy> inputPolicies)
         {
             try
             {
                 await this.storageService.CreateAndAssignAccessPoliciesAsync(
-                    inputContainer, inputPolicyNames);
+                    inputContainer, inputPolicies);
             }
             catch (StorageValidationException storageValidationException)
             {
@@ -446,11 +446,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
+        public async ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container)
         {
             try
             {
-                return await this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(container);
+                return await this.storageService.RetrieveListOfAllAccessPoliciesAsync(container);
             }
             catch (StorageValidationException storageValidationException)
             {

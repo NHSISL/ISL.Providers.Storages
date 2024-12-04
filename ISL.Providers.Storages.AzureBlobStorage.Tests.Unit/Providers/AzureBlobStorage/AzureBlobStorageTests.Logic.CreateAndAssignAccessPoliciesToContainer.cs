@@ -1,32 +1,30 @@
-﻿namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlobStorage
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using Moq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlobStorage
 {
     public partial class AzureBlobStorageTests
     {
-        //[Fact]
-        //public async Task ShouldCreateAndAssignAccessPoliciesAsync()
-        //{
-        //    // given
-        //    string randomContainer = GetRandomString();
-        //    string inputContainer = randomContainer;
+        [Fact]
+        public async Task ShouldCreateAndAssignAccessPoliciesAsync()
+        {
+            // given
+            string randomContainer = GetRandomString();
+            string inputContainer = randomContainer;
+            List<Policy> inputPolicies = GetPolicies();
 
-        //    List<string> inputPolicyNames = new List<string>
-        //    {
-        //        "read",
-        //        "write",
-        //        "delete",
-        //        "fullaccess"
-        //    };
+            // when
+            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                inputContainer, inputPolicies);
 
-        //    // when
-        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-        //        inputContainer, inputPolicyNames);
+            // then
+            this.storageServiceMock.Verify(service =>
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
+                    Times.Once);
 
-        //    // then
-        //    this.storageServiceMock.Verify(service =>
-        //        service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
-        //            Times.Once);
-
-        //    this.storageServiceMock.VerifyNoOtherCalls();
-        //}
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
