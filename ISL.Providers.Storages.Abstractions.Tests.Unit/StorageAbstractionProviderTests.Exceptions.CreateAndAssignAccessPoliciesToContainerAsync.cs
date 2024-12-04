@@ -17,7 +17,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     {
         [Fact]
         public async Task
-            ShouldThrowValidationExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIStorageValidationException()
+            ShouldThrowValidationExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIsStorageValidationException()
         {
             // given
             var someException = new Xeption();
@@ -59,7 +59,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowDependencyExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIStorageDependencyException()
+            ShouldThrowDependencyExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIsStorageDependencyException()
         {
             // given
             var someException = new Xeption();
@@ -100,7 +100,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowServiceExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIStorageServiceException()
+            ShouldThrowServiceExceptionOnCreateAndAssignAccessPoliciesAsyncWhenTypeIsStorageServiceException()
         {
             // given
             var someException = new Xeption();
