@@ -2,128 +2,224 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using FluentAssertions;
+using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using Moq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
 {
     public partial class StorageTests
     {
-        //[Theory]
-        //[InlineData(null)]
-        //[InlineData("")]
-        //[InlineData(" ")]
-        //public async Task
-        //    ShouldThrowValidationExceptionOnCreateAccessPolicyIfArgumentsInvalidAsync(
-        //    string invalidText)
-        //{
-        //    // given
-        //    string invalidContainer = invalidText;
-        //    List<string> invalidPolicyNames = new List<string> { invalidText };
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task
+            ShouldThrowValidationExceptionOnCreateAccessPolicyIfArgumentsInvalidAsync(
+            string invalidText)
+        {
+            // given
+            string invalidContainer = invalidText;
+            string invalidPolicyName = invalidText;
+            //List<Policy> invalidPolicies = new List<Policy>
+            //{
+            //    new Policy
+            //    {
+            //        PolicyName = invalidPolicyName,
+            //        Permissions = new List<string>{ invalidText }
+            //    }
+            //};
 
-        //    var invalidArgumentStorageException =
-        //        new InvalidArgumentStorageException(
-        //            message: "Invalid storage service argument(s), please fix the errors and try again.");
+            List<Policy> inputPolicies = GetPolicies();
 
-        //    invalidArgumentStorageException.AddData(
-        //        key: "Container",
-        //        values: "Text is invalid");
+            var invalidArgumentStorageException =
+                new InvalidArgumentStorageException(
+                    message: "Invalid storage service argument(s), please fix the errors and try again.");
 
-        //    invalidArgumentStorageException.AddData(
-        //        key: "PolicyNames",
-        //        values: "List is invalid");
+            invalidArgumentStorageException.AddData(
+                key: "Container",
+                values: "Text is invalid");
 
-        //    var expectedStorageValidationException =
-        //        new StorageValidationException(
-        //            message: "Storage validation error occurred, please fix errors and try again.",
-        //            innerException: invalidArgumentStorageException);
+            //invalidArgumentStorageException.AddData(
+            //    key: $"{nameof(Policy)}.{nameof(Policy.PolicyName)}",
+            //    values: "Text is invalid");
 
-        //    // when
-        //    ValueTask createAccessPolicyTask =
-        //        this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
-        //            invalidContainer, invalidPolicyNames);
+            //invalidArgumentStorageException.AddData(
+            //    key: $"{nameof(Policy)}.{nameof(Policy.Permissions)}",
+            //    values: "List is invalid");
 
-        //    StorageValidationException actualStorageValidationException =
-        //        await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: invalidArgumentStorageException);
 
-        //    // then
-        //    actualStorageValidationException
-        //        .Should().BeEquivalentTo(expectedStorageValidationException);
+            // when
+            ValueTask createAccessPolicyTask =
+                this.storageService.CreateAndAssignAccessPoliciesAsync(
+                    invalidContainer, inputPolicies);
 
-        //    this.blobStorageBrokerMock.VerifyNoOtherCalls();
-        //    this.dateTimeBrokerMock.VerifyNoOtherCalls();
-        //}
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
 
-        //[Theory]
-        //[MemberData(nameof(NullAndEmptyList))]
-        //public async Task
-        //    ShouldThrowValidationExceptionOnCreateAccessPolicyIfListNullOrEmptyInvalidAsync(
-        //    List<string> invalidList)
-        //{
-        //    // given
-        //    string randomString = GetRandomString();
-        //    string inputContainer = randomString;
-        //    List<string> invalidPolicyNameList = invalidList;
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
 
-        //    var invalidArgumentStorageException =
-        //        new InvalidArgumentStorageException(
-        //            message: "Invalid storage service argument(s), please fix the errors and try again.");
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
-        //    invalidArgumentStorageException.AddData(
-        //        key: "PolicyNames",
-        //        values: "List is invalid");
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task
+            ShouldThrowValidationExceptionOnCreateAccessPolicyIfPolicyObjectArgumentsInvalidAsync(
+            string invalidText)
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputContainer = randomString;
 
-        //    var expectedStorageValidationException =
-        //        new StorageValidationException(
-        //            message: "Storage validation error occurred, please fix errors and try again.",
-        //            innerException: invalidArgumentStorageException);
+            List<Policy> invalidPolicies = new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = invalidText,
+                    Permissions = new List<string>{ invalidText }
+                }
+            };
 
-        //    // when
-        //    ValueTask createAccessPolicyTask =
-        //        this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
-        //            inputContainer, invalidPolicyNameList);
+            List<Policy> inputPolicies = GetPolicies();
 
-        //    StorageValidationException actualStorageValidationException =
-        //        await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
+            var invalidArgumentStorageException =
+                new InvalidArgumentStorageException(
+                    message: "Invalid storage service argument(s), please fix the errors and try again.");
 
-        //    // then
-        //    actualStorageValidationException
-        //        .Should().BeEquivalentTo(expectedStorageValidationException);
+            invalidArgumentStorageException.AddData(
+                key: $"{nameof(Policy)}.{nameof(Policy.PolicyName)}",
+                values: "Text is invalid");
 
-        //    this.blobStorageBrokerMock.VerifyNoOtherCalls();
-        //    this.dateTimeBrokerMock.VerifyNoOtherCalls();
-        //}
+            invalidArgumentStorageException.AddData(
+                key: $"{nameof(Policy)}.{nameof(Policy.Permissions)}",
+                values: "List is invalid");
 
-        //[Fact]
-        //public async Task ShouldThrowValidationExceptionOnCreateAccessPolicyIfPolicyNamesInvalidAsync()
-        //{
-        //    // given
-        //    string randomString = GetRandomString();
-        //    string inputContainer = randomString;
-        //    List<string> randomPolicyNames = GetRandomStringList();
-        //    List<string> invalidPolicyNames = randomPolicyNames;
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: invalidArgumentStorageException);
 
-        //    var invalidPolicyNameStorageException =
-        //        new InvalidPolicyNameStorageException(
-        //            message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
-        //                "are supported at this time.");
+            // when
+            ValueTask createAccessPolicyTask =
+                this.storageService.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, invalidPolicies);
 
-        //    var expectedStorageValidationException =
-        //        new StorageValidationException(
-        //            message: "Storage validation error occurred, please fix errors and try again.",
-        //            innerException: invalidPolicyNameStorageException);
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
 
-        //    // when
-        //    ValueTask createAccessPolicyTask =
-        //        this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
-        //            inputContainer, invalidPolicyNames);
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
 
-        //    StorageValidationException actualStorageValidationException =
-        //        await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
 
-        //    // then
-        //    actualStorageValidationException
-        //        .Should().BeEquivalentTo(expectedStorageValidationException);
+        [Theory]
+        [MemberData(nameof(NullAndEmptyList))]
+        public async Task
+            ShouldThrowValidationExceptionOnCreateAccessPolicyIfListNullOrEmptyInvalidAsync(
+            List<Policy> invalidList)
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputContainer = randomString;
+            List<Policy> invalidPolicies = invalidList;
 
-        //    this.blobStorageBrokerMock.VerifyNoOtherCalls();
-        //    this.dateTimeBrokerMock.VerifyNoOtherCalls();
-        //}
+            var invalidArgumentStorageException =
+                new InvalidArgumentStorageException(
+                    message: "Invalid storage service argument(s), please fix the errors and try again.");
+
+            invalidArgumentStorageException.AddData(
+                key: "Policies",
+                values: "List is invalid");
+
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: invalidArgumentStorageException);
+
+            // when
+            ValueTask createAccessPolicyTask =
+                this.storageService.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, invalidPolicies);
+
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
+
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnCreateAccessPolicyIfPolicyNamesInvalidAsync()
+        {
+            // given
+            string randomContainer = GetRandomString();
+            string randomPolicyName = GetRandomString();
+            string inputContainer = randomContainer;
+            string inputPolicyName = randomPolicyName;
+            List<string> randomPermissions = GetRandomStringList();
+            List<string> invalidPermissions = randomPermissions;
+
+            List<Policy> inputPolicies = new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = inputPolicyName,
+                    Permissions = invalidPermissions
+                }
+            };
+
+            var invalidPolicyNameStorageException =
+                new InvalidPolicyNameStorageException(
+                    message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
+                        "are supported at this time.");
+
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: invalidPolicyNameStorageException);
+
+            // when
+            ValueTask createAccessPolicyTask =
+                this.storageService.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
+
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(testCode: createAccessPolicyTask.AsTask);
+
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffsetAsync(),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

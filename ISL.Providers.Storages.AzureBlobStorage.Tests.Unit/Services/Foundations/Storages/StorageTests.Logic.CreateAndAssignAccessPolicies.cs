@@ -34,7 +34,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             await this.storageService
-                .CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicies);
+                .CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies);
 
             // then
             this.dateTimeBrokerMock.Verify(broker =>

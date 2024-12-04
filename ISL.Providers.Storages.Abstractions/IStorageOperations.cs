@@ -122,7 +122,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="policies"><see cref="List{Policy}"/>
         /// A list of Policy objects representing the access policies to be created</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<Policy> policies);
+        ValueTask CreateAndAssignAccessPoliciesAsync(string container, List<Policy> policies);
 
         /// <summary>
         /// Removes all stored access policies from the container.

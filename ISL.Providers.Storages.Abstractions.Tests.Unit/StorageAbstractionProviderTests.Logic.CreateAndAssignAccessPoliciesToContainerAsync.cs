@@ -3,7 +3,7 @@
     public partial class StorageAbstractionProviderTests
     {
         //[Fact]
-        //public async Task ShouldCreateAndAssignAccessPoliciesToContainerAsync()
+        //public async Task ShouldCreateAndAssignAccessPoliciesAsync()
         //{
         //    // given
         //    string randomString = GetRandomString();
@@ -19,11 +19,11 @@
 
         //    // when
         //    await this.storageAbstractionProvider
-        //        .CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+        //        .CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames);
 
         //    // then
         //    this.storageProviderMock.Verify(provider =>
-        //        provider.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //        provider.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //            Times.Once);
 
         //    this.storageProviderMock.VerifyNoOtherCalls();

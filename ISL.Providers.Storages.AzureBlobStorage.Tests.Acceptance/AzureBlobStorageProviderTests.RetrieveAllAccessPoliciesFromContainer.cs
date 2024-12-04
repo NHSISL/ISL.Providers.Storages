@@ -17,7 +17,7 @@
 
         //    await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //        inputContainer, inputAccessPolicyNames);
 
         //    // when

@@ -22,12 +22,12 @@
         //                data: storageValidationException.InnerException.Data);
 
         //        this.storageServiceMock.Setup(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames))
         //                .ThrowsAsync(storageValidationException);
 
         //        // when
         //        ValueTask createAndAssignAccessPoliciesTask =
-        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //                inputContainer, inputPolicyNames);
 
         //        AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
@@ -39,7 +39,7 @@
         //            .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
         //        this.storageServiceMock.Verify(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //                Times.Once);
 
         //        this.storageServiceMock.VerifyNoOtherCalls();
@@ -66,12 +66,12 @@
         //                data: storageDependencyValidationException.InnerException.Data);
 
         //        this.storageServiceMock.Setup(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames))
         //                .ThrowsAsync(storageDependencyValidationException);
 
         //        // when
         //        ValueTask createAndAssignAccessPoliciesTask =
-        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //                inputContainer, inputPolicyNames);
 
         //        AzureBlobStorageProviderValidationException
@@ -84,7 +84,7 @@
         //            .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
         //        this.storageServiceMock.Verify(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //                Times.Once);
 
         //        this.storageServiceMock.VerifyNoOtherCalls();
@@ -110,12 +110,12 @@
         //                innerException: (Xeption)storageDependencyException.InnerException);
 
         //        this.storageServiceMock.Setup(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames))
         //                .ThrowsAsync(storageDependencyException);
 
         //        // when
         //        ValueTask createAndAssignAccessPoliciesTask =
-        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //                inputContainer, inputPolicyNames);
 
         //        AzureBlobStorageProviderDependencyException
@@ -128,7 +128,7 @@
         //            .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
         //        this.storageServiceMock.Verify(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //                Times.Once);
 
         //        this.storageServiceMock.VerifyNoOtherCalls();
@@ -154,12 +154,12 @@
         //                innerException: (Xeption)storageServiceException.InnerException);
 
         //        this.storageServiceMock.Setup(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames))
         //                .ThrowsAsync(storageServiceException);
 
         //        // when
         //        ValueTask createAndAssignAccessPoliciesTask =
-        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //            this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //                inputContainer, inputPolicyNames);
 
         //        AzureBlobStorageProviderServiceException
@@ -172,7 +172,7 @@
         //            .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
         //        this.storageServiceMock.Verify(service =>
-        //            service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //            service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //                Times.Once);
 
         //        this.storageServiceMock.VerifyNoOtherCalls();

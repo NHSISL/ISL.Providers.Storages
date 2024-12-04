@@ -194,6 +194,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobContainerItems;
         }
 
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "Read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "Create"
+                    }
+                },
+            };
+
         private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
@@ -242,30 +266,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
             return filler;
         }
-
-        private static List<Policy> GetPolicies() =>
-            new List<Policy>
-            {
-                new Policy
-                {
-                    PolicyName = "read",
-                    Permissions = new List<string>
-                    {
-                        "Read",
-                        "list"
-                    }
-                },
-                new Policy
-                {
-                    PolicyName = "write",
-                    Permissions = new List<string>
-                    {
-                        "write",
-                        "add",
-                        "Create"
-                    }
-                },
-            };
 
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
@@ -335,11 +335,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<List<string>> NullAndEmptyList() =>
-            new TheoryData<List<string>>
+        public static TheoryData<List<Policy>> NullAndEmptyList() =>
+            new TheoryData<List<Policy>>
             {
                 { null },
-                { new List<string>() }
+                { new List<Policy>() }
             };
     }
 }

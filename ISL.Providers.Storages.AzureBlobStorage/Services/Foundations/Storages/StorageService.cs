@@ -127,7 +127,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.CreateDirectoryAsync(dataLakeFileSystemClient, directory);
         });
 
-        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<Policy> policies) =>
+        public ValueTask CreateAndAssignAccessPoliciesAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
@@ -172,7 +172,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
             {
-                signedIdentifiers.Add(signedIdentifier.AccessPolicy.Permissions);
+                signedIdentifiers.Add(signedIdentifier.Id);
             }
 
             return signedIdentifiers;

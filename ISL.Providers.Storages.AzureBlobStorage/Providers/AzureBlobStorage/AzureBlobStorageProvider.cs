@@ -372,12 +372,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
+        public async ValueTask CreateAndAssignAccessPoliciesAsync(
             string inputContainer, List<Policy> inputPolicyNames)
         {
             try
             {
-                await this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
+                await this.storageService.CreateAndAssignAccessPoliciesAsync(
                     inputContainer, inputPolicyNames);
             }
             catch (StorageValidationException storageValidationException)

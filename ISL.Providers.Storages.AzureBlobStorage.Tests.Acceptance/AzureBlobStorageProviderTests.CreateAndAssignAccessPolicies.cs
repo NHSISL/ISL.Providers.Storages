@@ -3,7 +3,7 @@
     public partial class AzureBlobStorageProviderTests
     {
         //[Fact]
-        //public async Task ShouldCreateAndAssignAccessPoliciesToContainerAsync()
+        //public async Task ShouldCreateAndAssignAccessPoliciesAsync()
         //{
         //    // given
         //    string randomContainer = GetRandomString();
@@ -18,7 +18,7 @@
         //    await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
         //    // when
-        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //        inputContainer, inputAccessPolicyNames);
 
         //    List<string> actualAccessPolicyNames =

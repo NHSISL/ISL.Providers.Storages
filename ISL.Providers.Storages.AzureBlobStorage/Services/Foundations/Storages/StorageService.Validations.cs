@@ -64,6 +64,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
                 (Rule: IsInvalidList(policies), Parameter: "Policies"));
+
+            foreach (Policy policy in policies)
+            {
+                Validate(
+                    (Rule: IsInvalid(policy.PolicyName),
+                    Parameter: $"{nameof(Policy)}.{nameof(Policy.PolicyName)}"),
+
+                    (Rule: IsInvalidList(policy.Permissions),
+                    Parameter: $"{nameof(Policy)}.{nameof(Policy.Permissions)}"));
+            }
         }
 
         private static void ValidateStorageArgumentsOnCreateDirectorySasToken(

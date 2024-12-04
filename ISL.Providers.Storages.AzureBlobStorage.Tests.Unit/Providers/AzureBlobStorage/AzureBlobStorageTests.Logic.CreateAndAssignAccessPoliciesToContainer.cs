@@ -3,7 +3,7 @@
     public partial class AzureBlobStorageTests
     {
         //[Fact]
-        //public async Task ShouldCreateAndAssignAccessPoliciesToContainerAsync()
+        //public async Task ShouldCreateAndAssignAccessPoliciesAsync()
         //{
         //    // given
         //    string randomContainer = GetRandomString();
@@ -18,12 +18,12 @@
         //    };
 
         //    // when
-        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
+        //    await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
         //        inputContainer, inputPolicyNames);
 
         //    // then
         //    this.storageServiceMock.Verify(service =>
-        //        service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+        //        service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicyNames),
         //            Times.Once);
 
         //    this.storageServiceMock.VerifyNoOtherCalls();
