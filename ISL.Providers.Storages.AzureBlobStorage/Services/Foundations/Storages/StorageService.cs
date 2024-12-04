@@ -13,6 +13,7 @@ using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
@@ -129,16 +130,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
-            ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
+            ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
-            string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
             foreach (Policy policy in policies)
             {
-                ValidatePermsissions(policy.Permissions);
-                string permissions = ConvertPolicyNameToPermissions(policy.Permissions);
+                ValidatePermissions(policy.Permissions);
+                string permissions = ConvertToPermissionsString(policy.Permissions);
 
                 var blobSignedIdentifier = new BlobSignedIdentifier
                 {
@@ -172,12 +172,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
             {
-                signedIdentifiers.Add(signedIdentifier.Id);
+                signedIdentifiers.Add(signedIdentifier.AccessPolicy.Permissions);
             }
 
             return signedIdentifiers;
         });
-
 
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
@@ -202,14 +201,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return sasToken;
         });
 
-        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
+        virtual internal string ConvertToPermissionsString(List<string> permissions)
         {
-            "read" => "r",
-            "list" => "l",
-            "write" => "w",
-            "delete" => "d",
-            "fullaccess" => "rlwd",
-            _ => ""
-        };
+            string permissionsString = "";
+
+            if (permissions.Contains("read", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "r";
+            }
+            if (permissions.Contains("add", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "a";
+            }
+            if (permissions.Contains("create", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "c";
+            }
+            if (permissions.Contains("write", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "w";
+            }
+            if (permissions.Contains("delete", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "d";
+            }
+            if (permissions.Contains("list", StringComparer.OrdinalIgnoreCase))
+            {
+                permissionsString = permissionsString + "l";
+            }
+
+            return permissionsString;
+        }
+
     }
 }

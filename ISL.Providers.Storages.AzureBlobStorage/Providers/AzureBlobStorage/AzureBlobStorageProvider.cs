@@ -1,4 +1,5 @@
-﻿using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
@@ -301,7 +302,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         {
             try
             {
-                await this.storageService.DeleteContainerAsync(container); m
+                await this.storageService.DeleteContainerAsync(container);
             }
             catch (StorageValidationException storageValidationException)
             {
@@ -372,7 +373,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
-            string inputContainer, List<string> inputPolicyNames)
+            string inputContainer, List<Policy> inputPolicyNames)
         {
             try
             {

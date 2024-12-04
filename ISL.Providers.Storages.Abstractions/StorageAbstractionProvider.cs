@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -265,10 +266,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
+        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
-            await this.storageProvider.CreateAndAssignAccessPoliciesToContainerAsync(container, policyNames);
+            await this.storageProvider.CreateAndAssignAccessPoliciesToContainerAsync(container, policies);
         });
 
         /// <summary>

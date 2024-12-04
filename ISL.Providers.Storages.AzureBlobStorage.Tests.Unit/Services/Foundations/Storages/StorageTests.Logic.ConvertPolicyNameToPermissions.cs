@@ -1,23 +1,28 @@
 ﻿using FluentAssertions;
+using System.Collections.Generic;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
 {
     public partial class StorageTests
     {
-        [Theory]
-        [InlineData("read", "rl")]
-        [InlineData("write", "w")]
-        [InlineData("delete", "d")]
-        [InlineData("fullaccess", "rlwd")]
-        [InlineData("randomstring", "")]
-        public void ShouldConvertPolicyNameToPermissions(string maybePolicyString, string outputString)
+        [Fact]
+        public void ShouldConvertToPermissionsString()
         {
             // given
-            string inputString = maybePolicyString;
-            string expectedOutput = outputString;
+            List<string> inputPermissionsList = new List<string>
+            {
+                "Add",
+                "list",
+                "DELETE",
+                "reAd",
+                "Create",
+                "write"
+            };
+
+            string expectedOutput = "racwdl";
 
             // when
-            string actualOutput = this.storageService.ConvertPolicyNameToPermissions(inputString);
+            string actualOutput = this.storageService.ConvertToPermissionsString(inputPermissionsList);
 
             // then
             actualOutput.Should().BeEquivalentTo(expectedOutput);
