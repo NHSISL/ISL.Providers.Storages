@@ -24,15 +24,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // given
             string invalidContainer = invalidText;
             string invalidPolicyName = invalidText;
-            //List<Policy> invalidPolicies = new List<Policy>
-            //{
-            //    new Policy
-            //    {
-            //        PolicyName = invalidPolicyName,
-            //        Permissions = new List<string>{ invalidText }
-            //    }
-            //};
-
             List<Policy> inputPolicies = GetPolicies();
 
             var invalidArgumentStorageException =
@@ -42,14 +33,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             invalidArgumentStorageException.AddData(
                 key: "Container",
                 values: "Text is invalid");
-
-            //invalidArgumentStorageException.AddData(
-            //    key: $"{nameof(Policy)}.{nameof(Policy.PolicyName)}",
-            //    values: "Text is invalid");
-
-            //invalidArgumentStorageException.AddData(
-            //    key: $"{nameof(Policy)}.{nameof(Policy.Permissions)}",
-            //    values: "List is invalid");
 
             var expectedStorageValidationException =
                 new StorageValidationException(
