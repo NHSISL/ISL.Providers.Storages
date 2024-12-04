@@ -79,13 +79,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask CreateAndAssignAccessPoliciesAsyncTask =
+            ValueTask createAndAssignAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .CreateAndAssignAccessPoliciesAsync(It.IsAny<string>(), It.IsAny<List<Policy>>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: CreateAndAssignAccessPoliciesAsyncTask.AsTask);
+                    testCode: createAndAssignAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
@@ -120,13 +120,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask CreateAndAssignAccessPoliciesAsyncTask =
+            ValueTask createAndAssignAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .CreateAndAssignAccessPoliciesAsync(It.IsAny<string>(), It.IsAny<List<Policy>>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: CreateAndAssignAccessPoliciesAsyncTask.AsTask);
+                    testCode: createAndAssignAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -163,13 +163,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask CreateAndAssignAccessPoliciesAsyncTask =
+            ValueTask createAndAssignAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .CreateAndAssignAccessPoliciesAsync(It.IsAny<string>(), It.IsAny<List<Policy>>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: CreateAndAssignAccessPoliciesAsyncTask.AsTask);
+                    testCode: createAndAssignAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(

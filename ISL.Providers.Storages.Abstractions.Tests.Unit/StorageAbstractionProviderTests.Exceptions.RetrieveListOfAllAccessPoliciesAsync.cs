@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -37,13 +37,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsyncTask =
+            ValueTask<List<string>> retrieveListOfAllAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .RetrieveListOfAllAccessPoliciesAsync(It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: RetrieveListOfAllAccessPoliciesAsyncTask.AsTask);
+                    testCode: retrieveListOfAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
@@ -78,13 +78,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsyncTask =
+            ValueTask<List<string>> retrieveListOfAllAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .RetrieveListOfAllAccessPoliciesAsync(It.IsAny<string>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: RetrieveListOfAllAccessPoliciesAsyncTask.AsTask);
+                    testCode: retrieveListOfAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
@@ -119,13 +119,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsyncTask =
+            ValueTask<List<string>> retrieveListOfAllAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .RetrieveListOfAllAccessPoliciesAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: RetrieveListOfAllAccessPoliciesAsyncTask.AsTask);
+                    testCode: retrieveListOfAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -162,12 +162,12 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsyncTask =
+            ValueTask<List<string>> retrieveListOfAllAccessPoliciesAsyncTask =
                 this.storageAbstractionProvider
                     .RetrieveListOfAllAccessPoliciesAsync(It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
-                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: RetrieveListOfAllAccessPoliciesAsyncTask.AsTask);
+                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: retrieveListOfAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
