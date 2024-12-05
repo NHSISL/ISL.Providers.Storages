@@ -58,7 +58,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPolicyByNameAndLogItAsync(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveAccessPolicyByNameAndLogItAsync(
             Exception dependencyException)
         {
             // given
@@ -100,7 +100,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRetrieveAllAccessPolicicyByNameAndLogItAsync()
+        public async Task ShouldThrowServiceExceptionOnRetrieveAccessPolicyByNameAndLogItAsync()
         {
             // given
             Exception someException = new Exception();
