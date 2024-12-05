@@ -4,8 +4,8 @@
 
 using Azure;
 using Azure.Identity;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.WindowsAzure.Storage;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         private delegate ValueTask ReturningNothingFunction();
         private delegate ValueTask<List<string>> ReturningListFunction();
         private delegate ValueTask<string> ReturningStringFunction();
+        private delegate ValueTask<Policy> ReturningPolicyFunction();
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -274,6 +275,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                         innerException: exception);
 
                 throw CreateServiceException(failedStorageServiceException);
+            }
+        }
+
+        private async ValueTask<Policy> TryCatch(ReturningPolicyFunction returningPolicyFunction)
+        {
+            try
+            {
+                return await returningPolicyFunction();
+            }
+            catch (InvalidArgumentStorageException invalidArgumentStorageException)
+            {
+                throw CreateValidationException(invalidArgumentStorageException);
             }
         }
 

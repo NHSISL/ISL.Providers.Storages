@@ -177,8 +177,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return signedIdentifiers;
         });
 
-        public async ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName)
+        public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
+        TryCatch(async () =>
         {
+            ValidateStorageArgumentsOnRetrieveAccessPolicyByName(container, policyName);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
 
             BlobContainerAccessPolicy containerAccessPolicy =
@@ -201,7 +203,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             };
 
             return returnedPolicy;
-        }
+        });
 
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
