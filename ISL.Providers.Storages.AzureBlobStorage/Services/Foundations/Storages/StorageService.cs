@@ -232,6 +232,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return permissionsString;
         }
-
     }
 }
