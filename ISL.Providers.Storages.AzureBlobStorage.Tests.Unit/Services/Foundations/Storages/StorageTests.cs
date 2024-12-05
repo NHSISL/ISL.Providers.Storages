@@ -380,8 +380,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { "l", "list" }
             };
 
-            return permissionsString
-                .Split()
+            List<string> lettersList = permissionsString.Select(c => c.ToString()).ToList();
+
+            return lettersList
                 .Where(permissionsMap.ContainsKey)
                 .Select(letter => permissionsMap[letter])
                 .ToList();
