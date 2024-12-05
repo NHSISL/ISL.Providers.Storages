@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure.Storage.Blobs.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -96,6 +97,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
                 (Rule: IsInvalid(policyName), Parameter: "PolicyName"));
+        }
+
+        private static void ValidateAccessPolicyExists(string policyName, List<BlobSignedIdentifier> signedIdentifiers)
+        {
+            if (!(signedIdentifiers.Any(signedIdentifier => signedIdentifier.Id == policyName)))
+            {
+                throw new AccessPolicyNotFoundStorageException(
+                    message: "Access policy with the provided name was not found on this container.");
+            }
         }
 
         private static dynamic IsInvalid(string text) => new

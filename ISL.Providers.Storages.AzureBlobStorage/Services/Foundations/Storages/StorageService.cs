@@ -193,6 +193,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 signedIdentifiers.Add(signedIdentifier);
             }
 
+            ValidateAccessPolicyExists(policyName, signedIdentifiers);
+
             BlobSignedIdentifier matchedSignedIdentifier = signedIdentifiers.FirstOrDefault(
                 signedIdentifier => signedIdentifier.Id == policyName);
 
