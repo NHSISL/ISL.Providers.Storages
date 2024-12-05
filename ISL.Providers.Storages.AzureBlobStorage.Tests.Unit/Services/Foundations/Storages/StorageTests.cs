@@ -185,7 +185,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { "racwdl" , new List<string> { "read", "add", "create", "write", "delete", "list" }},
             };
 
-
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
