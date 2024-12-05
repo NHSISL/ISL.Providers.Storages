@@ -27,7 +27,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             BlobSignedIdentifier matchedSignedIdentifier =
                 outputBlobContainerAccessPolicy.SignedIdentifiers
-                    .FirstOrDefault(signedIdentifier => signedIdentifier.Id == expectedPolicyName);
+                    .First(signedIdentifier => signedIdentifier.Id == expectedPolicyName);
 
             List<string> permissionsList = ConvertToPermissionsList(
                 matchedSignedIdentifier.AccessPolicy.Permissions);
