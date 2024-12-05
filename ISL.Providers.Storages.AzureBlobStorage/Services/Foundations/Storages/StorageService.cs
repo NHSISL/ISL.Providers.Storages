@@ -258,6 +258,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 .Select(letters => permissionsMap[letters])
                 .ToList();
         }
-
     }
 }
