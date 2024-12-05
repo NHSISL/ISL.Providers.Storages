@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveAccessPolicyByNameAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveAccessPolicyByNameAndLogItAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -58,7 +58,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPolicyByNameAsync(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPolicyByNameAndLogItAsync(
             Exception dependencyException)
         {
             // given
@@ -83,13 +83,55 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             ValueTask<Policy> retrieveAccessPolicyTask =
                 this.storageService.RetrieveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
-            StorageDependencyValidationException actualStorageDependencyException =
-                await Assert.ThrowsAsync<StorageDependencyValidationException>(
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(
                     testCode: retrieveAccessPolicyTask.AsTask);
 
             // then
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(someContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveAllAccessPolicicyByNameAndLogItAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(someContainer))
+                    .Throws(someException);
+
+            // when
+            ValueTask<Policy> retrieveAccessPolicyTask =
+                this.storageService.RetrieveAccessPolicyByNameAsync(someContainer, somePolicyName);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(
+                    testCode: retrieveAccessPolicyTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.GetBlobContainerClient(someContainer),
