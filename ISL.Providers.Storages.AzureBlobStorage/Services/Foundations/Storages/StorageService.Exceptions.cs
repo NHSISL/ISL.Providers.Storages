@@ -288,6 +288,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw CreateValidationException(invalidArgumentStorageException);
             }
+            catch (AccessPolicyNotFoundStorageException accessPolicyNotFoundStorageException)
+            {
+                throw CreateValidationException(accessPolicyNotFoundStorageException);
+            }
         }
 
         private static StorageValidationException CreateValidationException(

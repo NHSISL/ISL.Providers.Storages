@@ -6,6 +6,7 @@ using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using Moq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
@@ -80,9 +81,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 broker.GetBlobContainerClient(someContainer))
                     .Returns(blobContainerClientMock.Object);
 
-            //this.blobStorageBrokerMock.Setup(broker =>
-            //    broker.GetAccessPolicyAsync(blobContainerClientMock.Object))
-            //        .ReturnsAsync(outputBlobContainerAccessPolicy);
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object))
+                    .ReturnsAsync(outputBlobContainerAccessPolicy);
 
             // when
             ValueTask<Policy> retrieveAccessPolicyTask =
@@ -95,6 +96,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualStorageValidationException
                 .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(someContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object),
+                    Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
