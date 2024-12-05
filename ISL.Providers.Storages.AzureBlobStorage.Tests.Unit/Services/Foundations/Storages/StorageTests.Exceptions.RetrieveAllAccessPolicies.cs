@@ -57,5 +57,49 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(DependencyExceptions))]
+        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPoliciesAndLogItAsync(
+            Exception dependencyException)
+        {
+            // given
+            string randomString = GetRandomString();
+            string someContainer = randomString;
+            string inputContainer = someContainer;
+
+            var failedStorageDependencyException =
+                new FailedStorageDependencyException(
+                    message: "Failed storage dependency error occurred, please contact support.",
+                    innerException: dependencyException);
+
+            var expectedStorageDependencyException =
+                new StorageDependencyException(
+                    message: "Storage dependency error occurred, please fix errors and try again.",
+                    innerException: failedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesTask =
+                this.storageService.RetrieveAllAccessPoliciesAsync(inputContainer);
+
+            StorageDependencyException actualStorageDependencyException =
+                await Assert.ThrowsAsync<StorageDependencyException>(
+                    testCode: retrieveAllAccessPoliciesTask.AsTask);
+
+            // then
+            actualStorageDependencyException
+                .Should().BeEquivalentTo(expectedStorageDependencyException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
