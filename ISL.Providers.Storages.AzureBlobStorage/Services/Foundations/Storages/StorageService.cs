@@ -7,6 +7,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using System;
@@ -175,6 +176,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return signedIdentifiers;
         });
 
+        public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
+            throw new NotImplementedException();
 
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>

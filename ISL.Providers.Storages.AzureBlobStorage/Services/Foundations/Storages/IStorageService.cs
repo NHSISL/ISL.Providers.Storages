@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.Abstractions.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
 
         ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
+        ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName);
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
     }
 }
