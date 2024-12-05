@@ -251,11 +251,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 { "l", "list" }
             };
 
-            var letters = permissionsString.Select(c => c.ToString()).ToList();
+            List<string> lettersList = permissionsString.Select(c => c.ToString()).ToList();
 
-            return letters
+            return lettersList
                 .Where(permissionsMap.ContainsKey)
-                .Select(letters => permissionsMap[letters])
+                .Select(letter => permissionsMap[letter])
                 .ToList();
         }
     }
