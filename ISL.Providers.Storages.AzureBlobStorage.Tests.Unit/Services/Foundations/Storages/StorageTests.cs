@@ -171,6 +171,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
+        public static TheoryData<string, List<string>> ConvertToPermissionsListInputsAndExpected() =>
+            new TheoryData<string, List<string>>
+            {
+                { "r" , new List<string> { "read" }},
+                { "a" , new List<string> { "add" }},
+                { "c" , new List<string> { "create" }},
+                { "w" , new List<string> { "write" }},
+                { "d" , new List<string> { "delete" }},
+                { "l" , new List<string> { "list" }},
+                { "rcd" , new List<string> { "read", "create", "delete" }},
+                { "ac" , new List<string> {"add", "create" }},
+                { "racwdl" , new List<string> { "read", "add", "create", "write", "delete", "list" }},
+            };
+
+
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
@@ -352,42 +367,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 "delete",
                 "fullaccess"
             };
-
-        //private static List<string> ConvertToPermissionsList(string permissionsString)
-        //{
-        //    List<string> permissionsList = new List<string>();
-        //    string[] splitpermissionsString = permissionsString.Split();
-
-        //    foreach (string letter in splitpermissionsString)
-        //    {
-        //        if (letter == "r")
-        //        {
-        //            permissionsList.Add("read");
-        //        }
-        //        if (letter == "a")
-        //        {
-        //            permissionsList.Add("add");
-        //        }
-        //        if (letter == "c")
-        //        {
-        //            permissionsList.Add("create");
-        //        }
-        //        if (letter == "w")
-        //        {
-        //            permissionsList.Add("write");
-        //        }
-        //        if (letter == "d")
-        //        {
-        //            permissionsList.Add("delete");
-        //        }
-        //        if (letter == "l")
-        //        {
-        //            permissionsList.Add("list");
-        //        }
-        //    }
-
-        //    return permissionsList;
-        //}
 
         private static List<string> ConvertToPermissionsList(string permissionsString)
         {
