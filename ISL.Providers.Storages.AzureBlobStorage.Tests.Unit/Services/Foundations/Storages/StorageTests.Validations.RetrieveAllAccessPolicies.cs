@@ -16,7 +16,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async Task ShouldThrowValidationExceptionOnRetrieveAllAccessPoliciesIfArgumentsInvalidAsync(
+        public async Task ShouldThrowValidationExceptionOnRetrieveAllAccessPoliciesIfArgumentsInvalidAndLogItAsync(
             string invalidText)
         {
             // given
