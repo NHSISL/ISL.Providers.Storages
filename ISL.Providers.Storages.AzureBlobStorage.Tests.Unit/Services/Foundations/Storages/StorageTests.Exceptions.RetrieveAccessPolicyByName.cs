@@ -19,6 +19,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Exception dependencyValidationException)
         {
             // given
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
+
             var failedStorageDependencyValidationException =
                 new FailedStorageDependencyValidationException(
                     message: "Failed storage dependency validation error occurred, please contact support.",
@@ -30,12 +33,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetBlobContainerClient(It.IsAny<string>()))
+                broker.GetBlobContainerClient(someContainer))
                     .Throws(dependencyValidationException);
 
             // when
             ValueTask<Policy> retrieveAccessPolicyTask =
-                this.storageService.RetrieveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
+                this.storageService.RetrieveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
@@ -46,7 +49,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetBlobContainerClient(It.IsAny<string>()),
+                broker.GetBlobContainerClient(someContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
