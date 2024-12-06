@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// </exception>
         /// <exception cref="StorageServiceProviderException">
         /// Thrown when there is a general issue in the storage service layer.
-        ValueTask<Policy> RetrieveAccessPolicyByName(string container, string policyName);
+        ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName);
 
         /// <summary>
         /// Creates the provided stored access policies on the container.

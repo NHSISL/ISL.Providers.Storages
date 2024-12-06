@@ -24,7 +24,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             // when
             Policy actualPolicy = await this.azureBlobStorageProvider
-                .RetrieveAccessPolicyByName(inputContainer, inputPolicyName);
+                .RetrieveAccessPolicyByNameAsync(inputContainer, inputPolicyName);
 
             // then
             actualPolicy.Should().BeEquivalentTo(expectedPolicy);

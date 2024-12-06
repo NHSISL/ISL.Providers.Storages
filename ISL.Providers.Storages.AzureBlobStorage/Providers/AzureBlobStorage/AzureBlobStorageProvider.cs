@@ -483,7 +483,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<Policy> RetrieveAccessPolicyByName(string container, string policyName) =>
+        public async ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
             await this.storageService.RetrieveAccessPolicyByNameAsync(container, policyName);
 
         /// <summary>
