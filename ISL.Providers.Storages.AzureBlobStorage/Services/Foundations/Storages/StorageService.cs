@@ -203,7 +203,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         virtual internal string ConvertToPermissionsString(List<string> permissions)
         {
-            var permissionsMap = new Dictionary<string, char>()
+            var permissionsMap = new Dictionary<string, char>(StringComparer.OrdinalIgnoreCase)
             {
                 { "read", 'r' },
                 { "add", 'a' },
