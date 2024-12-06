@@ -138,5 +138,48 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnRetrieveAccessPolicyByNameAsync()
+        {
+            // given
+            string randomContainer = GetRandomString();
+            string randomPolicyName = GetRandomString();
+            string inputContainer = randomContainer;
+            string inputPolicyName = randomPolicyName;
+
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveAccessPolicyByNameAsync(inputContainer, inputPolicyName))
+                    .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask<Policy> retrievePolicyTask =
+                this.azureBlobStorageProvider.RetrieveAccessPolicyByNameAsync(inputContainer, inputPolicyName);
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: retrievePolicyTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveAccessPolicyByNameAsync(inputContainer, inputPolicyName),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
