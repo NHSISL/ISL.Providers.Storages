@@ -18,7 +18,6 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             Policy outputPolicy = GetPolicy(inputPolicyName);
             Policy expectedPolicy = outputPolicy;
 
-
             this.storageProviderMock.Setup(provider =>
                 provider.RetrieveAccessPolicyByNameAsync(inputContainer, inputPolicyName))
                     .ReturnsAsync(outputPolicy);
