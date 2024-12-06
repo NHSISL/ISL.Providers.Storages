@@ -248,7 +248,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 .Contains(entry.Key, StringComparer.OrdinalIgnoreCase))
                 .Select(entry => entry.Value)
                 .ToArray());
-                }
+        }
 
         virtual internal List<string> ConvertToPermissionsList(string permissionsString)
         {
