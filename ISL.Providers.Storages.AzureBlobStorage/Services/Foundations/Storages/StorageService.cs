@@ -202,6 +202,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return policies;
         });
+        
         public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
         TryCatch(async () =>
         {
