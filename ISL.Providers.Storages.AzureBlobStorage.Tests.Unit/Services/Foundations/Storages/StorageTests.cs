@@ -130,29 +130,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             public override long Length => 0;
         }
 
-        private static string GetRandomPermissionsString()
-        {
-            List<string> permissionsStringList = new List<string>
-            {
-                "r",
-                "a",
-                "c",
-                "w",
-                "d",
-                "l",
-                "rl",
-                "acw",
-                "acd",
-                "wd",
-                "racwdl"
-            };
-
-            var rng = new Random();
-            int index = rng.Next(permissionsStringList.Count);
-
-            return permissionsStringList[index];
-        }
-
         public class HasLengthStream : MemoryStream
         {
             public override long Length => 1;
