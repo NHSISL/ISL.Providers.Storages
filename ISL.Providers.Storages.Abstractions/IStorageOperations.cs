@@ -116,6 +116,22 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);
 
         /// <summary>
+        /// Retrieves the provided stored access policy from the container if it exists.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="policyName">The name of the stored access policy.</param>
+        /// <returns>A <see cref="ValueTask{Policy}"/> containing the access policy.</returns>
+        /// <exception cref="StorageValidationProviderException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageDependencyProviderException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageServiceProviderException">
+        /// Thrown when there is a general issue in the storage service layer.
+        ValueTask<Policy> RetrieveAccessPolicyByName(string container, string policyName);
+
+        /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the storage container where the access policies will be created.</param>

@@ -80,6 +80,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 },
             };
 
+        private static Policy GetPolicy(string policyName) =>
+            new Policy
+            {
+                PolicyName = policyName,
+                Permissions = new List<string>
+                {
+                    "Read",
+                    "list"
+                }
+            };
+
+
         public class HasLengthStream : MemoryStream
         {
             public override long Length => 1;
