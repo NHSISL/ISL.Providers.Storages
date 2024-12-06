@@ -475,6 +475,43 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
+        /// Retrieves the provided stored access policy from the container if it exists.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="policyName">The name of the stored access policy.</param>
+        /// <returns>A <see cref="ValueTask{Policy}"/> containing the access policy.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName)
+        {
+            try
+            {
+                return await this.storageService.RetrieveAccessPolicyByNameAsync(container, policyName);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
+
+        /// <summary>
         /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
         /// the provided access policy.
         /// </summary>

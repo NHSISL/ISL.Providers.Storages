@@ -62,5 +62,16 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     }
                 },
             };
+
+        private static Policy GetPolicy(string policyName) =>
+            new Policy
+            {
+                PolicyName = policyName,
+                Permissions = new List<string>
+                {
+                    "Read",
+                    "list"
+                }
+            };
     }
 }
