@@ -19,6 +19,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Tynamix.ObjectFiller;
@@ -72,6 +73,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         private static int GetRandomNumber() =>
             new IntRange(max: 15, min: 2).GetValue();
 
+        private static int GetRandomNumber(int max, int min) =>
+            new IntRange(max: max, min: min).GetValue();
+
         private static List<string> GetRandomStringList()
         {
             int randomNumber = GetRandomNumber();
@@ -96,6 +100,29 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             DateTime futureEndDate = futureStartDate.AddDays(randomDaysInFuture).Date;
 
             return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
+        }
+
+        private static string GetRandomPermissionsString()
+        {
+            List<string> permissionsStringList = new List<string>
+            {
+                "r",
+                "a",
+                "c",
+                "w",
+                "d",
+                "l",
+                "rl",
+                "acw",
+                "acd",
+                "wd",
+                "racwdl"
+            };
+
+            var rng = new Random();
+            int index = rng.Next(permissionsStringList.Count);
+
+            return permissionsStringList[index];
         }
 
         public class ZeroLengthStream : MemoryStream
@@ -144,6 +171,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { " ", pastDateTimeOffset },
             };
         }
+
+        public static TheoryData<string, List<string>> ConvertToPermissionsListInputsAndExpected() =>
+            new TheoryData<string, List<string>>
+            {
+                { "r" , new List<string> { "read" }},
+                { "a" , new List<string> { "add" }},
+                { "c" , new List<string> { "create" }},
+                { "w" , new List<string> { "write" }},
+                { "d" , new List<string> { "delete" }},
+                { "l" , new List<string> { "list" }},
+                { "rcd" , new List<string> { "read", "create", "delete" }},
+                { "ac" , new List<string> {"add", "create" }},
+                { "racwdl" , new List<string> { "read", "add", "create", "write", "delete", "list" }},
+            };
 
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
@@ -246,25 +287,108 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return signedIdentifiers;
         }
 
-        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy() =>
-            CreateBlobContainerAccessPolicyFiller().Create();
+        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy()
+        {
+            string randomPolicyName = GetRandomString();
 
-        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller()
+            return CreateBlobContainerAccessPolicyFiller(randomPolicyName).Create();
+        }
+
+        private static BlobContainerAccessPolicy CreateRandomBlobContainerAccessPolicy(string inputPolicyName) =>
+            CreateBlobContainerAccessPolicyFiller(inputPolicyName).Create();
+
+        private static Filler<BlobContainerAccessPolicy> CreateBlobContainerAccessPolicyFiller(string inputPolicyName)
         {
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
             var filler = new Filler<BlobContainerAccessPolicy>();
+
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
                 .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
-                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()));
+                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()))
+                .OnProperty(policy => policy.SignedIdentifiers).Use(CreateRandomBlobSignedIdentifierEnumerable(inputPolicyName));
+
             return filler;
         }
-        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller(string signedIdentifierId)
+
+        private static IEnumerable<BlobSignedIdentifier> CreateRandomBlobSignedIdentifierEnumerable(string inputPolicyName)
+        {
+            int randomSignedIdentifierNumber = GetRandomNumber(5, 1);
+            int updatedSignedIdentifierIndex = GetRandomNumber(randomSignedIdentifierNumber, 1) - 1;
+            List<BlobSignedIdentifier> blobSignedIdentifierList = new List<BlobSignedIdentifier>();
+
+            for (int index = 0; index < randomSignedIdentifierNumber; index++)
+            {
+                BlobSignedIdentifier randomBlobSignedIdentifier = CreateRandomBlobSignedIdentifier();
+
+                if (index == updatedSignedIdentifierIndex)
+                {
+                    randomBlobSignedIdentifier.Id = inputPolicyName;
+                }
+
+                blobSignedIdentifierList.Add(randomBlobSignedIdentifier);
+            }
+
+            return blobSignedIdentifierList;
+        }
+
+        private static BlobSignedIdentifier CreateRandomBlobSignedIdentifier() =>
+            CreateBlobSignedIdentifierFiller().Create();
+
+        private static Filler<BlobSignedIdentifier> CreateBlobSignedIdentifierFiller()
         {
             var filler = new Filler<BlobSignedIdentifier>();
+
             filler.Setup()
-                .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
+                .OnProperty(signedIdentifier => signedIdentifier.AccessPolicy).Use(CreateRandomBlobAccessPolicy());
+
             return filler;
+        }
+
+        private static BlobAccessPolicy CreateRandomBlobAccessPolicy() =>
+            CreateBlobAccessPolicyFiller().Create();
+
+        private static Filler<BlobAccessPolicy> CreateBlobAccessPolicyFiller()
+        {
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            var filler = new Filler<BlobAccessPolicy>();
+
+            filler.Setup()
+                .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
+                .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
+                .OnProperty(accessPolicy => accessPolicy.Permissions).Use(GetRandomPermissionsString());
+
+            return filler;
+        }
+
+
+        private static List<string> GetPolicyNames() =>
+            new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "fullaccess"
+            };
+
+        private static List<string> ConvertToPermissionsList(string permissionsString)
+        {
+            var permissionsMap = new Dictionary<string, string>
+            {
+                { "r", "read" },
+                { "a", "add" },
+                { "c", "create" },
+                { "w", "write" },
+                { "d", "delete" },
+                { "l", "list" }
+            };
+
+            List<string> lettersList = permissionsString.Select(c => c.ToString()).ToList();
+
+            return lettersList
+                .Where(permissionsMap.ContainsKey)
+                .Select(letter => permissionsMap[letter])
+                .ToList();
         }
 
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(

@@ -178,6 +178,36 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return signedIdentifiers;
         });
 
+        public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRetrieveAccessPolicyByName(container, policyName);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier);
+            }
+
+            ValidateAccessPolicyExists(policyName, signedIdentifiers);
+
+            BlobSignedIdentifier matchedSignedIdentifier = signedIdentifiers.First(
+                signedIdentifier => signedIdentifier.Id == policyName);
+
+            Policy returnedPolicy = new Policy
+            {
+                PolicyName = matchedSignedIdentifier.Id,
+                Permissions = ConvertToPermissionsList(matchedSignedIdentifier.AccessPolicy.Permissions)
+            };
+
+            return returnedPolicy;
+        });
+
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
         {
@@ -218,6 +248,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 .Contains(entry.Key, StringComparer.OrdinalIgnoreCase))
                 .Select(entry => entry.Value)
                 .ToArray());
+        }
+
+        virtual internal List<string> ConvertToPermissionsList(string permissionsString)
+        {
+            var permissionsMap = new Dictionary<string, string>
+            {
+                { "r", "read" },
+                { "a", "add" },
+                { "c", "create" },
+                { "w", "write" },
+                { "d", "delete" },
+                { "l", "list" }
+            };
+
+            List<string> lettersList = permissionsString.Select(c => c.ToString()).ToList();
+
+            return lettersList
+                .Where(permissionsMap.ContainsKey)
+                .Select(letter => permissionsMap[letter])
+                .ToList();
         }
     }
 }
