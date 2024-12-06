@@ -483,8 +483,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
-            await this.storageService.RetrieveAccessPolicyByNameAsync(container, policyName);
+        public async ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName)
+        {
+            try
+            {
+                return await this.storageService.RetrieveAccessPolicyByNameAsync(container, policyName);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+        }
 
         /// <summary>
         /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
