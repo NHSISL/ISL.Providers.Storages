@@ -9,7 +9,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     public partial class StorageTests
     {
         [Fact]
-        public async Task ShouldRetrieveAllAccessPoliciesFromContainerAsync()
+        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
         {
             // given
             string randomString = GetRandomString();
@@ -34,7 +34,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             List<string> actualAccessPolicies = await this.storageService
-                .RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             // then
             actualAccessPolicies.Should().BeEquivalentTo(expectedAccessPolicies);

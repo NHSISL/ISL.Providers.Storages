@@ -36,7 +36,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<List<string>> retrieveAllAccessPoliciesTask =
-                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(invalidContainer);
+                this.storageService.RetrieveListOfAllAccessPoliciesAsync(invalidContainer);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(

@@ -127,22 +127,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.CreateDirectoryAsync(dataLakeFileSystemClient, directory);
         });
 
-        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
+        public ValueTask CreateAndAssignAccessPoliciesAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
-            ValidateStorageArgumentsOnCreateAccessPolicy(container, policyNames);
+            ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
-            string timestamp = currentDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
-            foreach (string policyName in policyNames)
+            foreach (Policy policy in policies)
             {
-                string permissions = ConvertPolicyNameToPermissions(policyName.ToLower());
+                ValidatePermissions(policy.Permissions);
+                string permissions = ConvertToPermissionsString(policy.Permissions);
 
                 var blobSignedIdentifier = new BlobSignedIdentifier
                 {
-                    Id = $"{policyName}_{timestamp}",
+                    Id = policy.PolicyName,
+
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = currentDateTimeOffset,
@@ -158,7 +159,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 blobContainerClient, signedIdentifiers);
         });
 
-        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+        public ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
@@ -201,6 +202,35 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             return policies;
         });
+        public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRetrieveAccessPolicyByName(container, policyName);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                signedIdentifiers.Add(signedIdentifier);
+            }
+
+            ValidateAccessPolicyExists(policyName, signedIdentifiers);
+
+            BlobSignedIdentifier matchedSignedIdentifier = signedIdentifiers.First(
+                signedIdentifier => signedIdentifier.Id == policyName);
+
+            Policy returnedPolicy = new Policy
+            {
+                PolicyName = matchedSignedIdentifier.Id,
+                Permissions = ConvertToPermissionsList(matchedSignedIdentifier.AccessPolicy.Permissions)
+            };
+
+            return returnedPolicy;
+        });
 
         public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
         TryCatch(async () =>
@@ -225,14 +255,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return sasToken;
         });
 
-        virtual internal string ConvertPolicyNameToPermissions(string policyName) => policyName switch
+        virtual internal string ConvertToPermissionsString(List<string> permissions)
         {
-            "read" => "rl",
-            "write" => "w",
-            "delete" => "d",
-            "fullaccess" => "rlwd",
-            _ => ""
-        };
+            var permissionsMap = new Dictionary<string, char>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "read", 'r' },
+                { "add", 'a' },
+                { "create", 'c' },
+                { "write", 'w' },
+                { "delete", 'd' },
+                { "list", 'l' }
+            };
+
+            return new string(permissionsMap
+                .Where(entry => permissions
+                .Contains(entry.Key, StringComparer.OrdinalIgnoreCase))
+                .Select(entry => entry.Value)
+                .ToArray());
+        }
 
         virtual internal List<string> ConvertToPermissionsList(string permissionsString)
         {

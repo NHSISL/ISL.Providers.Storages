@@ -14,7 +14,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     public partial class StorageAbstractionProviderTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnDeleteFileWhenTypeIStorageValidationException()
+        public async Task ShouldThrowValidationExceptionOnDeleteFileWhenTypeIsStorageValidationException()
         {
             // given
             var someException = new Xeption();
@@ -54,7 +54,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyExceptionOnDeleteFileWhenTypeIStorageDependencyException()
+        public async Task ShouldThrowDependencyExceptionOnDeleteFileWhenTypeIsStorageDependencyException()
         {
             // given
             var someException = new Xeption();
@@ -93,7 +93,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnDeleteFileWhenTypeIStorageServiceException()
+        public async Task ShouldThrowServiceExceptionOnDeleteFileWhenTypeIsStorageServiceException()
         {
             // given
             var someException = new Xeption();

@@ -9,6 +9,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
@@ -101,6 +102,29 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
         }
 
+        private static string GetRandomPermissionsString()
+        {
+            List<string> permissionsStringList = new List<string>
+            {
+                "r",
+                "a",
+                "c",
+                "w",
+                "d",
+                "l",
+                "rl",
+                "acw",
+                "acd",
+                "wd",
+                "racwdl"
+            };
+
+            var rng = new Random();
+            int index = rng.Next(permissionsStringList.Count);
+
+            return permissionsStringList[index];
+        }
+
         public class ZeroLengthStream : MemoryStream
         {
             public override long Length => 0;
@@ -171,6 +195,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
+        public static TheoryData<string, List<string>> ConvertToPermissionsListInputsAndExpected() =>
+            new TheoryData<string, List<string>>
+            {
+                { "r" , new List<string> { "read" }},
+                { "a" , new List<string> { "add" }},
+                { "c" , new List<string> { "create" }},
+                { "w" , new List<string> { "write" }},
+                { "d" , new List<string> { "delete" }},
+                { "l" , new List<string> { "list" }},
+                { "rcd" , new List<string> { "read", "create", "delete" }},
+                { "ac" , new List<string> {"add", "create" }},
+                { "racwdl" , new List<string> { "read", "add", "create", "write", "delete", "list" }},
+            };
+
         private static AsyncPageable<BlobItem> CreateAsyncPageableBlobItem()
         {
             List<BlobItem> blobItems = CreateBlobItems();
@@ -220,14 +258,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobContainerItems;
         }
 
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "Read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "Create"
+                    }
+                },
+            };
+
         private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
                 new BlobSignedIdentifier
                 {
-                    Id = $"read_{timestamp}",
+                    Id = $"read",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
@@ -237,34 +298,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 },
                 new BlobSignedIdentifier
                 {
-                    Id = $"write_{timestamp}",
+                    Id = $"write",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
                         PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "w"
+                        Permissions = "acw"
                     }
                 },
-                new BlobSignedIdentifier
-                {
-                    Id = $"delete_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "d"
-                    }
-                },
-                new BlobSignedIdentifier
-                {
-                    Id = $"fullaccess_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "rlwd"
-                    }
-                }
             };
             return signedIdentifiers;
         }
@@ -287,7 +328,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(randomDateTimeOffset)
                 .OnType<DateTimeOffset?>().Use(randomDateTimeOffset)
-                .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()))
                 .OnProperty(policy => policy.ETag).Use(new ETag(GetRandomString()))
                 .OnProperty(policy => policy.SignedIdentifiers).Use(CreateRandomBlobSignedIdentifierEnumerable(inputPolicyName));
 
@@ -343,6 +383,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return filler;
         }
+
 
         private static List<string> GetPolicyNames() =>
             new List<string>
@@ -441,11 +482,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<List<string>> NullAndEmptyList() =>
-            new TheoryData<List<string>>
+        public static TheoryData<List<Policy>> NullAndEmptyList() =>
+            new TheoryData<List<Policy>>
             {
                 { null },
-                { new List<string>() }
+                { new List<Policy>() }
             };
     }
 }

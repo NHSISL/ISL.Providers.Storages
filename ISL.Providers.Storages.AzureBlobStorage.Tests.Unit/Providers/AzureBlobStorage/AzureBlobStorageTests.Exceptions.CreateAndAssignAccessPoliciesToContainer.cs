@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
 using Moq;
@@ -15,9 +16,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            List<string> randomPolicyNames = GetRandomStringList();
             string inputContainer = randomContainer;
-            List<string> inputPolicyNames = randomPolicyNames;
+            List<Policy> inputPolicies = GetPolicies();
 
             var storageValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",
@@ -30,13 +30,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies))
                     .ThrowsAsync(storageValidationException);
 
             // when
             ValueTask createAndAssignAccessPoliciesTask =
-                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
@@ -47,7 +47,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -59,9 +59,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            List<string> randomPolicyNames = GetRandomStringList();
             string inputContainer = randomContainer;
-            List<string> inputPolicyNames = randomPolicyNames;
+            List<Policy> inputPolicies = GetPolicies();
 
             var storageDependencyValidationException = new StorageDependencyValidationException(
                 message: "Storage dependency validation error occurred, please fix errors and try again.",
@@ -74,13 +73,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies))
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
             ValueTask createAndAssignAccessPoliciesTask =
-                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
 
             AzureBlobStorageProviderValidationException
                 actualAzureBlobStorageProviderValidationException =
@@ -92,7 +91,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -103,9 +102,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            List<string> randomPolicyNames = GetRandomStringList();
             string inputContainer = randomContainer;
-            List<string> inputPolicyNames = randomPolicyNames;
+            List<Policy> inputPolicies = GetPolicies();
 
             var storageDependencyException = new StorageDependencyException(
                 message: "Storage dependency error occurred, please fix errors and try again.",
@@ -118,13 +116,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies))
                     .ThrowsAsync(storageDependencyException);
 
             // when
             ValueTask createAndAssignAccessPoliciesTask =
-                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
 
             AzureBlobStorageProviderDependencyException
                 actualAzureBlobStorageProviderDependencyException =
@@ -136,7 +134,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -147,9 +145,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            List<string> randomPolicyNames = GetRandomStringList();
             string inputContainer = randomContainer;
-            List<string> inputPolicyNames = randomPolicyNames;
+            List<Policy> inputPolicies = GetPolicies();
 
             var storageServiceException = new StorageServiceException(
                 message: "Storage service error occurred, please fix errors and try again.",
@@ -162,13 +159,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames))
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies))
                     .ThrowsAsync(storageServiceException);
 
             // when
             ValueTask createAndAssignAccessPoliciesTask =
-                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
 
             AzureBlobStorageProviderServiceException
                 actualAzureBlobStorageProviderServiceException =
@@ -180,10 +177,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
     }
 }
+
