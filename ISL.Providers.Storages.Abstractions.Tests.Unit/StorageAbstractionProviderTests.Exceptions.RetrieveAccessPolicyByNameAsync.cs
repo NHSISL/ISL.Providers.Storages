@@ -167,7 +167,8 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .RetrieveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
-                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: retrieveAccessPolicyByNameTask.AsTask);
+                await Assert.ThrowsAsync<StorageProviderServiceException>(
+                    testCode: retrieveAccessPolicyByNameTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
