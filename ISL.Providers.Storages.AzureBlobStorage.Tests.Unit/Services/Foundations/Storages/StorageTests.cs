@@ -9,6 +9,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
@@ -193,14 +194,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return blobContainerItems;
         }
 
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "Read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "Create"
+                    }
+                },
+            };
+
         private static List<BlobSignedIdentifier> SetupSignedIdentifiers(DateTimeOffset createdDateTimeOffset)
         {
-            string timestamp = createdDateTimeOffset.ToString("yyyyMMddHHmmss");
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>
             {
                 new BlobSignedIdentifier
                 {
-                    Id = $"read_{timestamp}",
+                    Id = $"read",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
@@ -210,34 +234,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 },
                 new BlobSignedIdentifier
                 {
-                    Id = $"write_{timestamp}",
+                    Id = $"write",
                     AccessPolicy = new BlobAccessPolicy
                     {
                         PolicyStartsOn = createdDateTimeOffset,
                         PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "w"
+                        Permissions = "acw"
                     }
                 },
-                new BlobSignedIdentifier
-                {
-                    Id = $"delete_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "d"
-                    }
-                },
-                new BlobSignedIdentifier
-                {
-                    Id = $"fullaccess_{timestamp}",
-                    AccessPolicy = new BlobAccessPolicy
-                    {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
-                        Permissions = "rlwd"
-                    }
-                }
             };
             return signedIdentifiers;
         }
@@ -262,15 +266,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .OnProperty(signedIdentifier => signedIdentifier.Id).Use(signedIdentifierId);
             return filler;
         }
-
-        private static List<string> GetPolicyNames() =>
-            new List<string>
-            {
-                "read",
-                "write",
-                "delete",
-                "fullaccess"
-            };
 
         private Expression<Func<List<BlobSignedIdentifier>, bool>> SameBlobSignedIdentifierListAs(
             List<BlobSignedIdentifier> expectedList) =>
@@ -340,11 +335,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<List<string>> NullAndEmptyList() =>
-            new TheoryData<List<string>>
+        public static TheoryData<List<Policy>> NullAndEmptyList() =>
+            new TheoryData<List<Policy>>
             {
                 { null },
-                { new List<string>() }
+                { new List<Policy>() }
             };
     }
 }

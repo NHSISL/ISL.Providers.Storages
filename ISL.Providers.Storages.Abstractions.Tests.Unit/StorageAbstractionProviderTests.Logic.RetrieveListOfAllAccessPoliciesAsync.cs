@@ -8,7 +8,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     public partial class StorageAbstractionProviderTests
     {
         [Fact]
-        public async Task ShouldRetrieveAllAccessPoliciesFromContainerAsync()
+        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
         {
             // given
             string randomString = GetRandomString();
@@ -25,18 +25,18 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             List<string> expectedAccessPolicies = outputPolicyNames;
 
             this.storageProviderMock.Setup(provider =>
-                provider.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer))
+                provider.RetrieveListOfAllAccessPoliciesAsync(inputContainer))
                     .ReturnsAsync(outputPolicyNames);
 
             // when
             List<string> actualAccessPolicies = await this.storageAbstractionProvider
-                .RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             // then
             actualAccessPolicies.Should().BeEquivalentTo(expectedAccessPolicies);
 
             this.storageProviderMock.Verify(provider =>
-                provider.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer),
+                provider.RetrieveListOfAllAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();

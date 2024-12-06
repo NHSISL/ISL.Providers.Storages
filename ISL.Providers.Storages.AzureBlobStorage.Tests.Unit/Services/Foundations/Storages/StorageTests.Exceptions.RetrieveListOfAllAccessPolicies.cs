@@ -15,7 +15,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveAllAccessPoliciesFromContainerAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnRetrieveListOfAllAccessPoliciesAsync(
             Exception dependencyValidationException)
         {
             // given
@@ -39,7 +39,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<List<string>> retrieveAllAccessPoliciesTask =
-                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                this.storageService.RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
@@ -59,7 +59,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRetrieveAllAccessPoliciesFromContainerAsync(
+        public async Task ShouldThrowDependencyExceptionOnRetrieveListOfAllAccessPoliciesAsync(
             Exception dependencyException)
         {
             // given
@@ -83,7 +83,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<List<string>> retrieveAllAccessPoliciesTask =
-                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                this.storageService.RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
@@ -102,7 +102,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRetrieveAllAccessPoliciesFromContainerAsync()
+        public async Task ShouldThrowServiceExceptionOnRetrieveListOfAllAccessPoliciesAsync()
         {
             // given
             Exception someException = new Exception();
@@ -126,7 +126,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<List<string>> retrieveAllAccessPoliciesTask =
-                this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                this.storageService.RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(

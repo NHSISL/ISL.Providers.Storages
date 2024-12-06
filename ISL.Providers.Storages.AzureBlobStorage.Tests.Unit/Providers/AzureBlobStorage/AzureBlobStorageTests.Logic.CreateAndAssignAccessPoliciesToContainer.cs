@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,27 +8,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldCreateAndAssignAccessPoliciesToContainerAsync()
+        public async Task ShouldCreateAndAssignAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
             string inputContainer = randomContainer;
-
-            List<string> inputPolicyNames = new List<string>
-            {
-                "read",
-                "write",
-                "delete",
-                "fullaccess"
-            };
+            List<Policy> inputPolicies = GetPolicies();
 
             // when
-            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesToContainerAsync(
-                inputContainer, inputPolicyNames);
+            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
+                inputContainer, inputPolicies);
 
             // then
             this.storageServiceMock.Verify(service =>
-                service.CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames),
+                service.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

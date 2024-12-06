@@ -5,7 +5,6 @@
 using Azure;
 using Azure.Identity;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
-using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Microsoft.WindowsAzure.Storage;
 using System;
 using System.Collections.Generic;
@@ -31,9 +30,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw CreateValidationException(invalidArgumentStorageException);
             }
-            catch (InvalidPolicyNameStorageException invalidPolicyNameStorageException)
+            catch (InvalidPolicyPermissionStorageException invalidPolicyPermissionStorageException)
             {
-                throw CreateValidationException(invalidPolicyNameStorageException);
+                throw CreateValidationException(invalidPolicyPermissionStorageException);
             }
             catch (ArgumentException argumentException)
             {
