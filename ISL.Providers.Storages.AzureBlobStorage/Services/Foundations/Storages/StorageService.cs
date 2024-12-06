@@ -178,6 +178,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return signedIdentifiers;
         });
 
+        public ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnRetrieveAllAccessPolicies(container);
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<Policy> policies = new List<Policy>();
+
+            foreach (var signedIdentifier in containerAccessPolicy.SignedIdentifiers)
+            {
+                Policy policy = new Policy
+                {
+                    PolicyName = signedIdentifier.Id,
+                    Permissions = ConvertToPermissionsList(signedIdentifier.AccessPolicy.Permissions)
+                };
+
+                policies.Add(policy);
+            }
+
+            return policies;
+        });
+        
         public ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName) =>
         TryCatch(async () =>
         {
