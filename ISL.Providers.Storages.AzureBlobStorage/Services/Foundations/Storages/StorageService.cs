@@ -203,34 +203,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         virtual internal string ConvertToPermissionsString(List<string> permissions)
         {
-            string permissionsString = "";
+            var permissionsMap = new Dictionary<string, char>()
+            {
+                { "read", 'r' },
+                { "add", 'a' },
+                { "create", 'c' },
+                { "write", 'w' },
+                { "delete", 'd' },
+                { "list", 'l' }
+            };
 
-            if (permissions.Contains("read", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "r";
-            }
-            if (permissions.Contains("add", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "a";
-            }
-            if (permissions.Contains("create", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "c";
-            }
-            if (permissions.Contains("write", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "w";
-            }
-            if (permissions.Contains("delete", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "d";
-            }
-            if (permissions.Contains("list", StringComparer.OrdinalIgnoreCase))
-            {
-                permissionsString = permissionsString + "l";
-            }
-
-            return permissionsString;
+            return new string(permissionsMap
+                .Where(entry => permissions
+                .Contains(entry.Key, StringComparer.OrdinalIgnoreCase))
+                .Select(entry => entry.Value)
+                .ToArray());
         }
     }
 }

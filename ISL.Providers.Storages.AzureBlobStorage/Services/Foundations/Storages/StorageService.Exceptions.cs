@@ -30,9 +30,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw CreateValidationException(invalidArgumentStorageException);
             }
-            catch (InvalidPolicyPermissionStorageException InvalidPolicyPermissionStorageException)
+            catch (InvalidPolicyPermissionStorageException invalidPolicyPermissionStorageException)
             {
-                throw CreateValidationException(InvalidPolicyPermissionStorageException);
+                throw CreateValidationException(invalidPolicyPermissionStorageException);
             }
             catch (ArgumentException argumentException)
             {
