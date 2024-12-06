@@ -15,7 +15,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     public partial class StorageAbstractionProviderTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnCreateFileWhenTypeIStorageValidationException()
+        public async Task ShouldThrowValidationExceptionOnCreateFileWhenTypeIsStorageValidationException()
         {
             // given
             var someException = new Xeption();
@@ -55,7 +55,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
         }
 
         [Fact]
-        public async Task ShouldThrowDependencyExceptionOnCreateFileWhenTypeIStorageDependencyException()
+        public async Task ShouldThrowDependencyExceptionOnCreateFileWhenTypeIsStorageDependencyException()
         {
             // given
             var someException = new Xeption();
@@ -94,7 +94,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateFileWhenTypeIStorageServiceException()
+        public async Task ShouldThrowServiceExceptionOnCreateFileWhenTypeIsStorageServiceException()
         {
             // given
             var someException = new Xeption();

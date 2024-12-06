@@ -15,7 +15,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     public partial class StorageAbstractionProviderTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnCreateDirectorySasTokenAsyncWhenTypeIStorageValidationException()
+        public async Task ShouldThrowValidationExceptionOnCreateDirectorySasTokenAsyncWhenTypeIsStorageValidationException()
         {
             // given
             var someException = new Xeption();
@@ -59,7 +59,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowDependencyExceptionOnCreateDirectorySasTokenAsyncWhenTypeIStorageDependencyException()
+            ShouldThrowDependencyExceptionOnCreateDirectorySasTokenAsyncWhenTypeIsStorageDependencyException()
         {
             // given
             var someException = new Xeption();
@@ -102,7 +102,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
         [Fact]
         public async Task
-            ShouldThrowServiceExceptionOnCreateDirectorySasTokenAsyncWhenTypeIStorageServiceException()
+            ShouldThrowServiceExceptionOnCreateDirectorySasTokenAsyncWhenTypeIsStorageServiceException()
         {
             // given
             var someException = new Xeption();

@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs.Models;
+using ISL.Providers.Storages.Abstractions.Models;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomString;
             DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
             DateTimeOffset inputDateTimeOffset = randomDateTimeOffset;
-            List<string> inputPolicyNames = GetPolicyNames();
+            List<Policy> inputPolicies = GetPolicies();
             List<BlobSignedIdentifier> inputSignedIdentifiers = SetupSignedIdentifiers(inputDateTimeOffset);
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -33,7 +34,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             await this.storageService
-                .CreateAndAssignAccessPoliciesToContainerAsync(inputContainer, inputPolicyNames);
+                .CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies);
 
             // then
             this.dateTimeBrokerMock.Verify(broker =>
@@ -46,7 +47,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.TokenLifetimeDays,
-                    Times.Exactly(inputPolicyNames.Count));
+                    Times.Exactly(inputPolicies.Count));
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.AssignAccessPoliciesToContainerAsync(

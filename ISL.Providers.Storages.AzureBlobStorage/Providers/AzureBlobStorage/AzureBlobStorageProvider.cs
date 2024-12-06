@@ -1,4 +1,5 @@
-﻿using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
@@ -16,7 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
     public class AzureBlobStorageProvider : IAzureBlobStorageProvider
     {
         private IStorageService storageService;
-        
+
         public AzureBlobStorageProvider(AzureBlobStoreConfigurations configurations)
         {
             IServiceProvider serviceProvider = RegisterServices(configurations);
@@ -371,13 +372,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask CreateAndAssignAccessPoliciesToContainerAsync(
-            string inputContainer, List<string> inputPolicyNames)
+        public async ValueTask CreateAndAssignAccessPoliciesAsync(
+            string inputContainer, List<Policy> inputPolicies)
         {
             try
             {
-                await this.storageService.CreateAndAssignAccessPoliciesToContainerAsync(
-                    inputContainer, inputPolicyNames);
+                await this.storageService.CreateAndAssignAccessPoliciesAsync(
+                    inputContainer, inputPolicies);
             }
             catch (StorageValidationException storageValidationException)
             {
@@ -445,11 +446,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container)
+        public async ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container)
         {
             try
             {
-                return await this.storageService.RetrieveAllAccessPoliciesFromContainerAsync(container);
+                return await this.storageService.RetrieveListOfAllAccessPoliciesAsync(container);
             }
             catch (StorageValidationException storageValidationException)
             {

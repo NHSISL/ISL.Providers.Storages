@@ -2,6 +2,7 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -243,18 +244,17 @@ namespace ISL.Providers.Storages.Abstractions
         /// </exception>
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
-        public ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container) =>
+        public ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container) =>
         TryCatch(async () =>
         {
-            return await storageProvider.RetrieveAllAccessPoliciesFromContainerAsync(container);
+            return await storageProvider.RetrieveListOfAllAccessPoliciesAsync(container);
         });
 
         /// <summary>
         /// Creates the provided stored access policies on the container.
         /// </summary>
         /// <param name="container">The name of the storage container where the access policies will be created.</param>
-        /// <param name="policyNames"><see cref="List<string>"/>
-        /// The names of the policies you want to create. Options are read, write, delete and fullaccess.</param>
+        /// <param name="policies"><see cref="List{Policy}"/>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
         /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
@@ -265,10 +265,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames) =>
+        public ValueTask CreateAndAssignAccessPoliciesAsync(string container, List<Policy> policies) =>
         TryCatch(async () =>
         {
-            await this.storageProvider.CreateAndAssignAccessPoliciesToContainerAsync(container, policyNames);
+            await this.storageProvider.CreateAndAssignAccessPoliciesAsync(container, policies);
         });
 
         /// <summary>

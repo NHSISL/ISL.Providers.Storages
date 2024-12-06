@@ -21,12 +21,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         ValueTask CreateContainerAsync(string container);
         ValueTask<List<string>> RetrieveAllContainersAsync();
         ValueTask DeleteContainerAsync(string container);
-        ValueTask CreateAndAssignAccessPoliciesToContainerAsync(string container, List<string> policyNames);
+        ValueTask CreateAndAssignAccessPoliciesAsync(string container, List<Policy> policies);
 
         ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
 
-        ValueTask<List<string>> RetrieveAllAccessPoliciesFromContainerAsync(string container);
+        ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);  
         ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName);
         ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
     }

@@ -3,6 +3,7 @@
 // ---------------------------------------------------------
 
 using Azure.Storage.Blobs.Models;
+using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -59,13 +60,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         }
 
         private static void ValidateStorageArgumentsOnCreateAccessPolicy(
-            string container, List<string> policyNames)
+            string container, List<Policy> policies)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
-                (Rule: IsInvalidList(policyNames), Parameter: "PolicyNames"));
+                (Rule: IsInvalidList(policies), Parameter: "Policies"));
 
-            ValidatePolicyNames(policyNames);
+            foreach (Policy policy in policies)
+            {
+                Validate(
+                    (Rule: IsInvalid(policy.PolicyName),
+                    Parameter: $"{nameof(Policy)}.{nameof(Policy.PolicyName)}"),
+
+                    (Rule: IsInvalidList(policy.Permissions),
+                    Parameter: $"{nameof(Policy)}.{nameof(Policy.Permissions)}"));
+            }
         }
 
         private static void ValidateStorageArgumentsOnCreateDirectorySasToken(
@@ -120,6 +129,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Message = "List is invalid"
         };
 
+        private static dynamic IsInvalidList(List<Policy> policyList) => new
+        {
+            Condition = policyList is null || policyList.Count == 0,
+            Message = "List is invalid"
+        };
+
         private static dynamic IsInvalid(DateTimeOffset dateTimeOffset) => new
         {
             Condition = dateTimeOffset == default || dateTimeOffset <= DateTimeOffset.UtcNow,
@@ -138,18 +153,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Message = "Stream is invalid"
         };
 
-        private static void ValidatePolicyNames(List<string> policyNames)
+        private static void ValidatePermissions(List<string> permissions)
         {
-            foreach (var policyName in policyNames)
+            foreach (var permission in permissions)
             {
-                if (policyName.ToLower() != "read" &&
-                    policyName.ToLower() != "write" &&
-                    policyName.ToLower() != "delete" &&
-                    policyName.ToLower() != "fullaccess")
+                if (permission.ToLower() != "read" &&
+                    permission.ToLower() != "write" &&
+                    permission.ToLower() != "delete" &&
+                    permission.ToLower() != "create" &&
+                    permission.ToLower() != "add" &&
+                    permission.ToLower() != "list")
                 {
-                    throw new InvalidPolicyNameStorageException(
-                        message: "Invalid policy name, only read, write, delete and fullaccess privileges " +
-                        "are supported at this time.");
+                    throw new InvalidPolicyPermissionStorageException(
+                        message: "Invalid permission. Read, write, delete, create, add and list" +
+                        "permissions are supported at this time.");
                 }
             }
         }

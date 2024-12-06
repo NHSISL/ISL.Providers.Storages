@@ -1,4 +1,5 @@
-﻿using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
 using ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages;
 using Moq;
 using System;
@@ -54,6 +55,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             return randomStringList;
         }
+
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "Read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "Create"
+                    }
+                },
+            };
 
         public class HasLengthStream : MemoryStream
         {

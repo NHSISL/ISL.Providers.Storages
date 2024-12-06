@@ -8,7 +8,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldRetrieveAllAccessPoliciesFromContainerAsync()
+        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
@@ -18,18 +18,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             List<string> expectedAccessPolicies = outputAccessPolicies;
 
             this.storageServiceMock.Setup(service =>
-                service.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer))
+                service.RetrieveListOfAllAccessPoliciesAsync(inputContainer))
                     .ReturnsAsync(outputAccessPolicies);
 
             // when
             List<string> actualAccessPolicies = await this.azureBlobStorageProvider
-                .RetrieveAllAccessPoliciesFromContainerAsync(inputContainer);
+                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             // then
             actualAccessPolicies.Should().BeEquivalentTo(expectedAccessPolicies);
 
             this.storageServiceMock.Verify(service =>
-                service.RetrieveAllAccessPoliciesFromContainerAsync(inputContainer),
+                service.RetrieveListOfAllAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

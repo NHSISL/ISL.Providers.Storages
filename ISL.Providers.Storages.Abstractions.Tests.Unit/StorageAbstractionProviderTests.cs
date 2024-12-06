@@ -3,8 +3,10 @@
 // ---------------------------------------------------------
 
 using ISL.Providers.Storages.Abstractions;
+using ISL.Providers.Storages.Abstractions.Models;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -36,5 +38,29 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
         }
+
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "Read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "Create"
+                    }
+                },
+            };
     }
 }
