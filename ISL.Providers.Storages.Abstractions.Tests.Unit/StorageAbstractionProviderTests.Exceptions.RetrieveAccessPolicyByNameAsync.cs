@@ -55,5 +55,46 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowDependencyExceptionOnRetrieveAccessPolicyByNameAsyncWhenTypeIsStorageDependencyException()
+        {
+            // given
+            var someException = new Xeption();
+
+            var someStorageValidationException =
+                new SomeStorageDependencyException(
+                    message: "Some storage provider dependency exception occurred",
+                    innerException: someException);
+
+            StorageProviderDependencyException expectedStorageDependencyProviderException =
+                new StorageProviderDependencyException(
+                    message: "Storage provider dependency error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RetrieveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask<Policy> retrieveListOfAllAccessPoliciesAsyncTask =
+                this.storageAbstractionProvider
+                    .RetrieveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
+
+            StorageProviderDependencyException actualStorageDependencyProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyException>(
+                    testCode: retrieveListOfAllAccessPoliciesAsyncTask.AsTask);
+
+            // then
+            actualStorageDependencyProviderException.Should().BeEquivalentTo(
+                expectedStorageDependencyProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RetrieveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
