@@ -2,10 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using Xeptions;
 
 namespace ISL.Providers.Storages.Abstractions
@@ -15,6 +16,7 @@ namespace ISL.Providers.Storages.Abstractions
         private delegate ValueTask ReturningNothingFunction();
         private delegate ValueTask<string> ReturningStringFunction();
         private delegate ValueTask<List<string>> ReturningStringListFunction();
+        private delegate ValueTask<Policy> ReturningPolicyFunction();
 
         private async ValueTask TryCatch(
             ReturningNothingFunction returningNothingFunction)
