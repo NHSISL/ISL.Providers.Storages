@@ -91,7 +91,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 }
             };
 
-
         public class HasLengthStream : MemoryStream
         {
             public override long Length => 1;
