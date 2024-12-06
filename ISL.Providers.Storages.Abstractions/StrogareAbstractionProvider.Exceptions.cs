@@ -112,6 +112,19 @@ namespace ISL.Providers.Storages.Abstractions
             }
         }
 
+        private async ValueTask<Policy> TryCatch(
+            ReturningPolicyFunction returningPolicyFunction)
+        {
+            try
+            {
+                return await returningPolicyFunction();
+            }
+            catch (Xeption ex) when (ex is IStorageProviderValidationException)
+            {
+                throw CreateValidationException(ex);
+            }
+        }
+
         private StorageProviderValidationException CreateValidationException(
             Xeption exception)
         {
