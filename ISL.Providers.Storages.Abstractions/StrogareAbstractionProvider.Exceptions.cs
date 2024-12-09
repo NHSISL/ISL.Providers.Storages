@@ -17,6 +17,7 @@ namespace ISL.Providers.Storages.Abstractions
         private delegate ValueTask<string> ReturningStringFunction();
         private delegate ValueTask<List<string>> ReturningStringListFunction();
         private delegate ValueTask<Policy> ReturningPolicyFunction();
+        private delegate ValueTask<List<Policy>> ReturningPolicyListFunction();
 
         private async ValueTask TryCatch(
             ReturningNothingFunction returningNothingFunction)
@@ -141,6 +142,19 @@ namespace ISL.Providers.Storages.Abstractions
                         data: ex.Data);
 
                 throw CreateUncatagorizedServiceException(uncatagorizedStroageProviderException);
+            }
+        }
+
+        private async ValueTask<List<Policy>> TryCatch(
+            ReturningPolicyListFunction returningPolicyListFunction)
+        {
+            try
+            {
+                return await returningPolicyListFunction();
+            }
+            catch (Xeption ex) when (ex is IStorageProviderValidationException)
+            {
+                throw CreateValidationException(ex);
             }
         }
 
