@@ -160,6 +160,10 @@ namespace ISL.Providers.Storages.Abstractions
             {
                 throw CreateDependencyException(ex);
             }
+            catch (Xeption ex) when (ex is IStorageProviderServiceException)
+            {
+                throw CreateServiceException(ex);
+            }
         }
 
         private StorageProviderValidationException CreateValidationException(
