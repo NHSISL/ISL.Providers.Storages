@@ -137,5 +137,47 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowUncatagorizedServiceExceptionOnRetrieveAllContainersAsyncWhenTypeIsNotExpected()
+        {
+            // given
+            var someException = new Xeption();
+
+            var uncatagorizedStorageProviderException =
+                new UncatagorizedStorageProviderException(
+                    message: "Storage provider not properly implemented. Uncatagorized errors found, " +
+                            "contact the storage provider owner for support.",
+                    innerException: someException,
+                    data: someException.Data);
+
+            StorageProviderServiceException expectedStorageServiceProviderException =
+                new StorageProviderServiceException(
+                    message: "Uncatagorized storage provider service error occurred, contact support.",
+                    innerException: uncatagorizedStorageProviderException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RetrieveAllContainersAsync())
+                    .ThrowsAsync(someException);
+
+            // when
+            ValueTask<List<string>> retrieveAllContainersAsyncTask =
+                this.storageAbstractionProvider
+                    .RetrieveAllContainersAsync();
+
+            StorageProviderServiceException actualStorageServiceProviderException =
+                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: retrieveAllContainersAsyncTask.AsTask);
+
+            // then
+            actualStorageServiceProviderException.Should().BeEquivalentTo(
+                expectedStorageServiceProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RetrieveAllContainersAsync(),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
