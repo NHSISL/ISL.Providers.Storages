@@ -52,5 +52,44 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnDeleteContainerWhenTypeIsStorageDependencyException()
+        {
+            // given
+            var someException = new Xeption();
+
+            var someStorageValidationException =
+                new SomeStorageDependencyException(
+                    message: "Some storage provider dependency exception occurred",
+                    innerException: someException);
+
+            StorageProviderDependencyException expectedStorageDependencyProviderException =
+                new StorageProviderDependencyException(
+                    message: "Storage provider dependency error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.DeleteContainerAsync(It.IsAny<string>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask deleteContainerTask =
+                this.storageAbstractionProvider
+                    .DeleteContainerAsync(It.IsAny<string>());
+
+            StorageProviderDependencyException actualStorageDependencyProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyException>(testCode: deleteContainerTask.AsTask);
+
+            // then
+            actualStorageDependencyProviderException.Should().BeEquivalentTo(
+                expectedStorageDependencyProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.DeleteContainerAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
