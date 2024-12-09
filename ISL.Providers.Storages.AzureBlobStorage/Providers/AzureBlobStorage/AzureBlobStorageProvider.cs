@@ -484,7 +484,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
-            throw new NotImplementedException();
+            await this.storageService.RetrieveAllAccessPoliciesAsync(container);
 
         /// <summary>
         /// Retrieves the provided stored access policy from the container if it exists.
