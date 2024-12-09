@@ -105,15 +105,15 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask{List{String}}"/> containing the access policy names.</returns>
-        /// <exception cref="StorageValidationProviderException">
-        /// Thrown when validation of input parameters fails.
-        /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
-        /// Thrown when there is an issue with the storage dependency.
-        /// </exception>
-        /// <exception cref="StorageServiceProviderException">
-        /// Thrown when there is a general issue in the storage service layer.
         ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);
+
+        /// <summary>
+        /// Retrieves all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask{List{Policy}}"/> containing policy objects corresponding to 
+        /// the container access policies.</returns>
+        ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container);
 
         /// <summary>
         /// Retrieves the provided stored access policy from the container if it exists.
@@ -121,14 +121,6 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container.</param>
         /// <param name="policyName">The name of the stored access policy.</param>
         /// <returns>A <see cref="ValueTask{Policy}"/> containing the access policy.</returns>
-        /// <exception cref="StorageValidationProviderException">
-        /// Thrown when validation of input parameters fails.
-        /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
-        /// Thrown when there is an issue with the storage dependency.
-        /// </exception>
-        /// <exception cref="StorageServiceProviderException">
-        /// Thrown when there is a general issue in the storage service layer.
         ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName);
 
         /// <summary>
