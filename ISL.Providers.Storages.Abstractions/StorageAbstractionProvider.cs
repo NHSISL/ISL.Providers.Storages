@@ -138,8 +138,11 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public async ValueTask<List<string>> RetrieveAllContainersAsync() =>
-            await storageProvider.RetrieveAllContainersAsync();
+        public ValueTask<List<string>> RetrieveAllContainersAsync() =>
+        TryCatch(async () =>
+        {
+            return await storageProvider.RetrieveAllContainersAsync();
+        });
 
         /// <summary>
         /// Deletes a container in the storage account.
