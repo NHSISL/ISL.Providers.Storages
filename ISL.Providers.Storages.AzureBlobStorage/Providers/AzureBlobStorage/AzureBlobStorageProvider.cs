@@ -511,7 +511,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             }
         }
 
-
         /// <summary>
         /// Retrieves the provided stored access policy from the container if it exists.
         /// </summary>
