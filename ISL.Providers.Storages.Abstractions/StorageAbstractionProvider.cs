@@ -256,13 +256,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask{List{Policy}}"/> containing policy objects corresponding to 
         /// the container access policies.</returns>
-        /// <exception cref="StorageValidationProviderException">
+        /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
         /// </exception>
-        /// <exception cref="StorageDependencyProviderException">
+        /// <exception cref="StorageProviderDependencyException">
         /// Thrown when there is an issue with the storage dependency.
         /// </exception>
-        /// <exception cref="StorageServiceProviderException">
+        /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         public ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
             throw new NotImplementedException();
