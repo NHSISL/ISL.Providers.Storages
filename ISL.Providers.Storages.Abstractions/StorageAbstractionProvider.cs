@@ -159,7 +159,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask DeleteContainerAsync(string container) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            await storageProvider.DeleteContainerAsync(container);
+        });
 
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
