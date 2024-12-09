@@ -33,12 +33,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageValidationException);
 
             // when
-            ValueTask<List<Policy>> retrievePoliciesTask =
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesAsyncTask =
                 this.azureBlobStorageProvider.RetrieveAllAccessPoliciesAsync(inputContainer);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
-                    testCode: retrievePoliciesTask.AsTask);
+                    testCode: retrieveAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
@@ -74,13 +74,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
-            ValueTask<List<Policy>> retrievePoliciesTask =
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesAsyncTask =
                 this.azureBlobStorageProvider.RetrieveAllAccessPoliciesAsync(inputContainer);
 
             AzureBlobStorageProviderValidationException
                 actualAzureBlobStorageProviderDependencyValidationException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
-                        testCode: retrievePoliciesTask.AsTask);
+                        testCode: retrieveAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderDependencyValidationException
@@ -115,13 +115,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageDependencyException);
 
             // when
-            ValueTask<List<Policy>> retrievePoliciesTask =
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesAsyncTask =
                 this.azureBlobStorageProvider.RetrieveAllAccessPoliciesAsync(inputContainer);
 
             AzureBlobStorageProviderDependencyException
                 actualAzureBlobStorageProviderDependencyException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
-                        testCode: retrievePoliciesTask.AsTask);
+                        testCode: retrieveAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderDependencyException
@@ -156,13 +156,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     .ThrowsAsync(storageServiceException);
 
             // when
-            ValueTask<List<Policy>> retrievePoliciesTask =
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesAsyncTask =
                 this.azureBlobStorageProvider.RetrieveAllAccessPoliciesAsync(inputContainer);
 
             AzureBlobStorageProviderServiceException
                 actualAzureBlobStorageProviderServiceException =
                     await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
-                        testCode: retrievePoliciesTask.AsTask);
+                        testCode: retrieveAllAccessPoliciesAsyncTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderServiceException
