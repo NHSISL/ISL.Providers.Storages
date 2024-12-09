@@ -164,6 +164,17 @@ namespace ISL.Providers.Storages.Abstractions
             {
                 throw CreateServiceException(ex);
             }
+            catch (Exception ex)
+            {
+                var uncatagorizedStroageProviderException =
+                    new UncatagorizedStorageProviderException(
+                        message: "Storage provider not properly implemented. Uncatagorized errors found, " +
+                            "contact the storage provider owner for support.",
+                        innerException: ex,
+                        data: ex.Data);
+
+                throw CreateUncatagorizedServiceException(uncatagorizedStroageProviderException);
+            }
         }
 
         private StorageProviderValidationException CreateValidationException(

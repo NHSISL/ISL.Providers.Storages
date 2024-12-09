@@ -138,5 +138,47 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowUncatagorizedServiceExceptionOnRetrieveAllAccessPoliciesAsyncWhenTypeIsNotExpected()
+        {
+            // given
+            var someException = new Xeption();
+
+            var uncatagorizedStorageProviderException =
+                new UncatagorizedStorageProviderException(
+                    message: "Storage provider not properly implemented. Uncatagorized errors found, " +
+                            "contact the storage provider owner for support.",
+                    innerException: someException,
+                    data: someException.Data);
+
+            StorageProviderServiceException expectedStorageServiceProviderException =
+                new StorageProviderServiceException(
+                    message: "Uncatagorized storage provider service error occurred, contact support.",
+                    innerException: uncatagorizedStorageProviderException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RetrieveAllAccessPoliciesAsync(It.IsAny<string>()))
+                    .ThrowsAsync(someException);
+
+            // when
+            ValueTask<List<Policy>> retrieveAllAccessPoliciesAsyncTask =
+                this.storageAbstractionProvider
+                    .RetrieveAllAccessPoliciesAsync(It.IsAny<string>());
+
+            StorageProviderServiceException actualStorageServiceProviderException =
+                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: retrieveAllAccessPoliciesAsyncTask.AsTask);
+
+            // then
+            actualStorageServiceProviderException.Should().BeEquivalentTo(
+                expectedStorageServiceProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RetrieveAllAccessPoliciesAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
