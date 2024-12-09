@@ -133,5 +133,46 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnRetrieveAllAccessPoliciesAsync()
+        {
+            // given
+            string randomContainer = GetRandomString();
+            string inputContainer = randomContainer;
+
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+                            "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.RetrieveAllAccessPoliciesAsync(inputContainer))
+                    .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask<List<Policy>> retrievePoliciesTask =
+                this.azureBlobStorageProvider.RetrieveAllAccessPoliciesAsync(inputContainer);
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: retrievePoliciesTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
+
+            this.storageServiceMock.Verify(service =>
+                service.RetrieveAllAccessPoliciesAsync(inputContainer),
+                Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
