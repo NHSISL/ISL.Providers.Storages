@@ -161,7 +161,6 @@ namespace ISL.Providers.Storages.Abstractions
             await storageProvider.DeleteContainerAsync(container);
         });
 
-
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
         /// </summary>
