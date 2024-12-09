@@ -233,12 +233,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             return returnedPolicy;
         });
 
-        public ValueTask RemoveAccessPoliciesFromContainerAsync(string container) =>
+        public ValueTask RemoveAccessPoliciesAsync(string container) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnRemoveAccessPolicies(container);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
-            await this.blobStorageBroker.RemoveAccessPoliciesFromContainerAsync(blobContainerClient);
+            await this.blobStorageBroker.RemoveAccessPoliciesAsync(blobContainerClient);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(

@@ -17,7 +17,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(blobContainerClientMock.Object);
 
             // when
-            await this.storageService.RemoveAccessPoliciesFromContainerAsync(inputContainer);
+            await this.storageService.RemoveAccessPoliciesAsync(inputContainer);
 
             // then
             this.blobStorageBrokerMock.Verify(broker =>
@@ -25,7 +25,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once());
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.RemoveAccessPoliciesFromContainerAsync(blobContainerClientMock.Object),
+                broker.RemoveAccessPoliciesAsync(blobContainerClientMock.Object),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
