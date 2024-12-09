@@ -91,5 +91,44 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnDeleteContainerWhenTypeIsStorageServiceException()
+        {
+            // given
+            var someException = new Xeption();
+
+            var someStorageValidationException =
+                new SomeStorageServiceException(
+                    message: "Some storage provider service exception occurred",
+                    innerException: someException);
+
+            StorageProviderServiceException expectedStorageServiceProviderException =
+                new StorageProviderServiceException(
+                    message: "Storage provider service error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.DeleteContainerAsync(It.IsAny<string>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask deleteContainerTask =
+                this.storageAbstractionProvider
+                    .DeleteContainerAsync(It.IsAny<string>());
+
+            StorageProviderServiceException actualStorageServiceProviderException =
+                await Assert.ThrowsAsync<StorageProviderServiceException>(testCode: deleteContainerTask.AsTask);
+
+            // then
+            actualStorageServiceProviderException.Should().BeEquivalentTo(
+                expectedStorageServiceProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.DeleteContainerAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
