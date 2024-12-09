@@ -264,8 +264,8 @@ namespace ISL.Providers.Storages.Abstractions
         /// </exception>
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
-        public ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
-            throw new NotImplementedException();
+        public async ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
+            await this.storageProvider.RetrieveAllAccessPoliciesAsync(container);
 
         /// <summary>
         /// Retrieves the provided stored access policy from the container if it exists.
