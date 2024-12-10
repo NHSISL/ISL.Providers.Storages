@@ -2,8 +2,10 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using Azure.Storage.Blobs.Models;
 using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using Moq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
@@ -49,6 +51,58 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualStorageValidationException
                 .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnRemoveByNameIfNotExistsAndLogItAsync()
+        {
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
+
+            BlobContainerAccessPolicy randomBlobContainerAccessPolicy =
+                CreateRandomBlobContainerAccessPolicy();
+
+            BlobContainerAccessPolicy outputBlobContainerAccessPolicy = randomBlobContainerAccessPolicy;
+
+            var accessPolicyNotFoundStorageException =
+                new AccessPolicyNotFoundStorageException(
+                    message: "Access policy with the provided name was not found on this container.");
+
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: accessPolicyNotFoundStorageException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(someContainer))
+                    .Returns(blobContainerClientMock.Object);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object))
+                    .ReturnsAsync(outputBlobContainerAccessPolicy);
+
+            // when
+            ValueTask retrieveAccessPolicyTask =
+                this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
+
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(
+                    testCode: retrieveAccessPolicyTask.AsTask);
+
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(someContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetAccessPolicyAsync(blobContainerClientMock.Object),
+                    Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
