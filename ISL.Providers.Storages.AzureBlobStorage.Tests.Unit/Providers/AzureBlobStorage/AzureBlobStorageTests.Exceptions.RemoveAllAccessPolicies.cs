@@ -63,7 +63,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 innerException: new Xeption());
 
             var expectedAzureBlobStorageProviderValidationException =
-            new AzureBlobStorageProviderValidationException(
+                new AzureBlobStorageProviderValidationException(
                     message: "Azure blob storage provider validation error occurred, fix errors and try again.",
                     innerException: (Xeption)storageDependencyValidationException.InnerException,
                     data: storageDependencyValidationException.InnerException.Data);
