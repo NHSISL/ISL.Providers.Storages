@@ -353,7 +353,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            await this.storageProvider.RemoveAccessPolicyByNameAsync(container, policyName);
+        });
 
         /// <summary>
         /// Creates a folder within the specified container.
