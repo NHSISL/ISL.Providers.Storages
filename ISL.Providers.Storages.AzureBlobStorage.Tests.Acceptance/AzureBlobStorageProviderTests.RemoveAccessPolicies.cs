@@ -13,30 +13,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             // given
             string randomContainer = GetRandomString();
             string inputContainer = randomContainer.ToLower();
-
-            List<Policy> inputAccessPolicies = new List<Policy>
-            {
-                new Policy
-                {
-                    PolicyName = "read",
-                    Permissions = new List<string>
-                    {
-                        "Read",
-                        "list"
-                    }
-                },
-                new Policy
-                {
-                    PolicyName = "write",
-                    Permissions = new List<string>
-                    {
-                        "write",
-                        "add",
-                        "Create"
-                    }
-                },
-            };
-
+            List<Policy> inputAccessPolicies = GetPolicies();
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
