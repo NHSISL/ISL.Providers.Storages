@@ -102,7 +102,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             BlobContainerClient blobContainerClient) =>
             await blobContainerClient.GetAccessPolicyAsync();
 
-        public async ValueTask RemoveAccessPoliciesAsync(BlobContainerClient containerClient)
+        public async ValueTask RemoveAllAccessPoliciesAsync(BlobContainerClient containerClient)
         {
             List<BlobSignedIdentifier> emptySignedIdentifiers = new List<BlobSignedIdentifier>();
             await containerClient.SetAccessPolicyAsync(permissions: emptySignedIdentifiers);

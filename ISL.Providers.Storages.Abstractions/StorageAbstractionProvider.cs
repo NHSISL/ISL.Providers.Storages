@@ -331,11 +331,29 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask RemoveAccessPoliciesAsync(string container) =>
+        public ValueTask RemoveAllAccessPoliciesAsync(string container) =>
         TryCatch(async () =>
         {
-            await this.storageProvider.RemoveAccessPoliciesAsync(container);
+            await this.storageProvider.RemoveAllAccessPoliciesAsync(container);
         });
+
+        /// <summary>
+        /// Removes the provided stored access policy from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="policyName">The name of the stored access policy.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="StorageProviderValidationException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageProviderDependencyException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageProviderServiceException">
+        /// Thrown when there is a general issue in the storage service layer.
+        /// </exception>
+        public ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName) =>
+            throw new NotImplementedException();
 
         /// <summary>
         /// Creates a folder within the specified container.

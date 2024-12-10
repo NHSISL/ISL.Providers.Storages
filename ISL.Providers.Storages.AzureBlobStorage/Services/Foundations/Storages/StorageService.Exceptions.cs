@@ -46,6 +46,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                 throw CreateDependencyValidationException(failedStorageDependencyValidationException);
             }
+            catch (AccessPolicyNotFoundStorageException accessPolicyNotFoundStorageException)
+            {
+                throw CreateValidationException(accessPolicyNotFoundStorageException);
+            }
             catch (AuthenticationFailedException authenticationFailedException)
             {
                 var failedStorageDependencyValidationException =

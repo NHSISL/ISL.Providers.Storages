@@ -6,19 +6,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldShouldRemoveAccessPoliciesAsync()
+        public async Task ShouldShouldRemoveAllAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
             string inputContainer = randomContainer;
 
             // when
-            await this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(
+            await this.azureBlobStorageProvider.RemoveAllAccessPoliciesAsync(
                 inputContainer);
 
             // then
             this.storageServiceMock.Verify(service =>
-                service.RemoveAccessPoliciesAsync(inputContainer),
+                service.RemoveAllAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

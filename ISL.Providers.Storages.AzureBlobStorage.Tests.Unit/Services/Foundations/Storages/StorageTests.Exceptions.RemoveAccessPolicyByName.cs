@@ -14,12 +14,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
     {
         [Theory]
         [MemberData(nameof(DependencyValidationExceptions))]
-        public async Task ShouldThrowDependencyValidationExceptionOnRemoveAccessPoliciesAsync(
+        public async Task ShouldThrowDependencyValidationExceptionOnRemoveAccessPolicyByNameAndLogItAsync(
             Exception dependencyValidationException)
         {
             // given
-            string randomString = GetRandomString();
-            string inputContainer = randomString;
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
 
             var failedStorageDependencyValidationException =
                 new FailedStorageDependencyValidationException(
@@ -32,12 +32,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetBlobContainerClient(inputContainer))
+                broker.GetBlobContainerClient(someContainer))
                     .Throws(dependencyValidationException);
 
             // when
             ValueTask removeAccessPolicyTask =
-                this.storageService.RemoveAccessPoliciesAsync(inputContainer);
+                this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
@@ -48,7 +48,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetBlobContainerClient(inputContainer),
+                broker.GetBlobContainerClient(someContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -57,11 +57,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionOnRemoveAccessPoliciesAsync(Exception dependencyException)
+        public async Task ShouldThrowDependencyExceptionOnRemoveAccessPolicyByNameAndLogItAsync(
+            Exception dependencyException)
         {
             // given
-            string randomString = GetRandomString();
-            string inputContainer = randomString; ;
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
 
             var failedStorageDependencyException =
                 new FailedStorageDependencyException(
@@ -74,12 +75,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetBlobContainerClient(inputContainer))
+                broker.GetBlobContainerClient(someContainer))
                     .Throws(dependencyException);
 
             // when
             ValueTask removeAccessPolicyTask =
-                this.storageService.RemoveAccessPoliciesAsync(inputContainer);
+                this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
@@ -90,7 +91,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetBlobContainerClient(inputContainer),
+                broker.GetBlobContainerClient(someContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -98,12 +99,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnRemoveAccessPoliciesAsync()
+        public async Task ShouldThrowServiceExceptionOnRemoveAccessPolicyByNameAndLogItAsync()
         {
             // given
             Exception someException = new Exception();
-            string randomString = GetRandomString();
-            string inputContainer = randomString;
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
 
             var failedStorageServiceException =
                 new FailedStorageServiceException(
@@ -116,12 +117,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageServiceException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetBlobContainerClient(inputContainer))
+                broker.GetBlobContainerClient(someContainer))
                     .Throws(someException);
 
             // when
             ValueTask removeAccessPolicyTask =
-                this.storageService.RemoveAccessPoliciesAsync(inputContainer);
+                this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(
@@ -132,7 +133,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetBlobContainerClient(inputContainer),
+                broker.GetBlobContainerClient(someContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

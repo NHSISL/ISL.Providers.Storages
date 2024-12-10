@@ -6,7 +6,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
     public partial class StorageAbstractionProviderTests
     {
         [Fact]
-        public async Task ShouldRemoveAccessPoliciesAsync()
+        public async Task ShouldRemoveAllAccessPoliciesAsync()
         {
             // given
             string randomString = GetRandomString();
@@ -14,11 +14,11 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             // when
             await this.storageAbstractionProvider
-                .RemoveAccessPoliciesAsync(inputContainer);
+                .RemoveAllAccessPoliciesAsync(inputContainer);
 
             // then
             this.storageProviderMock.Verify(provider =>
-                provider.RemoveAccessPoliciesAsync(inputContainer),
+                provider.RemoveAllAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();

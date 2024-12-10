@@ -8,7 +8,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     public partial class AzureBlobStorageProviderTests
     {
         [Fact]
-        public async Task ShouldRemoveAccessPoliciesAsync()
+        public async Task ShouldRemoveAllAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
@@ -20,7 +20,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 inputContainer, inputAccessPolicies);
 
             // when
-            await this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(inputContainer);
+            await this.azureBlobStorageProvider.RemoveAllAccessPoliciesAsync(inputContainer);
 
             // then
             List<string> actualAccessPolicyNames =

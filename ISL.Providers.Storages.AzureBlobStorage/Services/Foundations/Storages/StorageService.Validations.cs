@@ -108,6 +108,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(policyName), Parameter: "PolicyName"));
         }
 
+        private static void ValidateStorageArgumentsOnRemoveAccessPolicyByName(string container, string policyName)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(policyName), Parameter: "PolicyName"));
+        }
+
         private static void ValidateAccessPolicyExists(string policyName, List<BlobSignedIdentifier> signedIdentifiers)
         {
             if (!(signedIdentifiers.Any(signedIdentifier => signedIdentifier.Id == policyName)))
