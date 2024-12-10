@@ -79,6 +79,5 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                     }
                 },
             };
-
     }
 }
