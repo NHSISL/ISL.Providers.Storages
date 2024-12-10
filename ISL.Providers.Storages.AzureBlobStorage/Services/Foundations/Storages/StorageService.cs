@@ -241,8 +241,23 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             await this.blobStorageBroker.RemoveAccessPoliciesAsync(blobContainerClient);
         });
 
-        public ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName) =>
-            throw new NotImplementedException();
+        public async ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName)
+        {
+            BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
+
+            BlobContainerAccessPolicy containerAccessPolicy =
+                await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
+
+            List<BlobSignedIdentifier> signedIdentifiers = containerAccessPolicy.SignedIdentifiers.ToList();
+
+            BlobSignedIdentifier matchedBlobSignedIdentifier = signedIdentifiers
+                .FirstOrDefault(signedIdentifier => signedIdentifier.Id == policyName);
+
+            signedIdentifiers.Remove(matchedBlobSignedIdentifier);
+
+            await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
+                blobContainerClient, signedIdentifiers);
+        }
 
         public ValueTask<string> CreateDirectorySasTokenAsync(
              string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
