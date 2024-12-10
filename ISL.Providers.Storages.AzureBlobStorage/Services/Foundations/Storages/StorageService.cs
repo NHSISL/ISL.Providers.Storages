@@ -251,6 +251,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 await blobStorageBroker.GetAccessPolicyAsync(blobContainerClient);
 
             List<BlobSignedIdentifier> signedIdentifiers = containerAccessPolicy.SignedIdentifiers.ToList();
+            ValidateAccessPolicyExists(policyName, signedIdentifiers);
 
             BlobSignedIdentifier matchedBlobSignedIdentifier = signedIdentifiers
                 .First(signedIdentifier => signedIdentifier.Id == policyName);
