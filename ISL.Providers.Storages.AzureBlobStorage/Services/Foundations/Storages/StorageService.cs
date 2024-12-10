@@ -251,7 +251,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             List<BlobSignedIdentifier> signedIdentifiers = containerAccessPolicy.SignedIdentifiers.ToList();
 
             BlobSignedIdentifier matchedBlobSignedIdentifier = signedIdentifiers
-                .FirstOrDefault(signedIdentifier => signedIdentifier.Id == policyName);
+                .First(signedIdentifier => signedIdentifier.Id == policyName);
 
             signedIdentifiers.Remove(matchedBlobSignedIdentifier);
 
