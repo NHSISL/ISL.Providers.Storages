@@ -55,6 +55,45 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             this.storageProviderMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async Task
+            ShouldThrowDependencyExceptionOnRemoveAccessPolicyByNameAsyncWhenTypeIsStorageDependencyException()
+        {
+            // given
+            var someException = new Xeption();
 
+            var someStorageValidationException =
+                new SomeStorageDependencyException(
+                    message: "Some storage provider dependency exception occurred",
+                    innerException: someException);
+
+            StorageProviderDependencyException expectedStorageDependencyProviderException =
+                new StorageProviderDependencyException(
+                    message: "Storage provider dependency error occurred, contact support.",
+                    innerException: someStorageValidationException);
+
+            this.storageProviderMock.Setup(provider =>
+                provider.RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>()))
+                    .ThrowsAsync(someStorageValidationException);
+
+            // when
+            ValueTask retrieveAccessPolicyByNameTask =
+                this.storageAbstractionProvider
+                    .RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
+
+            StorageProviderDependencyException actualStorageDependencyProviderException =
+                await Assert.ThrowsAsync<StorageProviderDependencyException>(
+                    testCode: retrieveAccessPolicyByNameTask.AsTask);
+
+            // then
+            actualStorageDependencyProviderException.Should().BeEquivalentTo(
+                expectedStorageDependencyProviderException);
+
+            this.storageProviderMock.Verify(provider =>
+                provider.RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>()),
+                    Times.Once);
+
+            this.storageProviderMock.VerifyNoOtherCalls();
+        }
     }
 }
