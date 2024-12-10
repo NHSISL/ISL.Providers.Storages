@@ -139,7 +139,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask<List<string>> RetrieveAllContainersAsync() =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            return await storageProvider.RetrieveAllContainersAsync();
+        });
 
         /// <summary>
         /// Deletes a container in the storage account.
@@ -156,7 +159,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
         public ValueTask DeleteContainerAsync(string container) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            await storageProvider.DeleteContainerAsync(container);
+        });
 
         /// <summary>
         /// Asynchronously lists all files in the specified storage container.
@@ -248,6 +254,26 @@ namespace ISL.Providers.Storages.Abstractions
         TryCatch(async () =>
         {
             return await storageProvider.RetrieveListOfAllAccessPoliciesAsync(container);
+        });
+
+        /// <summary>
+        /// Retrieves all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask{List{Policy}}"/> containing policy objects corresponding to 
+        /// the container access policies.</returns>
+        /// <exception cref="StorageProviderValidationException">
+        /// Thrown when validation of input parameters fails.
+        /// </exception>
+        /// <exception cref="StorageProviderDependencyException">
+        /// Thrown when there is an issue with the storage dependency.
+        /// </exception>
+        /// <exception cref="StorageProviderServiceException">
+        /// Thrown when there is a general issue in the storage service layer.
+        public ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container) =>
+        TryCatch(async () =>
+        {
+            return await this.storageProvider.RetrieveAllAccessPoliciesAsync(container);
         });
 
         /// <summary>
