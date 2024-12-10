@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
@@ -9,7 +8,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     public partial class AzureBlobStorageProviderTests
     {
         [Fact]
-        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
+        public async Task ShouldRemoveAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
@@ -21,17 +20,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 inputContainer, inputAccessPolicies);
 
             // when
-            List<string> actualAccessPolicyNames = await this.azureBlobStorageProvider
-                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
+            await this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(inputContainer);
 
             // then
-            actualAccessPolicyNames.Count.Should().Be(inputAccessPolicies.Count);
+            List<string> actualAccessPolicyNames =
+                await this.azureBlobStorageProvider.RetrieveListOfAllAccessPoliciesAsync(
+                    inputContainer);
 
-            foreach (string policyName in actualAccessPolicyNames)
-            {
-                policyName.Should().BeOneOf(inputAccessPolicies.Select(policy => policy.PolicyName));
-            }
-
+            actualAccessPolicyNames.Should().BeEmpty();
             await this.azureBlobStorageProvider.DeleteContainerAsync(inputContainer);
         }
     }

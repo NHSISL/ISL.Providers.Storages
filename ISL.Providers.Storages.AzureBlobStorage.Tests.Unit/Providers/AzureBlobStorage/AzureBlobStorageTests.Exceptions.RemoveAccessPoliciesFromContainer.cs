@@ -27,12 +27,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer))
+                service.RemoveAccessPoliciesAsync(inputContainer))
                     .ThrowsAsync(storageValidationException);
 
             // when
             ValueTask removeAccessPoliciesTask =
-                this.azureBlobStorageProvider.RemoveAccessPoliciesFromContainerAsync(
+                this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(
                     inputContainer);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
@@ -44,7 +44,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer),
+                service.RemoveAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -69,12 +69,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer))
+                service.RemoveAccessPoliciesAsync(inputContainer))
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
             ValueTask removeAccessPoliciesTask =
-                this.azureBlobStorageProvider.RemoveAccessPoliciesFromContainerAsync(
+                this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(
                     inputContainer);
 
             AzureBlobStorageProviderValidationException
@@ -87,7 +87,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer),
+                service.RemoveAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -111,12 +111,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer))
+                service.RemoveAccessPoliciesAsync(inputContainer))
                     .ThrowsAsync(storageDependencyException);
 
             // when
             ValueTask removeAccessPoliciesTask =
-                this.azureBlobStorageProvider.RemoveAccessPoliciesFromContainerAsync(
+                this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(
                     inputContainer);
 
             AzureBlobStorageProviderDependencyException
@@ -129,7 +129,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer),
+                service.RemoveAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -153,12 +153,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer))
+                service.RemoveAccessPoliciesAsync(inputContainer))
                     .ThrowsAsync(storageServiceException);
 
             // when
             ValueTask removeAccessPoliciesTask =
-                this.azureBlobStorageProvider.RemoveAccessPoliciesFromContainerAsync(
+                this.azureBlobStorageProvider.RemoveAccessPoliciesAsync(
                     inputContainer);
 
             AzureBlobStorageProviderServiceException
@@ -171,7 +171,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.RemoveAccessPoliciesFromContainerAsync(inputContainer),
+                service.RemoveAccessPoliciesAsync(inputContainer),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

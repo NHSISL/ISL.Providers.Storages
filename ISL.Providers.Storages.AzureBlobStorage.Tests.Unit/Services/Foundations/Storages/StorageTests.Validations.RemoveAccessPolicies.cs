@@ -35,7 +35,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask removeAccessPolicyTask =
-                this.storageService.RemoveAccessPoliciesFromContainerAsync(invalidContainer);
+                this.storageService.RemoveAccessPoliciesAsync(invalidContainer);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(testCode: removeAccessPolicyTask.AsTask);

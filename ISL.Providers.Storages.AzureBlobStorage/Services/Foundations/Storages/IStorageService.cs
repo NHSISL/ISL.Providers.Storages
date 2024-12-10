@@ -29,6 +29,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);
         ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container);
         ValueTask<Policy> RetrieveAccessPolicyByNameAsync(string container, string policyName);
-        ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
+        ValueTask RemoveAccessPoliciesAsync(string container);
     }
 }

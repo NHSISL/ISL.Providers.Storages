@@ -137,7 +137,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        ValueTask RemoveAccessPoliciesFromContainerAsync(string container);
+        ValueTask RemoveAccessPoliciesAsync(string container);
 
         /// <summary>
         /// Creates a folder within the specified container.
