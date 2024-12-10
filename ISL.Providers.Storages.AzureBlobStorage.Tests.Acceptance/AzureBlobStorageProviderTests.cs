@@ -1,4 +1,5 @@
-﻿using ISL.Providers.Storages.AzureBlobStorage.Models;
+﻿using ISL.Providers.Storages.Abstractions.Models;
+using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -54,5 +55,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 
             return randomStringList;
         }
+
+        private static List<Policy> GetPolicies() =>
+            new List<Policy>
+            {
+                new Policy
+                {
+                    PolicyName = "read",
+                    Permissions = new List<string>
+                    {
+                        "read",
+                        "list"
+                    }
+                },
+                new Policy
+                {
+                    PolicyName = "write",
+                    Permissions = new List<string>
+                    {
+                        "write",
+                        "add",
+                        "create"
+                    }
+                },
+            };
+
     }
 }

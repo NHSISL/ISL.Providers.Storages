@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
@@ -9,29 +8,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     public partial class AzureBlobStorageProviderTests
     {
         [Fact]
-        public async Task ShouldRetrieveListOfAllAccessPoliciesAsync()
+        public async Task ShouldRetrieveAllAccessPoliciesAsync()
         {
             // given
             string randomContainer = GetRandomString();
+            string randomPolicyName = GetRandomString();
             string inputContainer = randomContainer.ToLower();
-            List<Policy> inputAccessPolicies = GetPolicies();
+            string inputPolicyName = randomPolicyName;
+            List<Policy> inputPolicyList = GetPolicies();
+            List<Policy> expectedPolicyList = inputPolicyList;
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicies);
+                inputContainer, inputPolicyList);
 
             // when
-            List<string> actualAccessPolicyNames = await this.azureBlobStorageProvider
-                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
+            List<Policy> actualPolicyList = await this.azureBlobStorageProvider
+                .RetrieveAllAccessPoliciesAsync(inputContainer);
 
             // then
-            actualAccessPolicyNames.Count.Should().Be(inputAccessPolicies.Count);
-
-            foreach (string policyName in actualAccessPolicyNames)
-            {
-                policyName.Should().BeOneOf(inputAccessPolicies.Select(policy => policy.PolicyName));
-            }
-
+            actualPolicyList.Should().BeEquivalentTo(expectedPolicyList);
             await this.azureBlobStorageProvider.DeleteContainerAsync(inputContainer);
         }
     }
