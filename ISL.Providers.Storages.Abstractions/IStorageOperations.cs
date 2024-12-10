@@ -140,6 +140,14 @@ namespace ISL.Providers.Storages.Abstractions
         ValueTask RemoveAccessPoliciesAsync(string container);
 
         /// <summary>
+        /// Removes the provided stored access policiy from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="policyName">The name of the stored access policy.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName);
+
+        /// <summary>
         /// Creates a folder within the specified container.
         /// </summary>
         /// <param name="container">The name of the storage container to create the folder in.</param>

@@ -403,42 +403,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
-        /// Removes all stored access policies from the container.
-        /// </summary>
-        /// <param name="container">The name of the storage container.</param>
-        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        /// <exception cref="AzureBlobStorageProviderValidationException" />
-        /// <exception cref="AzureBlobStorageProviderDependencyException" />
-        /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask RemoveAccessPoliciesAsync(string container)
-        {
-            try
-            {
-                await this.storageService.RemoveAccessPoliciesAsync(container);
-            }
-            catch (StorageValidationException storageValidationException)
-            {
-                throw CreateProviderValidationException(
-                    storageValidationException.InnerException as Xeption);
-            }
-            catch (StorageDependencyValidationException storageDependencyValidationException)
-            {
-                throw CreateProviderValidationException(
-                    storageDependencyValidationException.InnerException as Xeption);
-            }
-            catch (StorageDependencyException storageDependencyException)
-            {
-                throw CreateProviderDependencyException(
-                    storageDependencyException.InnerException as Xeption);
-            }
-            catch (StorageServiceException storageServiceException)
-            {
-                throw CreateProviderServiceException(
-                    storageServiceException.InnerException as Xeption);
-            }
-        }
-
-        /// <summary>
         /// Retrieves all stored access policies from the container.
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
@@ -547,6 +511,54 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
+        /// <summary>
+        /// Removes all stored access policies from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask RemoveAccessPoliciesAsync(string container)
+        {
+            try
+            {
+                await this.storageService.RemoveAccessPoliciesAsync(container);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
+
+        /// <summary>
+        /// Removes the provided stored access policiy from the container.
+        /// </summary>
+        /// <param name="container">The name of the storage container.</param>
+        /// <param name="policyName">The name of the stored access policy.</param>
+        /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask RemoveAccessPolicyByNameAsync(string container, string policyName) =>
+            throw new NotImplementedException();
 
         /// <summary>
         /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
