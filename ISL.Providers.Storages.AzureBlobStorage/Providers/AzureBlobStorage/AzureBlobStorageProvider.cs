@@ -520,11 +520,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask RemoveAccessPoliciesAsync(string container)
+        public async ValueTask RemoveAllAccessPoliciesAsync(string container)
         {
             try
             {
-                await this.storageService.RemoveAccessPoliciesAsync(container);
+                await this.storageService.RemoveAllAccessPoliciesAsync(container);
             }
             catch (StorageValidationException storageValidationException)
             {

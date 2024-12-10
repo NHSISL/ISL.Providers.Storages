@@ -331,10 +331,10 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public ValueTask RemoveAccessPoliciesAsync(string container) =>
+        public ValueTask RemoveAllAccessPoliciesAsync(string container) =>
         TryCatch(async () =>
         {
-            await this.storageProvider.RemoveAccessPoliciesAsync(container);
+            await this.storageProvider.RemoveAllAccessPoliciesAsync(container);
         });
 
         /// <summary>

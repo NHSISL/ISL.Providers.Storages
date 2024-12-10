@@ -137,7 +137,7 @@ namespace ISL.Providers.Storages.Abstractions
         /// </summary>
         /// <param name="container">The name of the storage container.</param>
         /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
-        ValueTask RemoveAccessPoliciesAsync(string container);
+        ValueTask RemoveAllAccessPoliciesAsync(string container);
 
         /// <summary>
         /// Removes the provided stored access policy from the container.
