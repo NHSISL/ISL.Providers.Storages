@@ -97,5 +97,47 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveAccessPolicyByNameAndLogItAsync()
+        {
+            // given
+            Exception someException = new Exception();
+            string someContainer = GetRandomString();
+            string somePolicyName = GetRandomString();
+
+            var failedStorageServiceException =
+                new FailedStorageServiceException(
+                    message: "Failed storage service error occurred, please contact support.",
+                    innerException: someException);
+
+            var expectedStorageServiceException =
+                new StorageServiceException(
+                    message: "Storage service error occurred, please fix errors and try again.",
+                    innerException: failedStorageServiceException);
+
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(someContainer))
+                    .Throws(someException);
+
+            // when
+            ValueTask retrieveAccessPolicyTask =
+                this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
+
+            StorageServiceException actualStorageServiceException =
+                await Assert.ThrowsAsync<StorageServiceException>(
+                    testCode: retrieveAccessPolicyTask.AsTask);
+
+            // then
+            actualStorageServiceException
+                .Should().BeEquivalentTo(expectedStorageServiceException);
+
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(someContainer),
+                    Times.Once);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
