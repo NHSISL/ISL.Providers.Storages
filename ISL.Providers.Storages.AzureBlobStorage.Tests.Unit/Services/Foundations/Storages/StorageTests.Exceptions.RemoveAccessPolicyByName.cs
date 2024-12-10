@@ -36,12 +36,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyValidationException);
 
             // when
-            ValueTask retrieveAccessPolicyTask =
+            ValueTask removeAccessPolicyTask =
                 this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
-                    testCode: retrieveAccessPolicyTask.AsTask);
+                    testCode: removeAccessPolicyTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -79,12 +79,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(dependencyException);
 
             // when
-            ValueTask retrieveAccessPolicyTask =
+            ValueTask removeAccessPolicyTask =
                 this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
-                    testCode: retrieveAccessPolicyTask.AsTask);
+                    testCode: removeAccessPolicyTask.AsTask);
 
             // then
             actualStorageDependencyException
@@ -121,12 +121,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Throws(someException);
 
             // when
-            ValueTask retrieveAccessPolicyTask =
+            ValueTask removeAccessPolicyTask =
                 this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(
-                    testCode: retrieveAccessPolicyTask.AsTask);
+                    testCode: removeAccessPolicyTask.AsTask);
 
             // then
             actualStorageServiceException

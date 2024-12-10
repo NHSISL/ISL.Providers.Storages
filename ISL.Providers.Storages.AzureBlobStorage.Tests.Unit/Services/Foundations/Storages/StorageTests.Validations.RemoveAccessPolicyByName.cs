@@ -41,12 +41,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: invalidArgumentStorageException);
 
             // when
-            ValueTask retrieveAccessPolicyTask =
+            ValueTask removeAccessPolicyTask =
                 this.storageService.RemoveAccessPolicyByNameAsync(invalidContainer, invalidPolicyName);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(
-                    testCode: retrieveAccessPolicyTask.AsTask);
+                    testCode: removeAccessPolicyTask.AsTask);
 
             // then
             actualStorageValidationException
@@ -85,12 +85,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .ReturnsAsync(outputBlobContainerAccessPolicy);
 
             // when
-            ValueTask retrieveAccessPolicyTask =
+            ValueTask removeAccessPolicyTask =
                 this.storageService.RemoveAccessPolicyByNameAsync(someContainer, somePolicyName);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(
-                    testCode: retrieveAccessPolicyTask.AsTask);
+                    testCode: removeAccessPolicyTask.AsTask);
 
             // then
             actualStorageValidationException
