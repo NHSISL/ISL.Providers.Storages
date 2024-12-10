@@ -36,13 +36,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask retrieveAccessPolicyByNameTask =
+            ValueTask removeAccessPolicyByNameTask =
                 this.storageAbstractionProvider
                     .RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderValidationException actualStorageValidationProviderException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: retrieveAccessPolicyByNameTask.AsTask);
+                    testCode: removeAccessPolicyByNameTask.AsTask);
 
             // then
             actualStorageValidationProviderException.Should().BeEquivalentTo(
@@ -77,13 +77,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask retrieveAccessPolicyByNameTask =
+            ValueTask removeAccessPolicyByNameTask =
                 this.storageAbstractionProvider
                     .RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: retrieveAccessPolicyByNameTask.AsTask);
+                    testCode: removeAccessPolicyByNameTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
@@ -118,13 +118,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask retrieveAccessPolicyByNameTask =
+            ValueTask removeAccessPolicyByNameTask =
                 this.storageAbstractionProvider
                     .RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: retrieveAccessPolicyByNameTask.AsTask);
+                    testCode: removeAccessPolicyByNameTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -161,13 +161,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask retrieveAccessPolicyByNameTask =
+            ValueTask removeAccessPolicyByNameTask =
                 this.storageAbstractionProvider
                     .RemoveAccessPolicyByNameAsync(It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: retrieveAccessPolicyByNameTask.AsTask);
+                    testCode: removeAccessPolicyByNameTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
