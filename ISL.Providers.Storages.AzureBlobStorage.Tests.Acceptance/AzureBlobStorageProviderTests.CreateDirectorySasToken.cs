@@ -26,7 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
 
-            List<Policy> inputAccessPolicies = new List<Policy>
+            List<Policy> inputAccessPolicyList = new List<Policy>
             {
                 new Policy
                 {
@@ -43,7 +43,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicies);
+                inputContainer, inputAccessPolicyList);
 
             // when
             var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
@@ -79,7 +79,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             MemoryStream inputStream = new MemoryStream(randomBytes);
             string inputDirectoryFilePath = inputDirectory + "/" + inputFileName;
 
-            List<Policy> inputAccessPolicies = new List<Policy>
+            List<Policy> inputAccessPolicyList = new List<Policy>
             {
                 new Policy
                 {
@@ -98,7 +98,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 inputStream, inputDirectoryFilePath, inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicies);
+                inputContainer, inputAccessPolicyList);
 
             // when
             var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
