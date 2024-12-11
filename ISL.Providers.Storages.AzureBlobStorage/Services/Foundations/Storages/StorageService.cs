@@ -132,6 +132,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddSeconds(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
@@ -146,8 +147,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = currentDateTimeOffset,
-                        PolicyExpiresOn = currentDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
+                        PolicyStartsOn = startsOnDateTimeOffset,
+                        PolicyExpiresOn = startsOnDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
                         Permissions = permissions
                     }
                 };
@@ -263,16 +264,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(
-             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn) =>
+             string container, string directoryPath, string accessPolicyIdentifier) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateDirectorySasToken(
-                container, directoryPath, accessPolicyIdentifier, expiresOn);
-
-            DateTimeOffset dateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+                container, directoryPath, accessPolicyIdentifier);
 
             var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
-                container, directoryPath, accessPolicyIdentifier, expiresOn);
+                container, directoryPath, accessPolicyIdentifier);
 
             return sasToken;
         });

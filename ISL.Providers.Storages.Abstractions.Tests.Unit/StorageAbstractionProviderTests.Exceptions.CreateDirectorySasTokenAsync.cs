@@ -2,12 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models.Exceptions;
 using ISL.Providers.Storages.Abstractions.Tests.Unit.Models.Exceptions;
 using Moq;
+using System.Threading.Tasks;
 using Xeptions;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -33,13 +32,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Setup(service =>
                 service.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()))
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                         .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
@@ -51,7 +50,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Verify(service =>
                 service.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -76,13 +75,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Setup(provider =>
                 provider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()))
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                     .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
@@ -94,7 +93,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Verify(provider =>
                 provider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -119,13 +118,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Setup(provider =>
                  provider.CreateDirectorySasTokenAsync(
-                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()))
+                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                      .ThrowsAsync(someStorageValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
@@ -137,7 +136,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Verify(provider =>
                 provider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
@@ -164,13 +163,13 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Setup(provider =>
                  provider.CreateDirectorySasTokenAsync(
-                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()))
+                     It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                     .ThrowsAsync(someException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageAbstractionProvider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>());
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
@@ -182,7 +181,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             this.storageProviderMock.Verify(provider =>
                 provider.CreateDirectorySasTokenAsync(
-                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTimeOffset>()),
+                    It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once);
 
             this.storageProviderMock.VerifyNoOtherCalls();
