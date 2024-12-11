@@ -82,10 +82,9 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="container">The name of the storage container where the SAS token will be created.</param>
         /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
         /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
-        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the SAS token will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         public ValueTask<string> CreateDirectorySasTokenAsync(
-             string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn);
+             string container, string directoryPath, string accessPolicyIdentifier);
 
         /// <summary>
         /// Asynchronously generates an access token for a specified path in the storage container with a given 

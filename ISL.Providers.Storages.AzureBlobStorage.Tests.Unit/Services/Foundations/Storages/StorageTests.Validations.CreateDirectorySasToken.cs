@@ -20,15 +20,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string invalidContainer = invalidText;
             string invalidDirectoryPath = invalidText;
             string invalidAccessPolicyIdentifier = invalidText;
-            DateTimeOffset invalidExpiresOn = invalidDateTimeOffset;
 
             var invalidArgumentStorageException =
                 new InvalidArgumentStorageException(
                     message: "Invalid storage service argument(s), please fix the errors and try again.");
-
-            invalidArgumentStorageException.AddData(
-                key: "ExpiresOn",
-                values: "Date is invalid");
 
             invalidArgumentStorageException.AddData(
                 key: "DirectoryPath",
@@ -50,7 +45,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateDirectorySasTokenAsync(
-                    invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier, invalidExpiresOn);
+                    invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(createDirectorySasTokenTask.AsTask);
