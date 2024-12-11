@@ -17,13 +17,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             // when
-            await this.azureBlobStorageProvider.CreateFolderInContainerAsync(
-                inputContainer, inputFolder);
+            await this.azureBlobStorageProvider.CreateFolderInContainerAsync(inputContainer, inputFolder);
 
             // then
-            await this.azureBlobStorageProvider.RetrieveFileAsync(
-                outputStream, inputFolder, inputContainer);
-
+            await this.azureBlobStorageProvider.RetrieveFileAsync(outputStream, inputFolder, inputContainer);
             await this.azureBlobStorageProvider.DeleteContainerAsync(inputContainer);
         }
     }
