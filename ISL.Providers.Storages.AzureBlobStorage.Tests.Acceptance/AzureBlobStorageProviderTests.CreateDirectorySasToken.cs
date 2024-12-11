@@ -19,12 +19,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             string randomContainer = GetRandomString();
             string randomFolder = GetRandomString();
             string randomSubFolder = GetRandomString();
-            DateTimeOffset randomFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
             string randomFileName = GetRandomString();
             string inputPolicyName = randomPolicyName;
             string inputContainer = randomContainer.ToLower();
             string inputDirectory = randomFolder + "/" + randomSubFolder;
-            DateTimeOffset inputFutureDateTimeOffset = randomFutureDateTimeOffset;
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
 
@@ -70,12 +68,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             string randomContainer = GetRandomString();
             string randomFolder = GetRandomString();
             string randomSubFolder = GetRandomString();
-            DateTimeOffset randomFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
             string randomFileName = GetRandomString();
             string inputPolicyName = randomPolicyName;
             string inputContainer = randomContainer.ToLower();
             string inputDirectory = randomFolder + "/" + randomSubFolder;
-            DateTimeOffset inputFutureDateTimeOffset = randomFutureDateTimeOffset;
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
             string randomString = GetRandomString();
