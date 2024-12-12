@@ -33,7 +33,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             var actualSasToken = await this.storageService.CreateDirectorySasTokenAsync(
-                inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier);
+                inputContainer,
+                inputDirectoryPath,
+                inputAccessPolicyIdentifier);
 
             // then
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
