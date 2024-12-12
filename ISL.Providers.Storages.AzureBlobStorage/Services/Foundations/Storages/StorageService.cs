@@ -132,7 +132,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
             DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddSeconds(-1);
+            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
