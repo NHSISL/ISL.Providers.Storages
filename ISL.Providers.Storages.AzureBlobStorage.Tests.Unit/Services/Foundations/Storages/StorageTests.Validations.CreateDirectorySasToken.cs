@@ -45,7 +45,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateDirectorySasTokenAsync(
-                    invalidContainer, invalidDirectoryPath, invalidAccessPolicyIdentifier);
+                    invalidContainer,
+                    invalidDirectoryPath,
+                    invalidAccessPolicyIdentifier);
 
             StorageValidationException actualStorageValidationException =
                 await Assert.ThrowsAsync<StorageValidationException>(createDirectorySasTokenTask.AsTask);
