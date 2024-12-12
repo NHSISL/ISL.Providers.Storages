@@ -90,7 +90,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             blobContainerClient.GetBlobsAsync();
 
         public async ValueTask CreateDirectoryAsync(
-            DataLakeFileSystemClient dataLakeFileSystemClient, string directory) =>
+            DataLakeFileSystemClient dataLakeFileSystemClient,
+            string directory) =>
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
 
         public async ValueTask AssignAccessPoliciesToContainerAsync(
@@ -119,7 +120,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public async ValueTask<string> CreateDirectorySasTokenAsync(
-            string container, string directoryPath, string accessPolicyIdentifier, DateTimeOffset expiresOn)
+            string container,
+            string directoryPath,
+            string accessPolicyIdentifier)
         {
             var directorySasBuilder = new DataLakeSasBuilder()
             {
@@ -128,8 +131,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 Path = directoryPath,
                 IsDirectory = true,
                 FileSystemName = container,
-                StartsOn = DateTimeOffset.UtcNow,
-                ExpiresOn = expiresOn
             };
 
             var sasQueryParameters = directorySasBuilder.ToSasQueryParameters(

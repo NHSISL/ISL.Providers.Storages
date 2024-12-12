@@ -4,7 +4,6 @@
 
 using FluentAssertions;
 using Moq;
-using System;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
@@ -22,41 +21,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputContainer = randomContainer;
             string inputDirectoryPath = randomDirectoryPath;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
-            DateTimeOffset currentDateTimeOffset = DateTimeOffset.UtcNow;
-            DateTimeOffset futureDateTimeOffset = GetRandomFutureDateTimeOffset();
-            DateTimeOffset inputExpiresOn = futureDateTimeOffset;
             string outputSasToken = randomSasToken;
             string expectedSasToken = outputSasToken;
-
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
-                    .ReturnsAsync(currentDateTimeOffset);
 
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.CreateDirectorySasTokenAsync(
                     inputContainer,
                     inputDirectoryPath,
-                    inputAccessPolicyIdentifier,
-                    inputExpiresOn))
+                    inputAccessPolicyIdentifier))
                         .ReturnsAsync(outputSasToken);
 
             // when
             var actualSasToken = await this.storageService.CreateDirectorySasTokenAsync(
-                inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier, inputExpiresOn);
+                inputContainer,
+                inputDirectoryPath,
+                inputAccessPolicyIdentifier);
 
             // then
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
-
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
-                    Times.Once);
 
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.CreateDirectorySasTokenAsync(
                     inputContainer,
                     inputDirectoryPath,
-                    inputAccessPolicyIdentifier,
-                    inputExpiresOn),
+                    inputAccessPolicyIdentifier),
                         Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

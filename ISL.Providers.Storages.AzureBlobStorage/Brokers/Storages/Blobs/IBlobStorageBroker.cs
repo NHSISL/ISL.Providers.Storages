@@ -47,7 +47,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<string> CreateDirectorySasTokenAsync(
             string container,
             string directoryPath,
-            string accessPolicyIdentifier,
-            DateTimeOffset expiresOn);
+            string accessPolicyIdentifier);
     }
 }
