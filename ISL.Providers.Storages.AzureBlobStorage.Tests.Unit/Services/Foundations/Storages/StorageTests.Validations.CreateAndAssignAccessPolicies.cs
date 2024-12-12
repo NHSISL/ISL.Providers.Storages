@@ -6,6 +6,7 @@ using FluentAssertions;
 using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -161,6 +162,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string inputPolicyName = randomPolicyName;
             List<string> randomPermissions = GetRandomStringList();
             List<string> invalidPermissions = randomPermissions;
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
 
             List<Policy> inputPolicies = new List<Policy>
             {
@@ -180,6 +182,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 new StorageValidationException(
                     message: "Storage validation error occurred, please fix errors and try again.",
                     innerException: InvalidPolicyPermissionStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffsetAsync())
+                    .ReturnsAsync(randomDateTimeOffset);
 
             // when
             ValueTask createAccessPolicyTask =

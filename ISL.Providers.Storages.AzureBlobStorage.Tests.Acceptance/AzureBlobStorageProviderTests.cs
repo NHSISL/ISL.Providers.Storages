@@ -2,6 +2,7 @@
 using ISL.Providers.Storages.AzureBlobStorage.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using Tynamix.ObjectFiller;
 
@@ -11,6 +12,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     {
         private readonly IAzureBlobStorageProvider azureBlobStorageProvider;
         private readonly IConfiguration configuration;
+        private readonly string serviceUri;
 
         public AzureBlobStorageProviderTests()
         {
@@ -25,6 +27,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 .GetSection("AzureBlobStoreConfigurations").Get<AzureBlobStoreConfigurations>();
 
             this.azureBlobStorageProvider = new AzureBlobStorageProvider(azureBlobStoreConfigurations);
+            this.serviceUri = azureBlobStoreConfigurations.ServiceUri;
         }
 
         private static int GetRandomNumber() =>
@@ -54,6 +57,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             }
 
             return randomStringList;
+        }
+
+        private static DateTimeOffset GetRandomFutureDateTimeOffset()
+        {
+            DateTime futureStartDate = DateTimeOffset.UtcNow.AddDays(1).Date;
+            int randomDaysInFuture = GetRandomNumber();
+            DateTime futureEndDate = futureStartDate.AddDays(randomDaysInFuture).Date;
+
+            return new DateTimeRange(earliestDate: futureStartDate, latestDate: futureEndDate).GetValue();
         }
 
         private static List<Policy> GetPolicies() =>
