@@ -139,7 +139,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return sasQueryParameters.ToString();
         }
 
-        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset startsOn, DateTimeOffset expiresOn)
+        public BlobSasBuilder GetBlobSasBuilder(
+            string blobName, 
+            string blobContainerName, 
+            DateTimeOffset startsOn, 
+            DateTimeOffset expiresOn)
         {
             var blobSasBuilder = new BlobSasBuilder()
             {
