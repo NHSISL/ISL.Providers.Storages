@@ -7,6 +7,7 @@ using ISL.Providers.Storages.Abstractions.Models;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Tynamix.ObjectFiller;
 
 namespace ISL.Providers.Storage.Abstractions.Tests.Unit
@@ -94,5 +95,15 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     "list"
                 }
             };
+
+        public class HasLengthStream : MemoryStream
+        {
+            public override long Length => 1;
+        }
+
+        public class ZeroLengthStream : MemoryStream
+        {
+            public override long Length => 0;
+        }
     }
 }
