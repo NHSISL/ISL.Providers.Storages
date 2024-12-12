@@ -37,8 +37,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     innerException: failedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.CreateDirectorySasTokenAsync(someContainer, someDirectoryPath, someAccessPolicyIdentifier))
-                    .Throws(dependencyValidationException);
+                broker.CreateDirectorySasTokenAsync(
+                    someContainer,
+                    someDirectoryPath,
+                    someAccessPolicyIdentifier))
+                        .Throws(dependencyValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
@@ -56,7 +59,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateDirectorySasTokenAsync(someContainer, someDirectoryPath, someAccessPolicyIdentifier),
+                broker.CreateDirectorySasTokenAsync(
+                    someContainer,
+                    someDirectoryPath,
+                    someAccessPolicyIdentifier),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -88,7 +94,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.CreateDirectorySasTokenAsync(
-                    someContainer, someDirectoryPath, someAccessPolicyIdentifier))
+                    someContainer,
+                    someDirectoryPath,
+                    someAccessPolicyIdentifier))
                         .Throws(dependencyException);
 
             // when
@@ -107,7 +115,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.CreateDirectorySasTokenAsync(someContainer, someDirectoryPath, someAccessPolicyIdentifier),
+                broker.CreateDirectorySasTokenAsync(
+                    someContainer,
+                    someDirectoryPath,
+                    someAccessPolicyIdentifier),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
