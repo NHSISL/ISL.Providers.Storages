@@ -602,7 +602,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             try
             {
                 return await this.storageService.CreateDirectorySasTokenAsync(
-                    container, directoryPath, accessPolicyIdentifier);
+                    container,
+                    directoryPath,
+                    accessPolicyIdentifier);
             }
             catch (StorageValidationException storageValidationException)
             {

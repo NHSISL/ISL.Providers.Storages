@@ -91,7 +91,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             blobContainerClient.GetBlobsAsync();
 
         public async ValueTask CreateDirectoryAsync(
-            DataLakeFileSystemClient dataLakeFileSystemClient, string directory) =>
+            DataLakeFileSystemClient dataLakeFileSystemClient,
+            string directory) =>
             await dataLakeFileSystemClient.CreateDirectoryAsync(directory);
 
         public async ValueTask AssignAccessPoliciesToContainerAsync(

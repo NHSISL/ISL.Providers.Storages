@@ -78,7 +78,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         }
 
         private static void ValidateStorageArgumentsOnCreateDirectorySasToken(
-            string container, string directoryPath, string accessPolicyIdentifier)
+            string container,
+            string directoryPath,
+            string accessPolicyIdentifier)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),

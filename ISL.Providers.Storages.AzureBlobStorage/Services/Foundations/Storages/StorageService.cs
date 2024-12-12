@@ -264,14 +264,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(
-             string container, string directoryPath, string accessPolicyIdentifier) =>
+             string container,
+             string directoryPath,
+             string accessPolicyIdentifier) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateDirectorySasToken(
-                container, directoryPath, accessPolicyIdentifier);
+                container,
+                directoryPath,
+                accessPolicyIdentifier);
 
             var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
-                container, directoryPath, accessPolicyIdentifier);
+                container,
+                directoryPath,
+                accessPolicyIdentifier);
 
             return sasToken;
         });

@@ -43,11 +43,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicyList);
+                inputContainer,
+                inputAccessPolicyList);
 
             // when
             var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                inputContainer, inputDirectory, inputPolicyName);
+                inputContainer,
+                inputDirectory,
+                inputPolicyName);
 
             // then
             Uri uri = new Uri(this.serviceUri + "/" + inputContainer + "/" + inputDirectory + "/subfolder");
@@ -94,15 +97,17 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            await this.azureBlobStorageProvider.CreateFileAsync(
-                inputStream, inputDirectoryFilePath, inputContainer);
+            await this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputDirectoryFilePath, inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicyList);
+                inputContainer,
+                inputAccessPolicyList);
 
             // when
             var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                inputContainer, inputDirectory, inputPolicyName);
+                inputContainer,
+                inputDirectory,
+                inputPolicyName);
 
             // then
             Uri uri = new Uri(this.serviceUri + "/" + inputContainer + "/" + inputDirectoryFilePath);

@@ -26,13 +26,11 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             // when
             string actualSasToken = await this.storageAbstractionProvider
-            string actualSasToken = await this.storageAbstractionProvider
                 .CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier);
+
             // then
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
 
-            this.storageProviderMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(
             this.storageProviderMock.Verify(service =>
                 service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
