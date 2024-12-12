@@ -123,7 +123,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public async ValueTask<string> CreateDirectorySasTokenAsync(
-            string container, string directoryPath, string accessPolicyIdentifier)
+            string container,
+            string directoryPath,
+            string accessPolicyIdentifier)
         {
             var directorySasBuilder = new DataLakeSasBuilder()
             {
