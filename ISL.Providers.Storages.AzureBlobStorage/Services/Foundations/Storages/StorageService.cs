@@ -259,8 +259,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             signedIdentifiers.Remove(matchedBlobSignedIdentifier);
 
-            await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
-                blobContainerClient, signedIdentifiers);
+            await this.blobStorageBroker
+                .AssignAccessPoliciesToContainerAsync(blobContainerClient, signedIdentifiers);
         });
 
         public ValueTask<string> CreateDirectorySasTokenAsync(

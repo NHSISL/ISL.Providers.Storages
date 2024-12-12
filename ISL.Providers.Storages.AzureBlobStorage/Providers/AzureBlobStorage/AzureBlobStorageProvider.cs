@@ -377,8 +377,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         {
             try
             {
-                await this.storageService.CreateAndAssignAccessPoliciesAsync(
-                    inputContainer, inputPolicies);
+                await this.storageService.CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies);
             }
             catch (StorageValidationException storageValidationException)
             {

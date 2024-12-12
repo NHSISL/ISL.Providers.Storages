@@ -16,16 +16,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             List<Policy> inputAccessPolicies = GetPolicies();
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicies);
+            await this.azureBlobStorageProvider
+                .CreateAndAssignAccessPoliciesAsync(inputContainer, inputAccessPolicies);
 
             // when
             await this.azureBlobStorageProvider.RemoveAllAccessPoliciesAsync(inputContainer);
 
             // then
             List<string> actualAccessPolicyNames =
-                await this.azureBlobStorageProvider.RetrieveListOfAllAccessPoliciesAsync(
-                    inputContainer);
+                await this.azureBlobStorageProvider
+                .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             actualAccessPolicyNames.Should().BeEmpty();
             await this.azureBlobStorageProvider.DeleteContainerAsync(inputContainer);
