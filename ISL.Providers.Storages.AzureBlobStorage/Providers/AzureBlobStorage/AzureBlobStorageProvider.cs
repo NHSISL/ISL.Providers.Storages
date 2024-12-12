@@ -597,7 +597,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
         public async ValueTask<string> CreateDirectorySasTokenAsync(
-             string container, string directoryPath, string accessPolicyIdentifier)
+             string container,
+             string directoryPath,
+             string accessPolicyIdentifier)
         {
             try
             {
