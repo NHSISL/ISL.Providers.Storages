@@ -20,7 +20,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         BlobContainerClient GetBlobContainerClient(string container);
         DataLakeFileSystemClient GetDataLakeFileSystemClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
-        BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
+        BlobSasBuilder GetBlobSasBuilder(
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset startsOn,
+            DateTimeOffset expiresOn);
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(BlobClient blobClient);

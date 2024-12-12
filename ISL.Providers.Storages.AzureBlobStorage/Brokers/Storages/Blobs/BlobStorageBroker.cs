@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
@@ -111,11 +110,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         public async ValueTask<string> GetDownloadLinkAsync(
             BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn)
         {
-            var userDelegationKey = GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn);
-
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
             {
-                Sas = blobSasBuilder.ToSasQueryParameters(userDelegationKey, BlobServiceClient.AccountName)
+                Sas = blobSasBuilder.ToSasQueryParameters(StorageSharedKeyCredential)
             };
 
             return blobUriBuilder.ToUri().ToString();
@@ -141,20 +138,14 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return sasQueryParameters.ToString();
         }
 
-        private Response<UserDelegationKey> GetUserDelegationKey(
-            DateTimeOffset? startsOn,
-            DateTimeOffset expiresOn,
-            CancellationToken cancellationToken = default) =>
-            BlobServiceClient.GetUserDelegationKey(DateTimeOffset.UtcNow, expiresOn, cancellationToken);
-
-        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn)
+        public BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset startsOn, DateTimeOffset expiresOn)
         {
             var blobSasBuilder = new BlobSasBuilder()
             {
                 BlobContainerName = blobContainerName,
                 BlobName = blobName,
                 Resource = "b",
-                StartsOn = DateTimeOffset.UtcNow,
+                StartsOn = startsOn,
                 ExpiresOn = expiresOn
             };
 
