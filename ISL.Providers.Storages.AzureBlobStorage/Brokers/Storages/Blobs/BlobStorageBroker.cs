@@ -109,7 +109,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public async ValueTask<string> GetDownloadLinkAsync(
-            BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn)
+            BlobClient blobClient, 
+            BlobSasBuilder blobSasBuilder, 
+            DateTimeOffset expiresOn)
         {
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
             {
