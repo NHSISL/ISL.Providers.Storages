@@ -20,13 +20,21 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         BlobContainerClient GetBlobContainerClient(string container);
         DataLakeFileSystemClient GetDataLakeFileSystemClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
-        BlobSasBuilder GetBlobSasBuilder(string blobName, string blobContainerName, DateTimeOffset expiresOn);
+        
+        BlobSasBuilder GetBlobSasBuilder(
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset startsOn,
+            DateTimeOffset expiresOn);
+
         ValueTask CreateFileAsync(BlobClient blobClient, Stream input);
         ValueTask RetrieveFileAsync(BlobClient blobClient, Stream output);
         ValueTask DeleteFileAsync(BlobClient blobClient);
 
         ValueTask<string> GetDownloadLinkAsync(
-            BlobClient blobClient, BlobSasBuilder blobSasBuilder, DateTimeOffset expiresOn);
+            BlobClient blobClient, 
+            BlobSasBuilder blobSasBuilder, 
+            DateTimeOffset expiresOn);
 
         ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
         ValueTask CreateContainerAsync(string container);
@@ -35,7 +43,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask AssignAccessPoliciesToContainerAsync(
-            BlobContainerClient blobContainerClient, List<BlobSignedIdentifier> signedIdentifiers);
+            BlobContainerClient blobContainerClient, 
+            List<BlobSignedIdentifier> signedIdentifiers);
 
         ValueTask<BlobContainerAccessPolicy> GetAccessPolicyAsync(BlobContainerClient blobContainerClient);
         ValueTask RemoveAllAccessPoliciesAsync(BlobContainerClient containerClient);
