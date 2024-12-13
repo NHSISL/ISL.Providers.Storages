@@ -76,9 +76,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnGetDownloadLink(fileName, container, expiresOn);
+            DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
+            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
-            BlobSasBuilder sasBuilder = this.blobStorageBroker.GetBlobSasBuilder(fileName, container, expiresOn);
+            
+            BlobSasBuilder sasBuilder = this.blobStorageBroker
+                .GetBlobSasBuilder(fileName, container, startsOnDateTimeOffset, expiresOn);
 
             string downloadLink = await this.blobStorageBroker
                 .GetDownloadLinkAsync(blobClient, sasBuilder, expiresOn);

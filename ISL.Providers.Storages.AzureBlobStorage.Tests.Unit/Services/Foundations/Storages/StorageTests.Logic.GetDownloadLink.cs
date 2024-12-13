@@ -20,11 +20,16 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             string randomDownloadLink = GetRandomString();
             string inputFileName = randomFileName;
             string inputContainer = randomContainer;
-            DateTimeOffset currentDateTimeOffset = DateTimeOffset.UtcNow;
+            DateTimeOffset randomDateTimeOffset = GetRandomDateTimeOffset();
+            DateTimeOffset inputStartsOn = randomDateTimeOffset.AddMinutes(-1);
             DateTimeOffset futureDateTimeOffset = GetRandomFutureDateTimeOffset();
             DateTimeOffset inputExpiresOn = futureDateTimeOffset;
             string outputDowloadLink = randomDownloadLink;
             string expectedDowloadLink = outputDowloadLink;
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffsetAsync())
+                    .ReturnsAsync(randomDateTimeOffset);
 
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.GetBlobContainerClient(inputContainer))
@@ -35,7 +40,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     .Returns(blobClientMock.Object);
 
             this.blobStorageBrokerMock.Setup(broker =>
-                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn))
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputStartsOn, inputExpiresOn))
                     .Returns(blobSasBuilderMock.Object);
 
             this.blobStorageBrokerMock.Setup(client =>
@@ -52,6 +57,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // then
             actualDownloadLink.Should().BeEquivalentTo(expectedDowloadLink);
 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffsetAsync(),
+                    Times.Once);
+
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
@@ -61,7 +70,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(broker =>
-                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputExpiresOn),
+                broker.GetBlobSasBuilder(inputFileName, inputContainer, inputStartsOn, inputExpiresOn),
                     Times.Once);
 
             this.blobStorageBrokerMock.Verify(client =>
