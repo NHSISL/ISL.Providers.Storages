@@ -2,11 +2,6 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Storage;
@@ -15,6 +10,11 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -118,21 +118,25 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return blobUriBuilder.ToUri().ToString();
         }
 
-        public async ValueTask<string> CreateDirectorySasTokenAsync(
+        public async ValueTask<string> CreateSasTokenAsync(
             string container,
-            string directoryPath,
-            string accessPolicyIdentifier)
+            string path,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn,
+            bool isDirectory,
+            string resource)
         {
-            var directorySasBuilder = new DataLakeSasBuilder()
+            var sasBuilder = new DataLakeSasBuilder()
             {
                 Identifier = accessPolicyIdentifier,
-                Resource = "d",
-                Path = directoryPath,
-                IsDirectory = true,
+                Resource = resource,
+                Path = path,
+                IsDirectory = isDirectory,
                 FileSystemName = container,
+                ExpiresOn = expiresOn,
             };
 
-            var sasQueryParameters = directorySasBuilder.ToSasQueryParameters(
+            var sasQueryParameters = sasBuilder.ToSasQueryParameters(
                 StorageSharedKeyCredential);
 
             return sasQueryParameters.ToString();

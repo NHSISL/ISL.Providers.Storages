@@ -585,27 +585,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         }
 
         /// <summary>
-        /// Creates a SAS token scoped to the provided container and directory, with the permissions of 
+        /// Creates a SAS token scoped to the provided container and path, with the permissions of 
         /// the provided access policy.
         /// </summary>
         /// <param name="container">The name of the storage container where the SAS token will be created.</param>
-        /// <param name="directoryPath">The path to which the SAS token will be scoped</param>
+        /// <param name="path">The path to which the SAS token will be scoped</param>
         /// <param name="accessPolicyIdentifier">The name of the stored access policy.</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
+        /// token will expire.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
         /// <exception cref="AzureBlobStorageProviderServiceException" />
-        public async ValueTask<string> CreateDirectorySasTokenAsync(
+        public async ValueTask<string> CreateSasTokenAsync(
              string container,
-             string directoryPath,
-             string accessPolicyIdentifier)
+             string path,
+             string accessPolicyIdentifier,
+             DateTimeOffset expiresOn)
         {
             try
             {
                 return await this.storageService.CreateSasTokenAsync(
                     container,
-                    directoryPath,
-                    accessPolicyIdentifier);
+                    path,
+                    accessPolicyIdentifier,
+                    expiresOn);
             }
             catch (StorageValidationException storageValidationException)
             {
@@ -628,6 +632,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                     storageServiceException.InnerException as Xeption);
             }
         }
+
+        /// <summary>
+        /// Creates a SAS token scoped to the provided container and path, with the permissions of 
+        /// the provided access policy.
+        /// </summary>
+        /// <param name="container">The name of the storage container where the SAS token will be created.</param>
+        /// <param name="path">The path to which the SAS token will be scoped</param>
+        /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
+        /// token will expire.</param>
+        /// <param name="permissions">The permissions of the token.</param>
+        /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
+        /// <exception cref="AzureBlobStorageProviderValidationException" />
+        /// <exception cref="AzureBlobStorageProviderDependencyException" />
+        /// <exception cref="AzureBlobStorageProviderServiceException" />
+        public async ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            string permissions) =>
+            throw new NotImplementedException();
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)

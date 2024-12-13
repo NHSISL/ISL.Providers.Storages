@@ -2,15 +2,15 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -48,9 +48,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<BlobContainerAccessPolicy> GetAccessPolicyAsync(BlobContainerClient blobContainerClient);
         ValueTask RemoveAllAccessPoliciesAsync(BlobContainerClient containerClient);
 
-        ValueTask<string> CreateDirectorySasTokenAsync(
+        ValueTask<string> CreateSasTokenAsync(
             string container,
-            string directoryPath,
-            string accessPolicyIdentifier);
+            string path,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn,
+            bool isDirectory,
+            string resource);
     }
 }
