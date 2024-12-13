@@ -45,7 +45,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasTokenAsync(
+                this.storageService.CreateSasTokenAsync(
                     someContainer,
                     someDirectoryPath,
                     someAccessPolicyIdentifier);
@@ -101,7 +101,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasTokenAsync(
+                this.storageService.CreateSasTokenAsync(
                     someContainer,
                     someDirectoryPath,
                     someAccessPolicyIdentifier);
@@ -157,7 +157,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasTokenAsync(
+                this.storageService.CreateSasTokenAsync(
                     someContainer,
                     someDirectoryPath,
                     someAccessPolicyIdentifier);

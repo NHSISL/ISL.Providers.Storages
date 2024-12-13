@@ -2,6 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -10,11 +15,6 @@ using Azure.Storage.Sas;
 using ISL.Providers.Storages.Abstractions.Models;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.DateTimes;
 using ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 {
@@ -80,7 +80,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
-            
+
             BlobSasBuilder sasBuilder = this.blobStorageBroker
                 .GetBlobSasBuilder(fileName, container, startsOnDateTimeOffset, expiresOn);
 
@@ -135,8 +135,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
-            DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
@@ -151,8 +149,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = startsOnDateTimeOffset,
-                        PolicyExpiresOn = startsOnDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
+                        PolicyStartsOn = policy.StartTime,
+                        PolicyExpiresOn = policy.ExpiryTime,
                         Permissions = permissions
                     }
                 };
@@ -267,24 +265,51 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 .AssignAccessPoliciesToContainerAsync(blobContainerClient, signedIdentifiers);
         });
 
-        public ValueTask<string> CreateDirectorySasTokenAsync(
+        public ValueTask<string> CreateSasTokenAsync(
              string container,
-             string directoryPath,
-             string accessPolicyIdentifier) =>
+             string path,
+             string accessPolicyIdentifier,
+             DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateDirectorySasToken(
                 container,
-                directoryPath,
+                path,
                 accessPolicyIdentifier);
+
+            //TODO: Logic to determine if this is a file or directory
 
             var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
                 container,
-                directoryPath,
+                path,
                 accessPolicyIdentifier);
 
             return sasToken;
         });
+
+        public ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            string accessLevel) =>
+        TryCatch(async () =>
+        {
+            throw new NotImplementedException();
+            //ValidateStorageArgumentsOnCreateDirectorySasToken(
+            //    container,
+            //    path,
+            //    accessPolicyIdentifier);
+
+            ////TODO: Logic to determine if this is a file or directory
+
+            //var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
+            //    container,
+            //    path,
+            //    accessPolicyIdentifier);
+
+            //return sasToken;
+        });
+
 
         virtual internal string ConvertToPermissionsString(List<string> permissions)
         {

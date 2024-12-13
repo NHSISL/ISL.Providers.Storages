@@ -2,6 +2,11 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Core.Pipeline;
 using Azure.Storage;
@@ -10,11 +15,6 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Files.DataLake;
 using Azure.Storage.Sas;
 using ISL.Providers.Storages.AzureBlobStorage.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
@@ -23,7 +23,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         private readonly BlobServiceClient BlobServiceClient;
         private readonly DataLakeServiceClient DataLakeServiceClient;
         private readonly StorageSharedKeyCredential StorageSharedKeyCredential;
-        public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -54,8 +53,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                 credential: this.StorageSharedKeyCredential,
                 dataLakeClientOptions);
-
-            this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
         public BlobContainerClient GetBlobContainerClient(string container) =>
@@ -109,8 +106,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public async ValueTask<string> GetDownloadLinkAsync(
-            BlobClient blobClient, 
-            BlobSasBuilder blobSasBuilder, 
+            BlobClient blobClient,
+            BlobSasBuilder blobSasBuilder,
             DateTimeOffset expiresOn)
         {
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
@@ -142,9 +139,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public BlobSasBuilder GetBlobSasBuilder(
-            string blobName, 
-            string blobContainerName, 
-            DateTimeOffset startsOn, 
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset startsOn,
             DateTimeOffset expiresOn)
         {
             var blobSasBuilder = new BlobSasBuilder()

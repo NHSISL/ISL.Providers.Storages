@@ -32,7 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                         .ReturnsAsync(outputSasToken);
 
             // when
-            var actualSasToken = await this.storageService.CreateDirectorySasTokenAsync(
+            var actualSasToken = await this.storageService.CreateSasTokenAsync(
                 inputContainer,
                 inputDirectoryPath,
                 inputAccessPolicyIdentifier);

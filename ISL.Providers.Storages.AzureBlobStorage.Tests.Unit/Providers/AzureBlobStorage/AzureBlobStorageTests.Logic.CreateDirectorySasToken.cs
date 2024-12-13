@@ -21,7 +21,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             string expectedSasToken = outputSasToken;
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
                     .ReturnsAsync(outputSasToken);
 
             // when
@@ -32,7 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();

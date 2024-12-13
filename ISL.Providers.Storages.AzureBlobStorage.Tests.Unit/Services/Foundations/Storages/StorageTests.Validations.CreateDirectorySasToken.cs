@@ -44,7 +44,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.storageService.CreateDirectorySasTokenAsync(
+                this.storageService.CreateSasTokenAsync(
                     invalidContainer,
                     invalidDirectoryPath,
                     invalidAccessPolicyIdentifier);

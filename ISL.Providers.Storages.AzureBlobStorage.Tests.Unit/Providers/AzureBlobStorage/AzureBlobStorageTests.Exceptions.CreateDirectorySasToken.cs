@@ -32,7 +32,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
                     .ThrowsAsync(storageValidationException);
 
             // when
@@ -49,7 +49,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -78,7 +78,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
                     .ThrowsAsync(storageDependencyValidationException);
 
             // when
@@ -98,7 +98,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -127,7 +127,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
                     .ThrowsAsync(storageDependencyException);
 
             // when
@@ -147,7 +147,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
@@ -176,7 +176,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
                     .ThrowsAsync(storageServiceException);
 
             // when
@@ -196,7 +196,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
+                service.CreateSasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
                     Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
