@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             string container,
             string path,
             DateTimeOffset expiresOn,
-            string permissions);
+            List<string> permissions);
 
         ValueTask<List<string>> RetrieveListOfAllAccessPoliciesAsync(string container);
         ValueTask<List<Policy>> RetrieveAllAccessPoliciesAsync(string container);

@@ -98,13 +98,13 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="path">The path to which the SAS token will be scoped</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
         /// token will expire.</param>
-        /// <param name="permissions">The permissions of the token.</param>
+        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         ValueTask<string> CreateSasTokenAsync(
             string container,
             string path,
             DateTimeOffset expiresOn,
-            string permissions);
+            List<string> permissions);
 
         /// <summary>
         /// Retrieves all stored access policies from the container.

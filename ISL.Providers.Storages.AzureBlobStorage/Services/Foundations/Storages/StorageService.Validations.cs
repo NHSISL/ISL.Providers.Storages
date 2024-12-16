@@ -80,15 +80,28 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
         private static void ValidateStorageArgumentsOnCreateSasToken(
             string container,
-            string directoryPath,
+            string path,
             string accessPolicyIdentifier,
             DateTimeOffset expiresOn)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
-                (Rule: IsInvalid(directoryPath), Parameter: "DirectoryPath"),
+                (Rule: IsInvalid(path), Parameter: "Path"),
                 (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"),
                 (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+        }
+
+        private static void ValidateStorageArgumentsOnCreateSasToken(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            List<string> permissions)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(path), Parameter: "Path"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"),
+                (Rule: IsInvalidList(permissions), Parameter: "Permissions"));
         }
 
         private static void ValidateStorageArgumentsOnRemoveAccessPolicies(string container)

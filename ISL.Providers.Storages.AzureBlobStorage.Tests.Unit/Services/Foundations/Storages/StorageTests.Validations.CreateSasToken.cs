@@ -18,7 +18,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             // given
             string invalidContainer = invalidText;
-            string invalidDirectoryPath = invalidText;
+            string invalidPath = invalidText;
             string invalidAccessPolicyIdentifier = invalidText;
 
             var invalidArgumentStorageException =
@@ -26,7 +26,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Invalid storage service argument(s), please fix the errors and try again.");
 
             invalidArgumentStorageException.AddData(
-                key: "DirectoryPath",
+                key: "Path",
                 values: "Text is invalid");
 
             invalidArgumentStorageException.AddData(
@@ -50,7 +50,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             ValueTask<string> createSasTokenTask =
                 this.storageService.CreateSasTokenAsync(
                     invalidContainer,
-                    invalidDirectoryPath,
+                    invalidPath,
                     invalidAccessPolicyIdentifier,
                     invalidDateTimeOffset);
 

@@ -16,12 +16,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
             string randomSasToken = GetRandomString();
             string inputContainer = randomContainer;
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
             DateTimeOffset inputExpiresOn = randomDateTimeOffset;
             string outputSasToken = randomSasToken;
@@ -30,7 +30,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.Setup(broker =>
                 broker.CreateSasTokenAsync(
                     inputContainer,
-                    inputDirectoryPath,
+                    inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn,
                     true,
@@ -40,7 +40,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             var actualSasToken = await this.storageService.CreateSasTokenAsync(
                 inputContainer,
-                inputDirectoryPath,
+                inputPath,
                 inputAccessPolicyIdentifier,
                 inputExpiresOn);
 
@@ -50,7 +50,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.Verify(broker =>
                 broker.CreateSasTokenAsync(
                     inputContainer,
-                    inputDirectoryPath,
+                    inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn,
                     true,

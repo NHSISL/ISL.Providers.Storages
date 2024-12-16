@@ -142,6 +142,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return sasQueryParameters.ToString();
         }
 
+        public async ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            string permissionsString,
+            bool isDirectory,
+            string resource)
+        {
+            var sasBuilder = new DataLakeSasBuilder()
+            {
+                Resource = resource,
+                Path = path,
+                IsDirectory = isDirectory,
+                FileSystemName = container,
+                ExpiresOn = expiresOn,
+            };
+
+            sasBuilder.SetPermissions(permissionsString);
+
+            var sasQueryParameters = sasBuilder.ToSasQueryParameters(
+                StorageSharedKeyCredential);
+
+            return sasQueryParameters.ToString();
+        }
+
         public BlobSasBuilder GetBlobSasBuilder(
             string blobName,
             string blobContainerName,

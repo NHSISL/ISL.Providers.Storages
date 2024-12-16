@@ -15,10 +15,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
             DateTimeOffset inputExpiresOn = randomDateTimeOffset;
@@ -121,10 +121,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
 
@@ -177,10 +177,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
 

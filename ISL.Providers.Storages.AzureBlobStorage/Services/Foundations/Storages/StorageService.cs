@@ -296,24 +296,30 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             string container,
             string path,
             DateTimeOffset expiresOn,
-            string permissions) =>
+            List<string> permissions) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnCreateSasToken(
+                container,
+                path,
+                expiresOn,
+                permissions);
 
-            throw new NotImplementedException();
-        //ValidateStorageArgumentsOnCreateDirectorySasToken(
-        //    container,
-        //    path,
-        //    accessPolicyIdentifier);
+            ValidatePermissions(permissions);
+            string permissionsString = ConvertToPermissionsString(permissions);
+            bool isDirectory = !Path.HasExtension(path);
+            string resource = ConvertToResourceString(isDirectory);
 
-        ////TODO: Logic to determine if this is a file or directory
+            var sasToken = await this.blobStorageBroker.CreateSasTokenAsync(
+                container,
+                path,
+                expiresOn,
+                permissionsString,
+                isDirectory,
+                resource);
 
-        //var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
-        //    container,
-        //    path,
-        //    accessPolicyIdentifier);
-
-        //return sasToken;
-
-
+            return sasToken;
+        });
 
         virtual internal string ConvertToPermissionsString(List<string> permissions)
         {

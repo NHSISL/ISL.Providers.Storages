@@ -12,11 +12,11 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
             string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
             DateTimeOffset inputExpiresOn = randomDateTimeOffset;
@@ -26,7 +26,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             this.storageProviderMock.Setup(service =>
                 service.CreateSasTokenAsync(
                     inputContainer,
-                    inputDirectoryPath,
+                    inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn))
                         .ReturnsAsync(outputSasToken);
@@ -35,7 +35,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             string actualSasToken = await this.storageAbstractionProvider
                 .CreateSasTokenAsync(
                     inputContainer,
-                    inputDirectoryPath,
+                    inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn);
 
@@ -45,7 +45,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
             this.storageProviderMock.Verify(service =>
                 service.CreateSasTokenAsync(
                     inputContainer,
-                    inputDirectoryPath,
+                    inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn),
                     Times.Once);
