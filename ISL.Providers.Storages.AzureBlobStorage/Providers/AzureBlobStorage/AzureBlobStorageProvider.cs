@@ -641,7 +641,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
         /// <param name="path">The path to which the SAS token will be scoped</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
         /// token will expire.</param>
-        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.</param>
+        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.
+        /// The options are read, add, create, write, delete and list.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         /// <exception cref="AzureBlobStorageProviderValidationException" />
         /// <exception cref="AzureBlobStorageProviderDependencyException" />
@@ -650,8 +651,37 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             string container,
             string path,
             DateTimeOffset expiresOn,
-            List<string> permissions) =>
-            throw new NotImplementedException();
+            List<string> permissions)
+        {
+            try
+            {
+                return await this.storageService.CreateSasTokenAsync(
+                    container,
+                    path,
+                    expiresOn,
+                    permissions);
+            }
+            catch (StorageValidationException storageValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
+            catch (StorageDependencyException storageDependencyException)
+            {
+                throw CreateProviderDependencyException(
+                    storageDependencyException.InnerException as Xeption);
+            }
+            catch (StorageServiceException storageServiceException)
+            {
+                throw CreateProviderServiceException(
+                    storageServiceException.InnerException as Xeption);
+            }
+        }
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)

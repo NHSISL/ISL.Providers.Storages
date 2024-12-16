@@ -225,7 +225,8 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="path">The path to which the SAS token will be scoped</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
         /// token will expire.</param>
-        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.</param>
+        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.
+        /// The options are read, add, create, write, delete and list.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.
@@ -236,12 +237,19 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public async ValueTask<string> CreateSasTokenAsync(
+        public ValueTask<string> CreateSasTokenAsync(
             string container,
             string path,
             DateTimeOffset expiresOn,
             List<string> permissions) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            return await storageProvider.CreateSasTokenAsync(
+                container,
+                path,
+                expiresOn,
+                permissions);
+        });
 
         /// <summary>
         /// Retrieves all stored access policies from the container.

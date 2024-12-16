@@ -91,6 +91,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 }
             };
 
+        private static List<string> GetRandomPermissionsList()
+        {
+            List<string> returnedList = new List<string>();
+
+            List<string> permissionsList = new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "list",
+                "add",
+                "create"
+            };
+
+            var rng = new Random();
+            int index = rng.Next(1, permissionsList.Count);
+
+            for (int i = 0; i < index; i++)
+            {
+                returnedList.Add(permissionsList[i]);
+            }
+
+            return returnedList;
+        }
+
         public class HasLengthStream : MemoryStream
         {
             public override long Length => 1;

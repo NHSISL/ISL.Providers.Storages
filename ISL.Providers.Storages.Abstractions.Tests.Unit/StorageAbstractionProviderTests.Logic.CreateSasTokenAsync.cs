@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlobStorage
+namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 {
-    public partial class AzureBlobStorageTests
+    public partial class StorageAbstractionProviderTests
     {
         [Fact]
         public async Task ShouldCreateSasTokenWithAccessPolicyAsync()
@@ -24,8 +24,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             string outputSasToken = randomSasToken;
             string expectedSasToken = outputSasToken;
 
-            this.storageServiceMock.Setup(service =>
-                service.CreateSasTokenAsync(
+            this.storageProviderMock.Setup(provider =>
+                provider.CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
                     inputAccessPolicyIdentifier,
@@ -33,7 +33,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                         .ReturnsAsync(outputSasToken);
 
             // when
-            string actualSasToken = await this.azureBlobStorageProvider
+            string actualSasToken = await this.storageAbstractionProvider
                 .CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
@@ -43,15 +43,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
 
-            this.storageServiceMock.Verify(service =>
-                service.CreateSasTokenAsync(
+            this.storageProviderMock.Verify(provider =>
+                provider.CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn),
                         Times.Once);
 
-            this.storageServiceMock.VerifyNoOtherCalls();
+            this.storageProviderMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             string outputSasToken = randomSasToken;
             string expectedSasToken = outputSasToken;
 
-            this.storageServiceMock.Setup(service =>
-                service.CreateSasTokenAsync(
+            this.storageProviderMock.Setup(provider =>
+                provider.CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
                     inputExpiresOn,
@@ -79,7 +79,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                         .ReturnsAsync(outputSasToken);
 
             // when
-            string actualSasToken = await this.azureBlobStorageProvider
+            string actualSasToken = await this.storageAbstractionProvider
                 .CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
@@ -89,15 +89,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualSasToken.Should().BeEquivalentTo(expectedSasToken);
 
-            this.storageServiceMock.Verify(service =>
-                service.CreateSasTokenAsync(
+            this.storageProviderMock.Verify(provider =>
+                provider.CreateSasTokenAsync(
                     inputContainer,
                     inputPath,
                     inputExpiresOn,
                     inputPermissionsList),
                         Times.Once);
 
-            this.storageServiceMock.VerifyNoOtherCalls();
+            this.storageProviderMock.VerifyNoOtherCalls();
         }
     }
 }

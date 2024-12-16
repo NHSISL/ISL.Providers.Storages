@@ -46,7 +46,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                         .Throws(dependencyValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -55,7 +55,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -107,7 +107,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                         .Throws(dependencyException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -116,7 +116,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyException
@@ -167,7 +167,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                         .Throws(someException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -176,7 +176,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceException
@@ -229,7 +229,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             StorageService storageService = storageServiceMock.Object;
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -238,7 +238,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyValidationException
@@ -285,7 +285,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             StorageService storageService = storageServiceMock.Object;
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -294,7 +294,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyException
@@ -340,7 +340,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             StorageService storageService = storageServiceMock.Object;
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 storageService.CreateSasTokenAsync(
                     someContainer,
                     somePath,
@@ -349,7 +349,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceException
