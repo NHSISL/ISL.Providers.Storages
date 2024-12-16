@@ -651,7 +651,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
             string path,
             DateTimeOffset expiresOn,
             List<string> permissions) =>
-            throw new NotImplementedException();
+            await this.storageService.CreateSasTokenAsync(
+                container,
+                path,
+                expiresOn,
+                permissions);
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
             Xeption innerException)
