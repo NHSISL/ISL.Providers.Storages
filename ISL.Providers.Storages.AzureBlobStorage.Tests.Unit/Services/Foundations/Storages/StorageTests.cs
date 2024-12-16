@@ -125,6 +125,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return permissionsStringList[index];
         }
 
+        private static List<string> GetRandomPermissionsList()
+        {
+            List<string> returnedList = new List<string>();
+
+            List<string> permissionsList = new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "list",
+                "add",
+                "create"
+            };
+
+            var rng = new Random();
+            int index = rng.Next(permissionsList.Count);
+
+            for (int i = 0; i < index; i++)
+            {
+                returnedList.Add(permissionsList[i]);
+            }
+
+            return returnedList;
+        }
+
         public class ZeroLengthStream : MemoryStream
         {
             public override long Length => 0;
@@ -356,16 +381,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return filler;
         }
-
-
-        private static List<string> GetPolicyNames() =>
-            new List<string>
-            {
-                "read",
-                "write",
-                "delete",
-                "fullaccess"
-            };
 
         private static List<string> ConvertToPermissionsList(string permissionsString)
         {
