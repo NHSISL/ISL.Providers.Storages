@@ -2,12 +2,12 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
+using System.Collections.Generic;
+using System.IO;
 using ADotNet.Clients;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
-using System.Collections.Generic;
-using System.IO;
 
 namespace ISL.Providers.Storages.Infrastructure.Services
 {
@@ -28,13 +28,13 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                 {
                     Push = new PushEvent
                     {
-                        Branches = new string[] { branchName }
+                        Branches = [branchName]
                     },
 
                     PullRequest = new PullRequestEvent
                     {
-                        Types = new string[] { "opened", "synchronize", "reopened", "closed" },
-                        Branches = new string[] { branchName }
+                        Types = ["opened", "synchronize", "reopened", "closed"],
+                        Branches = [branchName]
                     }
                 },
 
@@ -47,7 +47,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                 Jobs = new Dictionary<string, Job>
                 {
                     {
-                        "label",
+                        "Label",
                         new LabelJobV2(runsOn: BuildMachines.UbuntuLatest)
                     },
                     {
@@ -90,7 +90,8 @@ namespace ISL.Providers.Storages.Infrastructure.Services
 
                                 new DotNetBuildTask
                                 {
-                                    Name = "Build"
+                                    Name = "Build with warnings as errors",
+                                    Run = "dotnet build --no-restore --warnaserror"
                                 },
 
                                 new TestTask
@@ -108,6 +109,9 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                             projectRelativePath: $"{projectName}/{projectName}.csproj",
                             githubToken: "${{ secrets.PAT_FOR_TAGGING }}",
                             branchName: branchName)
+                        {
+                            Name = "Tag and Release"
+                        }
                     },
                     {
                         "publish",
@@ -116,6 +120,9 @@ namespace ISL.Providers.Storages.Infrastructure.Services
                             dependsOn: "add_tag",
                             dotNetVersion: dotNetVersion,
                             nugetApiKey: "${{ secrets.NUGET_ACCESS }}")
+                        {
+                            Name = "Publish to NuGet"
+                        }
                     }
                 }
             };
