@@ -225,7 +225,8 @@ namespace ISL.Providers.Storages.Abstractions
         /// <param name="path">The path to which the SAS token will be scoped</param>
         /// <param name="expiresOn">The <see cref="DateTimeOffset"/> indicating when the Sas 
         /// token will expire.</param>
-        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.</param>
+        /// <param name="permissions">A <see cref="List{String}"/> containing the permissions of the token.
+        /// The options are read, add, create, write, delete and list.</param>
         /// <returns>A <see cref="ValueTask{String}"/> containing the generated access token.</returns>
         /// <exception cref="StorageProviderValidationException">
         /// Thrown when validation of input parameters fails.

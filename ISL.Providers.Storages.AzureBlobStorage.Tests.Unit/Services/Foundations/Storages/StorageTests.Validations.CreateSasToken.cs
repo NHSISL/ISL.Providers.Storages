@@ -173,7 +173,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             var invalidPermissionStorageException =
                 new InvalidPermissionStorageException(
-                    message: "Invalid permission. Read, write, delete, create, add and list" +
+                    message: "Invalid permission. Read, write, delete, create, add and list " +
                         "permissions are supported at this time.");
 
             var expectedStorageValidationException =

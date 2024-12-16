@@ -190,7 +190,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                     permission.ToLower() != "list")
                 {
                     throw new InvalidPermissionStorageException(
-                        message: "Invalid permission. Read, write, delete, create, add and list" +
+                        message: "Invalid permission. Read, write, delete, create, add and list " +
                         "permissions are supported at this time.");
                 }
             }
