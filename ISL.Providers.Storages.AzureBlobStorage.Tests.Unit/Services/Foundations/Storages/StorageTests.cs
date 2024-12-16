@@ -268,8 +268,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Id = $"read",
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "rl"
                     }
                 },
@@ -278,8 +276,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Id = $"write",
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "acw"
                     }
                 },

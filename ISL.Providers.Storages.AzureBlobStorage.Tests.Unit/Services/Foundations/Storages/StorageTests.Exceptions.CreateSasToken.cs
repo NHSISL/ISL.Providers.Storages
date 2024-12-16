@@ -18,6 +18,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             Exception dependencyValidationException)
         {
             // given
+            string someContainer = GetRandomString();
+            string somePath = GetRandomString();
+            string somePolicyIdentifier = GetRandomString();
+            DateTimeOffset someFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
+
             var failedStorageDependencyValidationException =
                 new FailedStorageDependencyValidationException(
                     message: "Failed storage dependency validation error occurred, please contact support.",
@@ -33,7 +38,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>(),
+                    someFutureDateTimeOffset,
                     It.IsAny<bool>(),
                     It.IsAny<string>()))
                         .Throws(dependencyValidationException);
@@ -41,10 +46,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateSasTokenAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>());
+                    someContainer,
+                    somePath,
+                    somePolicyIdentifier,
+                    someFutureDateTimeOffset);
 
             StorageDependencyValidationException actualStorageDependencyValidationException =
                 await Assert.ThrowsAsync<StorageDependencyValidationException>(
@@ -59,7 +64,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>(),
+                    someFutureDateTimeOffset,
                     It.IsAny<bool>(),
                     It.IsAny<string>()),
                         Times.Once);
@@ -73,6 +78,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         public async Task ShouldThrowDependencyExceptionOnCreateSasTokenAsync(Exception dependencyException)
         {
             // given
+            string someContainer = GetRandomString();
+            string somePath = GetRandomString();
+            string somePolicyIdentifier = GetRandomString();
+            DateTimeOffset someFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
+
             var failedStorageDependencyException =
                 new FailedStorageDependencyException(
                     message: "Failed storage dependency error occurred, please contact support.",
@@ -96,10 +106,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateSasTokenAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>());
+                    someContainer,
+                    somePath,
+                    somePolicyIdentifier,
+                    someFutureDateTimeOffset);
 
             StorageDependencyException actualStorageDependencyException =
                 await Assert.ThrowsAsync<StorageDependencyException>(
@@ -128,6 +138,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         {
             // given
             Exception someException = new Exception();
+            string someContainer = GetRandomString();
+            string somePath = GetRandomString();
+            string somePolicyIdentifier = GetRandomString();
+            DateTimeOffset someFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
 
             var failedStorageServiceException =
                 new FailedStorageServiceException(
@@ -152,10 +166,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             // when
             ValueTask<string> createDirectorySasTokenTask =
                 this.storageService.CreateSasTokenAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<DateTimeOffset>());
+                    someContainer,
+                    somePath,
+                    somePolicyIdentifier,
+                    someFutureDateTimeOffset);
 
             StorageServiceException actualStorageServiceException =
                 await Assert.ThrowsAsync<StorageServiceException>(
