@@ -171,15 +171,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             DateTimeOffset someFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
             List<string> invalidPermissionsList = GetRandomStringList();
 
-            var InvalidSasPermissionStorageException =
-                new InvalidSasPermissionStorageException(
+            var invalidPermissionStorageException =
+                new InvalidPermissionStorageException(
                     message: "Invalid permission. Read, write, delete, create, add and list" +
                         "permissions are supported at this time.");
 
             var expectedStorageValidationException =
                 new StorageValidationException(
                     message: "Storage validation error occurred, please fix errors and try again.",
-                    innerException: InvalidSasPermissionStorageException);
+                    innerException: invalidPermissionStorageException);
 
             // when
             ValueTask<string> createSasTokenTask =

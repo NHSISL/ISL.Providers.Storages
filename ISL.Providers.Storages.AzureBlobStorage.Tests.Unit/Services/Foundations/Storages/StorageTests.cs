@@ -140,7 +140,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
 
             var rng = new Random();
-            int index = rng.Next(permissionsList.Count);
+            int index = rng.Next(1, permissionsList.Count);
 
             for (int i = 0; i < index; i++)
             {

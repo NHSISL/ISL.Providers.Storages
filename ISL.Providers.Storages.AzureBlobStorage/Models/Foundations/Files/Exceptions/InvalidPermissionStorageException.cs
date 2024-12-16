@@ -6,9 +6,9 @@ using Xeptions;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions
 {
-    public class InvalidSasPermissionStorageException : Xeption
+    public class InvalidPermissionStorageException : Xeption
     {
-        public InvalidSasPermissionStorageException(string message)
+        public InvalidPermissionStorageException(string message)
             : base(message)
         { }
     }
