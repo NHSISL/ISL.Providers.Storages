@@ -100,7 +100,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
                 (Rule: IsInvalid(path), Parameter: "Path"),
-                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+
+            Validate(
                 (Rule: IsInvalidList(permissions), Parameter: "Permissions"));
         }
 

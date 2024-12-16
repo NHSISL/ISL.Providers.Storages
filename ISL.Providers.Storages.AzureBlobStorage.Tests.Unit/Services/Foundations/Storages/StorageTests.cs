@@ -470,11 +470,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<List<Policy>> NullAndEmptyList() =>
+        public static TheoryData<List<Policy>> NullAndEmptyPolicyList() =>
             new TheoryData<List<Policy>>
             {
                 { null },
                 { new List<Policy>() }
+            };
+
+        public static TheoryData<List<string>> NullAndEmptyStringList() =>
+            new TheoryData<List<string>>
+            {
+                { null },
+                { new List<string>() }
             };
 
         public static TheoryData<string, bool, string> PathRelatedInputs()

@@ -112,7 +112,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Theory]
-        [MemberData(nameof(NullAndEmptyList))]
+        [MemberData(nameof(NullAndEmptyPolicyList))]
         public async Task
             ShouldThrowValidationExceptionOnCreateAccessPolicyIfListNullOrEmptyInvalidAsync(
             List<Policy> invalidList)
