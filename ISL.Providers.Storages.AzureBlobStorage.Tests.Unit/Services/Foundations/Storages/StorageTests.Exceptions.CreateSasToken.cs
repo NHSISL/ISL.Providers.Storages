@@ -137,7 +137,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
         }
 
         [Fact]
-        public async Task ShouldThrowServiceExceptionOnCreateSasTokenAsync()
+        public async Task ShouldThrowServiceExceptionOnCreateSasTokenWithAccessPolicyAsync()
         {
             // given
             Exception someException = new Exception();
