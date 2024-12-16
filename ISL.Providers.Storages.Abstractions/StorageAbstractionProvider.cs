@@ -236,12 +236,19 @@ namespace ISL.Providers.Storages.Abstractions
         /// <exception cref="StorageProviderServiceException">
         /// Thrown when there is a general issue in the storage service layer.
         /// </exception>
-        public async ValueTask<string> CreateSasTokenAsync(
+        public ValueTask<string> CreateSasTokenAsync(
             string container,
             string path,
             DateTimeOffset expiresOn,
             List<string> permissions) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            return await storageProvider.CreateSasTokenAsync(
+                container,
+                path,
+                expiresOn,
+                permissions);
+        });
 
         /// <summary>
         /// Retrieves all stored access policies from the container.
