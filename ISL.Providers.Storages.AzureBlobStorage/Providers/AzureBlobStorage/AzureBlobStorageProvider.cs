@@ -665,6 +665,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Providers.AzureBlobStorage
                 throw CreateProviderValidationException(
                     storageValidationException.InnerException as Xeption);
             }
+            catch (StorageDependencyValidationException storageDependencyValidationException)
+            {
+                throw CreateProviderValidationException(
+                    storageDependencyValidationException.InnerException as Xeption);
+            }
         }
 
         private static AzureBlobStorageProviderValidationException CreateProviderValidationException(
