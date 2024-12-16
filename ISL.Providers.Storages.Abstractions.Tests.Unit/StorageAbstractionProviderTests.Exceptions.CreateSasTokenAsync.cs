@@ -42,7 +42,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -51,7 +51,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
@@ -94,7 +94,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -103,7 +103,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
@@ -146,7 +146,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -155,7 +155,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -200,7 +200,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -209,7 +209,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -253,7 +253,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -262,7 +262,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<StorageProviderValidationException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
@@ -305,7 +305,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -314,7 +314,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderDependencyException actualStorageDependencyProviderException =
                 await Assert.ThrowsAsync<StorageProviderDependencyException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageDependencyProviderException.Should().BeEquivalentTo(
@@ -357,7 +357,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                         .ThrowsAsync(someStorageValidationException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -366,7 +366,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
@@ -411,7 +411,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
                     .ThrowsAsync(someException);
 
             // when
-            ValueTask<string> createDirectorySasTokenTask =
+            ValueTask<string> createSasTokenTask =
                 this.storageAbstractionProvider.CreateSasTokenAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -420,7 +420,7 @@ namespace ISL.Providers.Storage.Abstractions.Tests.Unit
 
             StorageProviderServiceException actualStorageServiceProviderException =
                 await Assert.ThrowsAsync<StorageProviderServiceException>(
-                    testCode: createDirectorySasTokenTask.AsTask);
+                    testCode: createSasTokenTask.AsTask);
 
             // then
             actualStorageServiceProviderException.Should().BeEquivalentTo(
