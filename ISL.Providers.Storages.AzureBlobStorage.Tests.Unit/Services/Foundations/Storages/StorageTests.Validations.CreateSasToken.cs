@@ -160,5 +160,44 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task
+            ShouldThrowValidationExceptionOnCreateSasTokenWithPermissionsListIfPermissionsInvalidAsync()
+        {
+            // given
+            string someContainer = GetRandomString();
+            string somePath = GetRandomString();
+            DateTimeOffset someFutureDateTimeOffset = GetRandomFutureDateTimeOffset();
+            List<string> invalidPermissionsList = GetRandomStringList();
+
+            var InvalidSasPermissionStorageException =
+                new InvalidSasPermissionStorageException(
+                    message: "Invalid permission. Read, write, delete, create, add and list" +
+                        "permissions are supported at this time.");
+
+            var expectedStorageValidationException =
+                new StorageValidationException(
+                    message: "Storage validation error occurred, please fix errors and try again.",
+                    innerException: InvalidSasPermissionStorageException);
+
+            // when
+            ValueTask<string> createSasTokenTask =
+                this.storageService.CreateSasTokenAsync(
+                    someContainer,
+                    somePath,
+                    someFutureDateTimeOffset,
+                    invalidPermissionsList);
+
+            StorageValidationException actualStorageValidationException =
+                await Assert.ThrowsAsync<StorageValidationException>(createSasTokenTask.AsTask);
+
+            // then
+            actualStorageValidationException
+                .Should().BeEquivalentTo(expectedStorageValidationException);
+
+            this.blobStorageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
