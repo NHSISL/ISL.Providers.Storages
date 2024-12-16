@@ -165,14 +165,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         public async Task ShouldThrowProviderServiceExceptionOnCreateSasTokenWithAccessPolicyAsync()
         {
             // given
-            string randomContainer = GetRandomString();
-            string randomPath = GetRandomString();
-            string randomAccessPolicyIdentifier = GetRandomString();
-            string randomSasToken = GetRandomString();
-            string inputPath = randomPath;
-            string inputContainer = randomContainer;
-            string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
-
             var storageServiceException = new StorageServiceException(
                 message: "Storage service error occurred, please fix errors and try again.",
                 innerException: new Xeption());
@@ -357,6 +349,56 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             // then
             actualAzureBlobStorageProviderDependencyException
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
+
+            this.storageServiceMock.Verify(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()),
+                        Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowProviderServiceExceptionOnCreateSasTokenWithPermissionsListAsync()
+        {
+            // given
+            var storageServiceException = new StorageServiceException(
+                message: "Storage service error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderServiceException =
+                new AzureBlobStorageProviderServiceException(
+                    message: "Azure blob storage provider service error occurred, " +
+                        "contact support.",
+                    innerException: (Xeption)storageServiceException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()))
+                        .ThrowsAsync(storageServiceException);
+
+            // when
+            ValueTask<string> createSasTokenTask =
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>());
+
+            AzureBlobStorageProviderServiceException
+                actualAzureBlobStorageProviderServiceException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderServiceException>(
+                        testCode: createSasTokenTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderServiceException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
                 service.CreateSasTokenAsync(
