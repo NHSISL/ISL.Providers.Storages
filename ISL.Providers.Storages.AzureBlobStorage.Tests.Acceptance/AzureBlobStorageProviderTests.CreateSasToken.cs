@@ -102,7 +102,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            await this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputDirectoryFilePath, inputContainer);
+            await this.azureBlobStorageProvider.CreateFileAsync(
+                inputStream,
+                inputDirectoryFilePath,
+                inputContainer);
 
             await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
                 inputContainer,
@@ -197,7 +200,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
 
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            await this.azureBlobStorageProvider.CreateFileAsync(inputStream, inputDirectoryFilePath, inputContainer);
+            await this.azureBlobStorageProvider.CreateFileAsync(
+                inputStream,
+                inputDirectoryFilePath,
+                inputContainer);
 
             // when
             var actualSasToken = await this.azureBlobStorageProvider.CreateSasTokenAsync(
