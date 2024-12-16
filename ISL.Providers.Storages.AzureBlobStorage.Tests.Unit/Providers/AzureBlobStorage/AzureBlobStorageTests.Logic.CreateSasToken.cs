@@ -8,7 +8,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
     public partial class AzureBlobStorageTests
     {
         [Fact]
-        public async Task ShouldCreateDirectorySasTokenAsync()
+        public async Task ShouldCreateSasTokenAsync()
         {
             // given
             string randomContainer = GetRandomString();

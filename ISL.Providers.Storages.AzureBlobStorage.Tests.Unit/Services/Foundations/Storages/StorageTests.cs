@@ -461,5 +461,18 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 { null },
                 { new List<Policy>() }
             };
+
+        public static TheoryData<string, bool, string> PathRelatedInputs()
+        {
+            string randomString = GetRandomString();
+            string directoryPath = randomString;
+            string blobPath = randomString + ".csv";
+
+            return new TheoryData<string, bool, string>
+            {
+                { directoryPath, true, "d" },
+                { blobPath, false, "b" }
+            };
+        }
     }
 }

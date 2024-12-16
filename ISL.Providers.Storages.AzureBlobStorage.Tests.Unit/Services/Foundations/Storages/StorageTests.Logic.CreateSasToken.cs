@@ -11,19 +11,24 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 {
     public partial class StorageTests
     {
-        [Fact]
-        public async Task ShouldCreateDirectorySasTokenAsync()
+        [Theory]
+        [MemberData(nameof(PathRelatedInputs))]
+        public async Task ShouldCreateSasTokenAsync(
+            string path,
+            bool isDirectory,
+            string resource)
         {
             // given
             string randomContainer = GetRandomString();
-            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
             string randomSasToken = GetRandomString();
             string inputContainer = randomContainer;
-            string inputPath = randomPath;
+            string inputPath = path;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
             DateTimeOffset inputExpiresOn = randomDateTimeOffset;
+            bool inputIsDirectory = isDirectory;
+            string inputResource = resource;
             string outputSasToken = randomSasToken;
             string expectedSasToken = outputSasToken;
 
@@ -33,8 +38,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn,
-                    true,
-                    "d"))
+                    inputIsDirectory,
+                    inputResource))
                         .ReturnsAsync(outputSasToken);
 
             // when
@@ -53,8 +58,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     inputPath,
                     inputAccessPolicyIdentifier,
                     inputExpiresOn,
-                    true,
-                    "d"),
+                    inputIsDirectory,
+                    inputResource),
                         Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
