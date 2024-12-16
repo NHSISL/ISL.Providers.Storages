@@ -41,12 +41,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             // when
-            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicies);
+            await this.azureBlobStorageProvider
+                .CreateAndAssignAccessPoliciesAsync(inputContainer, inputAccessPolicies);
 
             List<string> actualAccessPolicyNames =
-                await this.azureBlobStorageProvider.RetrieveListOfAllAccessPoliciesAsync(
-                    inputContainer);
+                await this.azureBlobStorageProvider
+                    .RetrieveListOfAllAccessPoliciesAsync(inputContainer);
 
             // then
             actualAccessPolicyNames.Count.Should().Be(inputAccessPolicies.Count);

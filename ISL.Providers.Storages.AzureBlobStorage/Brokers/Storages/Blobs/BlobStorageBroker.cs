@@ -23,7 +23,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         private readonly BlobServiceClient BlobServiceClient;
         private readonly DataLakeServiceClient DataLakeServiceClient;
         private readonly StorageSharedKeyCredential StorageSharedKeyCredential;
-        public int TokenLifetimeDays { get; private set; }
 
         public BlobStorageBroker(AzureBlobStoreConfigurations azureBlobStoreConfigurations)
         {
@@ -54,8 +53,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
                 serviceUri: new Uri(azureBlobStoreConfigurations.ServiceUri),
                 credential: this.StorageSharedKeyCredential,
                 dataLakeClientOptions);
-
-            this.TokenLifetimeDays = azureBlobStoreConfigurations.TokenLifetimeDays;
         }
 
         public BlobContainerClient GetBlobContainerClient(string container) =>
@@ -109,8 +106,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         }
 
         public async ValueTask<string> GetDownloadLinkAsync(
-            BlobClient blobClient, 
-            BlobSasBuilder blobSasBuilder, 
+            BlobClient blobClient,
+            BlobSasBuilder blobSasBuilder,
             DateTimeOffset expiresOn)
         {
             var blobUriBuilder = new BlobUriBuilder(blobClient.Uri)
@@ -121,30 +118,59 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
             return blobUriBuilder.ToUri().ToString();
         }
 
-        public async ValueTask<string> CreateDirectorySasTokenAsync(
+        public async ValueTask<string> CreateSasTokenAsync(
             string container,
-            string directoryPath,
-            string accessPolicyIdentifier)
+            string path,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn,
+            bool isDirectory,
+            string resource)
         {
-            var directorySasBuilder = new DataLakeSasBuilder()
+            var sasBuilder = new DataLakeSasBuilder()
             {
                 Identifier = accessPolicyIdentifier,
-                Resource = "d",
-                Path = directoryPath,
-                IsDirectory = true,
+                Resource = resource,
+                Path = path,
+                IsDirectory = isDirectory,
                 FileSystemName = container,
+                ExpiresOn = expiresOn,
             };
 
-            var sasQueryParameters = directorySasBuilder.ToSasQueryParameters(
+            var sasQueryParameters = sasBuilder.ToSasQueryParameters(
+                StorageSharedKeyCredential);
+
+            return sasQueryParameters.ToString();
+        }
+
+        public async ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            string permissionsString,
+            bool isDirectory,
+            string resource)
+        {
+            var sasBuilder = new DataLakeSasBuilder()
+            {
+                Resource = resource,
+                Path = path,
+                IsDirectory = isDirectory,
+                FileSystemName = container,
+                ExpiresOn = expiresOn,
+            };
+
+            sasBuilder.SetPermissions(permissionsString);
+
+            var sasQueryParameters = sasBuilder.ToSasQueryParameters(
                 StorageSharedKeyCredential);
 
             return sasQueryParameters.ToString();
         }
 
         public BlobSasBuilder GetBlobSasBuilder(
-            string blobName, 
-            string blobContainerName, 
-            DateTimeOffset startsOn, 
+            string blobName,
+            string blobContainerName,
+            DateTimeOffset startsOn,
             DateTimeOffset expiresOn)
         {
             var blobSasBuilder = new BlobSasBuilder()

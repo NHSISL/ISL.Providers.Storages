@@ -12,7 +12,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
     public partial class AzureBlobStorageProviderTests
     {
         [Fact]
-        public async Task ShouldCreateDirectorySasTokenWritePermissionsAsync()
+        public async Task ShouldCreateSasTokenWritePermissionsAsync()
         {
             // given
             string randomPolicyName = GetRandomString();
@@ -20,9 +20,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             string randomFolder = GetRandomString();
             string randomSubFolder = GetRandomString();
             string randomFileName = GetRandomString();
+            DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
             string inputPolicyName = randomPolicyName;
             string inputContainer = randomContainer.ToLower();
             string inputDirectory = randomFolder + "/" + randomSubFolder;
+            DateTimeOffset inputExpiresOn = randomDateTimeOffset;
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
 
@@ -47,10 +49,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 inputAccessPolicyList);
 
             // when
-            var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
+            var actualSasToken = await this.azureBlobStorageProvider.CreateSasTokenAsync(
                 inputContainer,
                 inputDirectory,
-                inputPolicyName);
+                inputPolicyName,
+                inputExpiresOn);
 
             // then
             Uri uri = new Uri(this.serviceUri + "/" + inputContainer + "/" + inputDirectory + "/subfolder");
@@ -64,7 +67,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
         }
 
         [Fact]
-        public async Task ShouldCreateDirectorySasTokenReadPermissionsAsync()
+        public async Task ShouldCreateSasTokenReadPermissionsAsync()
         {
             // given
             string randomPolicyName = GetRandomString();
@@ -72,11 +75,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             string randomFolder = GetRandomString();
             string randomSubFolder = GetRandomString();
             string randomFileName = GetRandomString();
+            DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
             string inputPolicyName = randomPolicyName;
             string inputContainer = randomContainer.ToLower();
             string inputDirectory = randomFolder + "/" + randomSubFolder;
             randomFileName = randomFileName + ".csv";
             string inputFileName = randomFileName;
+            DateTimeOffset inputExpiresOn = randomDateTimeOffset;
             string randomString = GetRandomString();
             byte[] randomBytes = Encoding.UTF8.GetBytes(randomString);
             MemoryStream inputStream = new MemoryStream(randomBytes);
@@ -104,10 +109,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 inputAccessPolicyList);
 
             // when
-            var actualSasToken = await this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
+            var actualSasToken = await this.azureBlobStorageProvider.CreateSasTokenAsync(
                 inputContainer,
                 inputDirectory,
-                inputPolicyName);
+                inputPolicyName,
+                inputExpiresOn);
 
             // then
             Uri uri = new Uri(this.serviceUri + "/" + inputContainer + "/" + inputDirectoryFilePath);

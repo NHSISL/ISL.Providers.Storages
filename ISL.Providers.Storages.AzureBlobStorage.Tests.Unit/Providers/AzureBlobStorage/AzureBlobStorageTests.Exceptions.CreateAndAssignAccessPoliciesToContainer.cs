@@ -35,8 +35,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             // when
             ValueTask createAndAssignAccessPoliciesTask =
-                this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                    inputContainer, inputPolicies);
+                this.azureBlobStorageProvider
+                    .CreateAndAssignAccessPoliciesAsync(inputContainer, inputPolicies);
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(

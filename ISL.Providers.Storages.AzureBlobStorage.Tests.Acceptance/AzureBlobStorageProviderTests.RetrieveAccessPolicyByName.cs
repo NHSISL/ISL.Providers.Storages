@@ -32,8 +32,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             Policy expectedPolicy = inputAccessPolicyList[0];
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
-            await this.azureBlobStorageProvider.CreateAndAssignAccessPoliciesAsync(
-                inputContainer, inputAccessPolicyList);
+            await this.azureBlobStorageProvider
+                .CreateAndAssignAccessPoliciesAsync(inputContainer, inputAccessPolicyList);
 
             // when
             Policy actualPolicy = await this.azureBlobStorageProvider

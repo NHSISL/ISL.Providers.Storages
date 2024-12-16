@@ -125,6 +125,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             return permissionsStringList[index];
         }
 
+        private static List<string> GetRandomPermissionsList()
+        {
+            List<string> returnedList = new List<string>();
+
+            List<string> permissionsList = new List<string>
+            {
+                "read",
+                "write",
+                "delete",
+                "list",
+                "add",
+                "create"
+            };
+
+            var rng = new Random();
+            int index = rng.Next(1, permissionsList.Count);
+
+            for (int i = 0; i < index; i++)
+            {
+                returnedList.Add(permissionsList[i]);
+            }
+
+            return returnedList;
+        }
+
         public class ZeroLengthStream : MemoryStream
         {
             public override long Length => 0;
@@ -268,8 +293,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Id = $"read",
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "rl"
                     }
                 },
@@ -278,8 +301,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     Id = $"write",
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = createdDateTimeOffset,
-                        PolicyExpiresOn = createdDateTimeOffset.AddDays(365),
                         Permissions = "acw"
                     }
                 },
@@ -360,16 +381,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
 
             return filler;
         }
-
-
-        private static List<string> GetPolicyNames() =>
-            new List<string>
-            {
-                "read",
-                "write",
-                "delete",
-                "fullaccess"
-            };
 
         private static List<string> ConvertToPermissionsList(string permissionsString)
         {
@@ -459,11 +470,31 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             };
         }
 
-        public static TheoryData<List<Policy>> NullAndEmptyList() =>
+        public static TheoryData<List<Policy>> NullAndEmptyPolicyList() =>
             new TheoryData<List<Policy>>
             {
                 { null },
                 { new List<Policy>() }
             };
+
+        public static TheoryData<List<string>> NullAndEmptyStringList() =>
+            new TheoryData<List<string>>
+            {
+                { null },
+                { new List<string>() }
+            };
+
+        public static TheoryData<string, bool, string> PathRelatedInputs()
+        {
+            string randomString = GetRandomString();
+            string directoryPath = randomString;
+            string blobPath = randomString + ".csv";
+
+            return new TheoryData<string, bool, string>
+            {
+                { directoryPath, true, "d" },
+                { blobPath, false, "b" }
+            };
+        }
     }
 }

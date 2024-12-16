@@ -25,8 +25,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
                 byte[] randomBytes = Encoding.UTF8.GetBytes(randomString);
                 MemoryStream inputStream = new MemoryStream(randomBytes);
 
-                await this.azureBlobStorageProvider.CreateFileAsync(
-                    inputStream, inputFileName, inputContainer);
+                await this.azureBlobStorageProvider
+                    .CreateFileAsync(inputStream, inputFileName, inputContainer);
             }
 
             // when

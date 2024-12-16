@@ -34,8 +34,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency validation error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyValidationException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyValidationException);
 
             // when
@@ -50,8 +50,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageDependencyValidationException
                 .Should().BeEquivalentTo(expectedStorageDependencyValidationException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -77,8 +77,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage dependency error occurred, please fix errors and try again.",
                     innerException: failedStorageDependencyException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(dependencyException);
 
             // when
@@ -92,8 +92,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageDependencyException
                 .Should().BeEquivalentTo(expectedStorageDependencyException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();
@@ -119,8 +119,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                     message: "Storage service error occurred, please fix errors and try again.",
                     innerException: failedStorageServiceException);
 
-            this.dateTimeBrokerMock.Setup(broker =>
-                broker.GetCurrentDateTimeOffsetAsync())
+            this.blobStorageBrokerMock.Setup(broker =>
+                broker.GetBlobContainerClient(inputContainer))
                     .Throws(someException);
 
             // when
@@ -135,8 +135,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             actualStorageServiceException
                 .Should().BeEquivalentTo(expectedStorageServiceException);
 
-            this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTimeOffsetAsync(),
+            this.blobStorageBrokerMock.Verify(broker =>
+                broker.GetBlobContainerClient(inputContainer),
                     Times.Once);
 
             this.blobStorageBrokerMock.VerifyNoOtherCalls();

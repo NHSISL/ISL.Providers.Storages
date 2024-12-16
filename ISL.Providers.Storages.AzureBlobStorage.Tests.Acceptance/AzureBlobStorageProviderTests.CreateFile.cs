@@ -24,11 +24,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance
             await this.azureBlobStorageProvider.CreateContainerAsync(inputContainer);
 
             // when
-            await this.azureBlobStorageProvider.CreateFileAsync(
-                inputStream, inputFileName, inputContainer);
+            await this.azureBlobStorageProvider
+                .CreateFileAsync(inputStream, inputFileName, inputContainer);
 
-            await this.azureBlobStorageProvider.RetrieveFileAsync(
-                actualOutputStream, inputFileName, inputContainer);
+            await this.azureBlobStorageProvider
+                .RetrieveFileAsync(actualOutputStream, inputFileName, inputContainer);
 
             // then
             actualOutputStream.Length.Should().BeGreaterThan(0);

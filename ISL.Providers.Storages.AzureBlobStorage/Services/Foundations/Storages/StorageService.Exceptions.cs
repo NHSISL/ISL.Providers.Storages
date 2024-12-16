@@ -33,9 +33,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             {
                 throw CreateValidationException(invalidArgumentStorageException);
             }
-            catch (InvalidPolicyPermissionStorageException invalidPolicyPermissionStorageException)
+            catch (InvalidPermissionStorageException invalidPermissionStorageException)
             {
-                throw CreateValidationException(invalidPolicyPermissionStorageException);
+                throw CreateValidationException(invalidPermissionStorageException);
             }
             catch (ArgumentException argumentException)
             {
@@ -208,6 +208,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             catch (InvalidArgumentStorageException invalidArgumentStorageException)
             {
                 throw CreateValidationException(invalidArgumentStorageException);
+            }
+            catch (InvalidPermissionStorageException invalidPermissionStorageException)
+            {
+                throw CreateValidationException(invalidPermissionStorageException);
             }
             catch (ArgumentException argumentException)
             {

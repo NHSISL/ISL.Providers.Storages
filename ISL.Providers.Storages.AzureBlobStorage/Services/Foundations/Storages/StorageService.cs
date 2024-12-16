@@ -80,7 +80,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             BlobClient blobClient = this.blobStorageBroker.GetBlobClient(blobContainerClient, fileName);
-            
+
             BlobSasBuilder sasBuilder = this.blobStorageBroker
                 .GetBlobSasBuilder(fileName, container, startsOnDateTimeOffset, expiresOn);
 
@@ -135,8 +135,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         TryCatch(async () =>
         {
             ValidateStorageArgumentsOnCreateAccessPolicy(container, policies);
-            DateTimeOffset currentDateTimeOffset = await this.dateTimeBroker.GetCurrentDateTimeOffsetAsync();
-            DateTimeOffset startsOnDateTimeOffset = currentDateTimeOffset.AddMinutes(-1);
             BlobContainerClient blobContainerClient = this.blobStorageBroker.GetBlobContainerClient(container);
             List<BlobSignedIdentifier> signedIdentifiers = new List<BlobSignedIdentifier>();
 
@@ -151,8 +149,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
                     AccessPolicy = new BlobAccessPolicy
                     {
-                        PolicyStartsOn = startsOnDateTimeOffset,
-                        PolicyExpiresOn = startsOnDateTimeOffset.AddDays(this.blobStorageBroker.TokenLifetimeDays),
+                        PolicyStartsOn = policy.StartTime,
+                        PolicyExpiresOn = policy.ExpiryTime,
                         Permissions = permissions
                     }
                 };
@@ -263,25 +261,62 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
 
             signedIdentifiers.Remove(matchedBlobSignedIdentifier);
 
-            await this.blobStorageBroker.AssignAccessPoliciesToContainerAsync(
-                blobContainerClient, signedIdentifiers);
+            await this.blobStorageBroker
+                .AssignAccessPoliciesToContainerAsync(blobContainerClient, signedIdentifiers);
         });
 
-        public ValueTask<string> CreateDirectorySasTokenAsync(
+        public ValueTask<string> CreateSasTokenAsync(
              string container,
-             string directoryPath,
-             string accessPolicyIdentifier) =>
+             string path,
+             string accessPolicyIdentifier,
+             DateTimeOffset expiresOn) =>
         TryCatch(async () =>
         {
-            ValidateStorageArgumentsOnCreateDirectorySasToken(
+            ValidateStorageArgumentsOnCreateSasToken(
                 container,
-                directoryPath,
-                accessPolicyIdentifier);
+                path,
+                accessPolicyIdentifier,
+                expiresOn);
 
-            var sasToken = await this.blobStorageBroker.CreateDirectorySasTokenAsync(
+            bool isDirectory = !Path.HasExtension(path);
+            string resource = ConvertToResourceString(isDirectory);
+
+            var sasToken = await this.blobStorageBroker.CreateSasTokenAsync(
                 container,
-                directoryPath,
-                accessPolicyIdentifier);
+                path,
+                accessPolicyIdentifier,
+                expiresOn,
+                isDirectory,
+                resource);
+
+            return sasToken;
+        });
+
+        public ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            List<string> permissions) =>
+        TryCatch(async () =>
+        {
+            ValidateStorageArgumentsOnCreateSasToken(
+                container,
+                path,
+                expiresOn,
+                permissions);
+
+            ValidatePermissions(permissions);
+            string permissionsString = ConvertToPermissionsString(permissions);
+            bool isDirectory = !Path.HasExtension(path);
+            string resource = ConvertToResourceString(isDirectory);
+
+            var sasToken = await this.blobStorageBroker.CreateSasTokenAsync(
+                container,
+                path,
+                expiresOn,
+                permissionsString,
+                isDirectory,
+                resource);
 
             return sasToken;
         });
@@ -324,5 +359,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 .Select(letter => permissionsMap[letter])
                 .ToList();
         }
+
+        virtual internal string ConvertToResourceString(bool isDirectory) => isDirectory switch
+        {
+            true => "d",
+            false => "b"
+        };
     }
 }

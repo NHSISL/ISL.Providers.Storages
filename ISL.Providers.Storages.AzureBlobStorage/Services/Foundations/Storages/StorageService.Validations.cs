@@ -51,7 +51,9 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
         }
 
         private static void ValidateStorageArgumentsOnGetDownloadLink(
-            string fileName, string container, DateTimeOffset expiresOn)
+            string fileName,
+            string container,
+            DateTimeOffset expiresOn)
         {
             Validate(
                 (Rule: IsInvalid(fileName), Parameter: "FileName"),
@@ -59,8 +61,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                 (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
         }
 
-        private static void ValidateStorageArgumentsOnCreateAccessPolicy(
-            string container, List<Policy> policies)
+        private static void ValidateStorageArgumentsOnCreateAccessPolicy(string container, List<Policy> policies)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
@@ -77,19 +78,35 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
             }
         }
 
-        private static void ValidateStorageArgumentsOnCreateDirectorySasToken(
+        private static void ValidateStorageArgumentsOnCreateSasToken(
             string container,
-            string directoryPath,
-            string accessPolicyIdentifier)
+            string path,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"),
-                (Rule: IsInvalid(directoryPath), Parameter: "DirectoryPath"),
-                (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"));
+                (Rule: IsInvalid(path), Parameter: "Path"),
+                (Rule: IsInvalid(accessPolicyIdentifier), Parameter: "AccessPolicyIdentifier"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
         }
 
-        private static void ValidateStorageArgumentsOnRemoveAccessPolicies(
-            string container)
+        private static void ValidateStorageArgumentsOnCreateSasToken(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            List<string> permissions)
+        {
+            Validate(
+                (Rule: IsInvalid(container), Parameter: "Container"),
+                (Rule: IsInvalid(path), Parameter: "Path"),
+                (Rule: IsInvalid(expiresOn), Parameter: "ExpiresOn"));
+
+            Validate(
+                (Rule: IsInvalidList(permissions), Parameter: "Permissions"));
+        }
+
+        private static void ValidateStorageArgumentsOnRemoveAccessPolicies(string container)
         {
             Validate(
                 (Rule: IsInvalid(container), Parameter: "Container"));
@@ -172,7 +189,7 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Services.Foundations.Storages
                     permission.ToLower() != "add" &&
                     permission.ToLower() != "list")
                 {
-                    throw new InvalidPolicyPermissionStorageException(
+                    throw new InvalidPermissionStorageException(
                         message: "Invalid permission. Read, write, delete, create, add and list" +
                         "permissions are supported at this time.");
                 }

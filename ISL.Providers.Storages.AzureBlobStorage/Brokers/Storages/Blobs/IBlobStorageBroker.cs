@@ -16,11 +16,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
 {
     internal interface IBlobStorageBroker
     {
-        int TokenLifetimeDays { get; }
         BlobContainerClient GetBlobContainerClient(string container);
         DataLakeFileSystemClient GetDataLakeFileSystemClient(string container);
         BlobClient GetBlobClient(BlobContainerClient blobContainerClient, string fileName);
-        
+
         BlobSasBuilder GetBlobSasBuilder(
             string blobName,
             string blobContainerName,
@@ -32,8 +31,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask DeleteFileAsync(BlobClient blobClient);
 
         ValueTask<string> GetDownloadLinkAsync(
-            BlobClient blobClient, 
-            BlobSasBuilder blobSasBuilder, 
+            BlobClient blobClient,
+            BlobSasBuilder blobSasBuilder,
             DateTimeOffset expiresOn);
 
         ValueTask CreateDirectoryAsync(DataLakeFileSystemClient dataLakeFileSystemClient, string directory);
@@ -43,15 +42,26 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Brokers.Storages.Blobs
         ValueTask<AsyncPageable<BlobItem>> GetBlobsAsync(BlobContainerClient blobContainerClient);
 
         ValueTask AssignAccessPoliciesToContainerAsync(
-            BlobContainerClient blobContainerClient, 
+            BlobContainerClient blobContainerClient,
             List<BlobSignedIdentifier> signedIdentifiers);
 
         ValueTask<BlobContainerAccessPolicy> GetAccessPolicyAsync(BlobContainerClient blobContainerClient);
         ValueTask RemoveAllAccessPoliciesAsync(BlobContainerClient containerClient);
 
-        ValueTask<string> CreateDirectorySasTokenAsync(
+        ValueTask<string> CreateSasTokenAsync(
             string container,
-            string directoryPath,
-            string accessPolicyIdentifier);
+            string path,
+            string accessPolicyIdentifier,
+            DateTimeOffset expiresOn,
+            bool isDirectory,
+            string resource);
+
+        ValueTask<string> CreateSasTokenAsync(
+            string container,
+            string path,
+            DateTimeOffset expiresOn,
+            string permissionsString,
+            bool isDirectory,
+            string resource);
     }
 }

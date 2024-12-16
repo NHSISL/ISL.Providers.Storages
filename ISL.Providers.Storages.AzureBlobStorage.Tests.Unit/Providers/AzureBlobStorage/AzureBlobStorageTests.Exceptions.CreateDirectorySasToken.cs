@@ -2,6 +2,7 @@
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Providers.Exceptions;
 using Moq;
+using System;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -14,12 +15,13 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
-            string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            DateTimeOffset randomDateTimeOffset = GetRandomFutureDateTimeOffset();
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
+            DateTimeOffset inputExpiresOn = randomDateTimeOffset;
 
             var storageValidationException = new StorageValidationException(
                 message: "Storage validation error occurred, please fix errors and try again.",
@@ -32,13 +34,20 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
-                    .ThrowsAsync(storageValidationException);
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()))
+                        .ThrowsAsync(storageValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                    inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier);
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>());
 
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
@@ -49,8 +58,12 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
-                    Times.Once);
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()),
+                        Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -59,14 +72,6 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         public async Task ShouldThrowProviderValidationExceptionOnCreateDirectorySasTokenDependencyValidation()
         {
             // given
-            string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
-            string randomAccessPolicyIdentifier = GetRandomString();
-            string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
-            string inputContainer = randomContainer;
-            string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier; ;
-
             var storageDependencyValidationException = new StorageDependencyValidationException(
                 message: "Storage dependency validation error occurred, please fix errors and try again.",
                 innerException: new Xeption());
@@ -78,15 +83,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
-                    .ThrowsAsync(storageDependencyValidationException);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()))
+                        .ThrowsAsync(storageDependencyValidationException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                    inputContainer,
-                    inputDirectoryPath,
-                    inputAccessPolicyIdentifier);
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>());
 
             AzureBlobStorageProviderValidationException
                 actualAzureBlobStorageProviderValidationException =
@@ -98,8 +107,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
-                    Times.Once);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()),
+                        Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -109,10 +121,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
 
@@ -127,15 +139,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
-                    .ThrowsAsync(storageDependencyException);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()))
+                        .ThrowsAsync(storageDependencyException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                    inputContainer,
-                    inputDirectoryPath,
-                    inputAccessPolicyIdentifier);
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>());
 
             AzureBlobStorageProviderDependencyException
                 actualAzureBlobStorageProviderDependencyException =
@@ -147,8 +163,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
-                    Times.Once);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()),
+                        Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
@@ -158,10 +177,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
         {
             // given
             string randomContainer = GetRandomString();
-            string randomDirectoryPath = GetRandomString();
+            string randomPath = GetRandomString();
             string randomAccessPolicyIdentifier = GetRandomString();
             string randomSasToken = GetRandomString();
-            string inputDirectoryPath = randomDirectoryPath;
+            string inputPath = randomPath;
             string inputContainer = randomContainer;
             string inputAccessPolicyIdentifier = randomAccessPolicyIdentifier;
 
@@ -176,15 +195,19 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier))
-                    .ThrowsAsync(storageServiceException);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()))
+                        .ThrowsAsync(storageServiceException);
 
             // when
             ValueTask<string> createDirectorySasTokenTask =
-                this.azureBlobStorageProvider.CreateDirectorySasTokenAsync(
-                    inputContainer,
-                    inputDirectoryPath,
-                    inputAccessPolicyIdentifier);
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>());
 
             AzureBlobStorageProviderServiceException
                 actualAzureBlobStorageProviderServiceException =
@@ -196,8 +219,11 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateDirectorySasTokenAsync(inputContainer, inputDirectoryPath, inputAccessPolicyIdentifier),
-                    Times.Once);
+                service.CreateSasTokenAsync(It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>()),
+                        Times.Once);
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
