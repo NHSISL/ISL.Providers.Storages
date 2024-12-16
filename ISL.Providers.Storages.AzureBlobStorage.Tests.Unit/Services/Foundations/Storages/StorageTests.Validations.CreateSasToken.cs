@@ -37,6 +37,10 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
                 key: "AccessPolicyIdentifier",
                 values: "Text is invalid");
 
+            invalidArgumentStorageException.AddData(
+                key: "ExpiresOn",
+                values: "Date is invalid");
+
             var expectedStorageValidationException =
                 new StorageValidationException(
                     message: "Storage validation error occurred, please fix errors and try again.",
