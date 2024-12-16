@@ -318,5 +318,55 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
 
             this.storageServiceMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowProviderDependencyExceptionOnCreateSasTokenWithPermissionsListAsync()
+        {
+            // given
+            var storageDependencyException = new StorageDependencyException(
+                message: "Storage dependency error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderDependencyException =
+                new AzureBlobStorageProviderDependencyException(
+                    message: "Azure blob storage provider dependency error occurred, " +
+                        "contact support.",
+                    innerException: (Xeption)storageDependencyException.InnerException);
+
+            this.storageServiceMock.Setup(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()))
+                        .ThrowsAsync(storageDependencyException);
+
+            // when
+            ValueTask<string> createSasTokenTask =
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>());
+
+            AzureBlobStorageProviderDependencyException
+                actualAzureBlobStorageProviderDependencyException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderDependencyException>(
+                        testCode: createSasTokenTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderDependencyException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
+
+            this.storageServiceMock.Verify(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()),
+                        Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
     }
 }
