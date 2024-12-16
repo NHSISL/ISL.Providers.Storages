@@ -76,7 +76,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     data: storageDependencyValidationException.InnerException.Data);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()))
@@ -100,7 +101,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()),
@@ -124,7 +126,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageDependencyException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()))
@@ -148,7 +151,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderDependencyException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()),
@@ -180,7 +184,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                     innerException: (Xeption)storageServiceException.InnerException);
 
             this.storageServiceMock.Setup(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()))
@@ -204,7 +209,8 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
                 .Should().BeEquivalentTo(expectedAzureBlobStorageProviderServiceException);
 
             this.storageServiceMock.Verify(service =>
-                service.CreateSasTokenAsync(It.IsAny<string>(),
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTimeOffset>()),
@@ -246,6 +252,57 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Providers.AzureBlob
             AzureBlobStorageProviderValidationException actualAzureBlobStorageProviderValidationException =
                 await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
                     testCode: createSasTokenTask.AsTask);
+
+            // then
+            actualAzureBlobStorageProviderValidationException
+                .Should().BeEquivalentTo(expectedAzureBlobStorageProviderValidationException);
+
+            this.storageServiceMock.Verify(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()),
+                        Times.Once);
+
+            this.storageServiceMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task
+            ShouldThrowProviderValidationExceptionOnCreateSasTokenWithPermissionsListAsyncDependencyValidation()
+        {
+            // given
+            var storageDependencyValidationException = new StorageDependencyValidationException(
+                message: "Storage dependency validation error occurred, please fix errors and try again.",
+                innerException: new Xeption());
+
+            var expectedAzureBlobStorageProviderValidationException =
+                new AzureBlobStorageProviderValidationException(
+                    message: "Azure blob storage provider validation error occurred, fix errors and try again.",
+                    innerException: (Xeption)storageDependencyValidationException.InnerException,
+                    data: storageDependencyValidationException.InnerException.Data);
+
+            this.storageServiceMock.Setup(service =>
+                service.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>()))
+                        .ThrowsAsync(storageDependencyValidationException);
+
+            // when
+            ValueTask<string> createSasTokenTask =
+                this.azureBlobStorageProvider.CreateSasTokenAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<List<string>>());
+
+            AzureBlobStorageProviderValidationException
+                actualAzureBlobStorageProviderValidationException =
+                    await Assert.ThrowsAsync<AzureBlobStorageProviderValidationException>(
+                        testCode: createSasTokenTask.AsTask);
 
             // then
             actualAzureBlobStorageProviderValidationException
