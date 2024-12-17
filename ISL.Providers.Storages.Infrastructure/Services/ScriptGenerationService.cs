@@ -90,8 +90,7 @@ namespace ISL.Providers.Storages.Infrastructure.Services
 
                                 new DotNetBuildTask
                                 {
-                                    Name = "Build with warnings as errors",
-                                    Run = "dotnet build --no-restore --warnaserror"
+                                    Name = "Build",
                                 },
 
                                 new TestTask

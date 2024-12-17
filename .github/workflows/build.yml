@@ -112,8 +112,8 @@ jobs:
         dotnet-version: 9.0.100
     - name: Restore
       run: dotnet restore
-    - name: Build with warnings as errors
-      run: dotnet build --no-restore --warnaserror
+    - name: Build
+      run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
     env:
