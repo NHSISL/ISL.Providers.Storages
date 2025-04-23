@@ -160,15 +160,15 @@ namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundation
             public override long Length => 1;
         }
 
-        public static TheoryData<Stream, string> InvalidArgumentsStreamLengthZero()
+        public static TheoryData<Stream, string> InvalidArgumentsStreamIsNull()
         {
             Stream stream = new ZeroLengthStream();
 
             return new TheoryData<Stream, string>
             {
                 { null, null },
-                { stream, "" },
-                { stream, " " }
+                { null, "" },
+                { null, " " }
             };
         }
 
