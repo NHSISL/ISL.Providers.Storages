@@ -2,17 +2,17 @@
 // Copyright (c) North East London ICB. All rights reserved.
 // ---------------------------------------------------------
 
-using System.IO;
-using System.Threading.Tasks;
 using FluentAssertions;
 using ISL.Providers.Storages.AzureBlobStorage.Models.Foundations.Files.Exceptions;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.Services.Foundations.Storages
 {
     public partial class StorageTests
     {
         [Theory]
-        [MemberData(nameof(InvalidArgumentsStreamLengthZero))]
+        [MemberData(nameof(InvalidArgumentsStreamIsNull))]
         public async Task ShouldThrowValidationExceptionOnCreateIfArgumentsInvalidAsync(
             Stream invalidStream, string invalidText)
         {
