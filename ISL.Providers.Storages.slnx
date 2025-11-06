@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Abstraction Provider/">
+    <Project Path="ISL.Providers.Storages.Abstractions.Tests.Unit/ISL.Providers.Storages.Abstractions.Tests.Unit.csproj" />
+    <Project Path="ISL.Providers.Storages.Abstractions/ISL.Providers.Storages.Abstractions.csproj" />
+  </Folder>
+  <Folder Name="/AzureBlobStorage/">
+    <Project Path="ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance/ISL.Providers.Storages.AzureBlobStorage.Tests.Acceptance.csproj" />
+    <Project Path="ISL.Providers.Storages.AzureBlobStorage.Tests.Unit/ISL.Providers.Storages.AzureBlobStorage.Tests.Unit.csproj" />
+    <Project Path="ISL.Providers.Storages.AzureBlobStorage/ISL.Providers.Storages.AzureBlobStorage.csproj" />
+  </Folder>
+  <Project Path="ISL.Providers.Storages.Infrastructure/ISL.Providers.Storages.Infrastructure.csproj" />
+</Solution>
